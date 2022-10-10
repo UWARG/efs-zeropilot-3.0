@@ -1,0 +1,3 @@
+[submodule "LaminarOS"]
+	path = LaminarOS
+	url = https://github.com/UWARG/LaminarOS
