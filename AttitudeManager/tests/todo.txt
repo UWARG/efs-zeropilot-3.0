@@ -1,0 +1,1 @@
+Somehow, create tests for AM on a system level. HOW?!?!?!?
