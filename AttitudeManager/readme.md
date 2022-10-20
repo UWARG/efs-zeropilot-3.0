@@ -8,6 +8,9 @@
     "logLevel": "info",
     "flowchart": {
       "htmlLabels": true
+    },
+    "sequence": {
+      "mirrorActors": true
     }
   }
 }%%
