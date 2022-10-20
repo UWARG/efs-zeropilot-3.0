@@ -98,12 +98,12 @@ struct WaypointManager_Data_Out{
 typedef struct CommandsForAM_t{
   WaypointType waypoint_type; 
 
-  // heading vector in three angles
-  float heading_angle_x; 
-  float heading_angle_y; 
-  float heading_angle_z; 
-  float vector_dist; //speed
-  double velocity_target; 
+  // heading unit vector and magnitude
+  float heading_dist_x; 
+  float heading_dist_y; 
+  float heading_dist_z; 
+  float heading_magnitude; // Magnitude distance to waypoint target
+  double velocity_target; // Target velocity of drone approaching target
 } CommandsForAM;
 
 

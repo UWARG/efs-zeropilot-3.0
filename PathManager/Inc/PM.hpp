@@ -1,6 +1,7 @@
 #pragma once
 #include "PM_StateManager.hpp"
 #include "PM_DataTypes.hpp"
+#include "PM_LandingTakeoffManager.hpp"
 
 class pathManagerState;
 
@@ -22,6 +23,7 @@ class pathManager
         PathMan::_Path_Manager_Cycle_Status getStatus() {return status;}
 
         //used to determine the stage of the landing sequence
+        LandingTakeoffManager vtolManager;
         _FlightStage stage;
         bool madeLandingPoints;
         bool madeTakeoffPoints;
