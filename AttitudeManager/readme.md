@@ -31,4 +31,6 @@ graph TD;
   OutputMixingMode--Error-->FatalFailureMode
   
   TelemetryManagementMode--Success-->FetchInstructionsMode
+
+  FatalFailureMode--No Exit-->FatalFailureMode
 ```
