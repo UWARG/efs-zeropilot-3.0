@@ -18,15 +18,17 @@ graph TD;
   FetchInstructionsMode--Disarmed-->DisarmMode
   FetchInstructionsMode--Comms Timeout-->FatalFailureMode
   FetchInstructionsMode--Armed-->GetPositionMode
+  FetchInstructionsMode--LimpMode-->OutputMixingMode
   
   DisarmMode--Armed-->FetchInstructionsMode
 
-  GetPositionMode-->RunControlsMode
+  GetPositionMode--SF Data OK-->RunControlsMode
+  GetPositionMode--LimpMode-->OutputMixingMode
   
-  RunControlsMode-->OutputMixingMode
+  RunControlsMode--Stabilized Flight-->OutputMixingMode
   
-  OutputMixingMode--Success-->StateReportingMode
+  OutputMixingMode--Success-->TelemetryManagementMode
   OutputMixingMode--Error-->FatalFailureMode
   
-  StateReportingMode-->FetchInstructionsMode
+  TelemetryManagementMode--Success-->FetchInstructionsMode
 ```
