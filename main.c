@@ -1,11 +1,10 @@
 #include "main.h"
-#include "stm32f4xx_it.h"
 
 int main()
 {
 
-    los_init();
-    
+    //MUST INITIALIZE SYSTEM AND HAL
+
     while(1)
     {
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);

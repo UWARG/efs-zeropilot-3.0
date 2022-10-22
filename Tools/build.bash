@@ -17,38 +17,20 @@
 set -o errtrace
 set -o nounset
 
-CLEAN=false
-TEST=false
-FLASH=false
+CLEAN=true
 BUILD_TYPE="Debug"
 GENERATOR="Unix Makefiles"
+PLATFORM="STM32F401RE"
 
-while getopts "c,t,h,f,r" opt; do
-    case $opt in
-        c)
-            CLEAN=true
-        ;;
-        t)
-            TEST=true
-        ;;
-        f)
-            FLASH=true
-        ;;
-        r)
-            BUILD_TYPE="Release"
-        ;;
-        h|\?)
-            printf "%s\n" "Usage: $0 [OPTIONS]"\
-                "Script to build the WARG Safety project"\
-                "    -f                 - flashes the Safety after building"\
-                "    -c                 - removes previous build files before building"\
-                "    -h                 - outputs this message"\
-                "    -t                 - runs tests after building if build is successful"\
-                "    -r                 - Sets the build type to release"
-            exit 1
-        ;;
+while getopts c:p: flag
+do
+    case "${flag}" in
+        c) CLEAN={OPTARG};;
+        p) PLATFORM=${OPTARG};;
     esac
 done
+
+echo "Building for $PLATFORM"
 
 if command -v ninja >/dev/null 2>&1; then
     GENERATOR="Ninja"
@@ -76,10 +58,7 @@ if [[ $CLEAN == true ]]; then
 fi
 
 # Prebuild info display
-echo "Building LaminarOS..."
-# if [[ $# > 0 ]]; then
-#     echo "with cmake parameters: $@"
-# fi
+echo "Building ZeroPilot..."
 
 # Build commands
 cmake -E make_directory $BUILD_DIR
@@ -87,22 +66,14 @@ cmake -E chdir $BUILD_DIR \
   cmake \
     -G "${GENERATOR}" \
     -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-    -DCMAKE_TOOLCHAIN_FILE="LaminarOS/STM32F401RE.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE="LaminarOS/$PLATFORM.cmake" \
     -Wdev\
     -Wdeprecated\
     ../
 
 cmake --build $BUILD_DIR
 
-if [[ $TEST == true ]] ; then
-    cmake --build $BUILD_DIR --target test
-fi
-
-if [[ $FLASH == true ]] ; then
-    cmake --build $BUILD_DIR --target install
-fi
-
 # Final status display
 echo ""
-echo "LaminarOS build SUCCESS!"
+echo "ZeroPilot build SUCCESS!"
 exit 0
