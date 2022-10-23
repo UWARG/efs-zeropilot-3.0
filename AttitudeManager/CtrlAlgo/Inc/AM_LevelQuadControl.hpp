@@ -22,11 +22,8 @@ public:
         ControlInterface(NumActuatorIdx),
         configs{frontRight, frontLeft, backRight, backLeft} {};
     
-    void runControlsAlgo(const AttitudeManagerInput &instructions) const;
-    [[nodiscard]] ActuatorOutput getActuatorOutput(uint8_t actuatorIdx) const {
-        return outputs[actuatorIdx];
-    }
-
+    void runControlsAlgo(const AttitudeManagerInput &instructions,
+                         float outputs[]) const;
     enum ActuatorIdx {
         FrontRight = 0,
         FrontLeft,

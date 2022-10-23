@@ -10,19 +10,13 @@ namespace AM
 void AttitudeManager::runControlLoopIteration(AttitudeManagerInput instructions) {
     // Process Instructions
 
-    // Run Control Algorithms
-    float controllerOutputs[controllersLen][outputsLen] = {{0}};
-    float actuatorOutputs[] = {0};
+    float controllerOutputs[numControllers][numActuatorChannels] = {0};
+    // float actuatorOutputs[actuatorsLen] = {};
     
-    for (uint8_t controllerIdx = 0; controllerIdx < controllersLen; controllerIdx++) {
-        ControlInterface* controller = controllers[i];
+    // Run Control Algorithms
+    for (uint8_t controllerIdx = 0; controllerIdx < numControllers; controllerIdx++) {
+        const ControlInterface* controller = controllers[controllerIdx];
         controller->runControlsAlgo(instructions, controllerOutputs[controllerIdx]);
-        
-        // get the computed actuators
-        for (uint8_t actuator = 0; actuator < controller->numActuators; actuator++) {
-            ActuatorOutput output = controller->getActuatorOutput(actuator);
-            controllerOutputs[controllerIdx][output.channel] = output.percent;
-        }
     }
 
     // Mix actuator outputs

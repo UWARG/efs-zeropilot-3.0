@@ -16,8 +16,8 @@ namespace AM {
 class ControlInterface {
 public:
     ControlInterface(uint8_t numActuators) : numActuators(numActuators) {};
-    virtual void runControlsAlgo(const AttitudeManagerInput &instructions) const = 0;
-    virtual ActuatorOutput getActuatorOutput(uint8_t actuatorIdx) const = 0;
+    virtual void runControlsAlgo(const AttitudeManagerInput &instructions,
+                                 float outputs[]) const = 0;
     const uint8_t numActuators;
 private:
     ControlInterface();

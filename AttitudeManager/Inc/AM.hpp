@@ -17,30 +17,21 @@ namespace AM {
 
 class AttitudeManager {
 public:
-    template<class ...Controller, class ...Actuator>
-    AttitudeManager(const Controller &...controllers, 
-                    const Actuator &...actuators) :
-        controllers{controllers...},
-        controllersLen(sizeof...(controllers)),
-        actuators{actuators...},
-        actuatorsLen(sizeof...(actuators)),
-        outputsLen(actuatorsLen)
-         {};
+    AttitudeManager(const ControlInterface* controllers[], 
+                    uint8_t numControllers,
+                    uint8_t numActuatorChannels
+                    ) :
+        numControllers(numControllers),
+        numActuatorChannels(numActuatorChannels),
+        controllers(controllers) {};
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 private:
     void setup();
-    static const int controllersLen;
-    const ControlInterface* controllers[];
-
-    static const int actuatorsLen;
-    const ActuatorConfig actuators[];
-
-    // Could be optimized for cases where a single actuator is used for 
-    // multiple control algorithms
-    static const int outputsLen; 
-    // stored as [Controller][Output Channel]
+    const int numControllers = 0;
+    const int numActuatorChannels = 0;
     
+    const ControlInterface** controllers;
 };
 } // namespace AM
 

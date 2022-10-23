@@ -27,8 +27,7 @@ public:
         yaw(constrain<float>(yaw, 1, -1)) { }
 private:
     template <typename T>
-    static const T constrain(T input, const T max, const T min) {
-        assert(max > min);
+    static constexpr T constrain(const T input, const T max, const T min) {
         return  (input > max ? max : 
                 (input < min ? min :
                 input));
