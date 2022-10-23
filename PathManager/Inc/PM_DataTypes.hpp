@@ -8,7 +8,7 @@
 * Enums
 ********************************************************************/
 
-enum FlightStage{PREFLIGHT = 0, TAKEOFF, CRUISING, LANDING}; //used to determine the stage of flight
+enum FlightStage{PREFLIGHT = 0, TAKEOFF, CRUISING, LANDING, LANDED, DISARMED}; //used to determine the stage of flight
 
 
 // Used to specify the type of output
@@ -93,7 +93,6 @@ struct WaypointManager_Data_Out{
 };
 
 
-// Don't know where to put this yet 
 //Commands for path manager to send to attitude manager.
 typedef struct CommandsForAM_t{
   WaypointType waypoint_type; 
@@ -103,9 +102,14 @@ typedef struct CommandsForAM_t{
   float heading_dist_y; 
   float heading_dist_z; 
   float heading_magnitude; // Magnitude distance to waypoint target
-  double velocity_target; // Target velocity of drone approaching target
+  double speed; // Target velocity of drone approaching target
 } CommandsForAM;
 
+
+// AM will tell us when drone is armed and ready to fly, then we will progress to Takeoff
+typedef struct CommandsFromAM{
+    bool armed;  
+} CommandsFromAM;
 
 struct GpsCoordinates{
     double longitude; 
