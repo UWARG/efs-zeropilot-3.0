@@ -78,7 +78,7 @@ class LandingTakeoffManager{
         COMMON LANDING AND TAKEOFF FUNCTIONS
         ************************************/
 
-         /*
+        /*
             This function returns the desired climb/descend speed given the current altitude
             Because the takeoff and landing target velocities 
 
@@ -90,4 +90,6 @@ class LandingTakeoffManager{
 
     private:
         double groundHeight = -1; // Set by takeoff and used by landing
+        double landingRangeConstant = 0; //Value set based on the drone altitude when transitioning to landing
+        // Note: a value of 0 means a velocity of 0, so drone only moves once value set.
 };

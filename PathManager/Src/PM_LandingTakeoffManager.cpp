@@ -16,6 +16,10 @@ double LandingTakeoffManager::getTakeoffAltitudeTarget(double currentAltitude)
 
 double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
 {
+    //Calculate the landing range constant if just entering landing state.
+    if (landingRangeConstant == 0) {
+        landingRangeConstant = getLandingRange(currentAltitude);
+    }
     // Return ground height for use to determine when to transition out of Landing
     return groundHeight;
 }
@@ -61,4 +65,10 @@ double LandingTakeoffManager::getSpeedTarget(double currentAltitude)
     double speedTarget;
     speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / RANGE_CONSTANT))
     return speedTarget;
+}
+
+double LandingTakeoffManager::getLandingRange(double currentAltitude)
+{
+    double pathMidpoint = (currentAltitude - groundHeight) / 2;
+    return sqrt((pathMidpoint ^ 2) / (-2 * (log(LANDING_SPEED / MAX_SPEED))));
 }
