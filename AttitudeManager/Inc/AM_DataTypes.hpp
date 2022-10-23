@@ -10,8 +10,13 @@
 
 namespace AM {
 
-class StateMix {
-  public:
+template <typename T>
+static constexpr T constrain(const T input, const T max, const T min) {
+    assert(max > min);
+    return (input > max ? max : (input < min ? min : input));
+}
+
+struct StateMix {
     const float velocity_x, velocity_y, velocity_z, pitch, roll, yaw;
     StateMix(float velocity_x, float velocity_y, float velocity_z, float pitch,
              float roll, float yaw)
@@ -21,13 +26,6 @@ class StateMix {
           pitch(constrain<float>(pitch, 1, -1)),
           roll(constrain<float>(roll, 1, -1)),
           yaw(constrain<float>(yaw, 1, -1)) {}
-
-  private:
-    template <typename T>
-    static constexpr T constrain(const T input, const T max, const T min) {
-        assert(max > min);
-        return (input > max ? max : (input < min ? min : input));
-    }
 };
 
 typedef struct {

@@ -32,6 +32,25 @@ class LevelQuadControl : public ControlInterface {
 
   private:
     ActuatorConfig configs[NumActuatorIdx];
+
+    static constexpr float maxRoll = 60;
+    static constexpr float maxPitch = 60;
+
+    static constexpr int pid_abs_max = 100;
+    // ? not sure if we need specifics for each angle
+    static constexpr int max_i_windup = 1;
+
+    static constexpr float roll_kp = 0.05;
+    static constexpr float roll_ki = 0.001;
+    static constexpr float roll_kd = 0.015;
+
+    static constexpr float pitch_kp = 0.05;
+    static constexpr float pitch_ki = 0.001;
+    static constexpr float pitch_kd = 0.015;
+
+    static constexpr float yaw_kp = 0.25;
+    static constexpr float yaw_ki = 0.01;
+    static constexpr float yaw_kd = 0.05;
 };
 } // namespace AM
 
