@@ -14,25 +14,24 @@
 
 namespace AM {
 
-
 class AttitudeManager {
-public:
-    AttitudeManager(const ControlInterface* controllers[], 
-                    uint8_t numControllers,
-                    uint8_t numActuatorChannels
-                    ) :
-        numControllers(numControllers),
-        numActuatorChannels(numActuatorChannels),
-        controllers(controllers) {};
+  public:
+    AttitudeManager(const ControlInterface *controllers[],
+                    uint8_t numControllers, const uint8_t actuatorChannelMap[],
+                    uint8_t numActuatorChannels)
+        : numControllers(numControllers),
+          numActuatorChannels(numActuatorChannels), controllers(controllers),
+          actuatorChannelMap(actuatorChannelMap){};
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
-private:
-    void setup();
+
+  private:
     const int numControllers = 0;
     const int numActuatorChannels = 0;
-    
-    const ControlInterface** controllers;
+
+    const ControlInterface **controllers;
+    const uint8_t *actuatorChannelMap;
 };
 } // namespace AM
 
-#endif //ZPSW3_AM_HPP
+#endif // ZPSW3_AM_HPP

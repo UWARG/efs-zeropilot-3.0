@@ -21,4 +21,4 @@ void AM_InterfaceExecute(void);
 }
 #endif
 
-#endif //ZPSW3_AM_INTERFACE_H
+#endif // ZPSW3_AM_INTERFACE_H

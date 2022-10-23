@@ -14,16 +14,14 @@
 namespace AM {
 
 class LevelQuadControl : public ControlInterface {
-public:
-    LevelQuadControl(ActuatorConfig &frontRight,
-                     ActuatorConfig &frontLeft,
-                     ActuatorConfig &backRight,
-                     ActuatorConfig &backLeft) :
-        ControlInterface(NumActuatorIdx),
-        configs{frontRight, frontLeft, backRight, backLeft} {};
-    
+  public:
+    LevelQuadControl(ActuatorConfig &frontRight, ActuatorConfig &frontLeft,
+                     ActuatorConfig &backRight, ActuatorConfig &backLeft)
+        : ControlInterface(NumActuatorIdx), configs{frontRight, frontLeft,
+                                                    backRight, backLeft} {};
+
     void runControlsAlgo(const AttitudeManagerInput &instructions,
-                         float outputs[]) const;
+                         float outputs[], uint8_t outputsLength) const;
     enum ActuatorIdx {
         FrontRight = 0,
         FrontLeft,
@@ -32,10 +30,9 @@ public:
         NumActuatorIdx // Must always be last
     };
 
-private:
+  private:
     ActuatorConfig configs[NumActuatorIdx];
-    ActuatorOutput outputs[NumActuatorIdx];    
 };
 } // namespace AM
 
-#endif //ZPSW3_AM_LEVEL_QUAD_CONTROL_HPP
+#endif // ZPSW3_AM_LEVEL_QUAD_CONTROL_HPP

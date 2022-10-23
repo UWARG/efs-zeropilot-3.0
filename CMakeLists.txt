@@ -5,17 +5,21 @@ set(ELF_NAME ${PROJECT_NAME}.elf)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+
+set(ATTITUDE_MANAGER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager")
+set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
+
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/CtrlAlgo/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Interface/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Drivers/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Device/ST/${FAMILY_NAME}/Include
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Include
+    ${ATTITUDE_MANAGER_DIR}/Inc
+    ${ATTITUDE_MANAGER_DIR}/ControlAlgorithms/Inc
+    ${LAMINAR_OS_DIR}/Interface/Inc
+    ${LAMINAR_OS_DIR}/Drivers/Inc
+    ${LAMINAR_OS_DIR}/Core/Inc
+    ${LAMINAR_OS_DIR}/boardfiles/${FOLDER_NAME}/Inc
+    ${LAMINAR_OS_DIR}/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
+    ${LAMINAR_OS_DIR}/boardfiles/${FOLDER_NAME}/Core/Inc
+    ${LAMINAR_OS_DIR}/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Device/ST/${FAMILY_NAME}/Include
+    ${LAMINAR_OS_DIR}/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Include
 )
 
 # Libraries
@@ -24,9 +28,12 @@ add_subdirectory(LaminarOS)
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})
 
-
-set(ATTITUDE_MANAGER_CXX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Src/*.cpp")
-set(PATH_MANAGER_CXX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/PathManager/Src/*.cpp")
+set(ATTITUDE_MANAGER_CXX_SOURCES
+  ${ATTITUDE_MANAGER_DIR}/Src/AM.cpp
+  ${ATTITUDE_MANAGER_DIR}/Src/PID.cpp
+  ${ATTITUDE_MANAGER_DIR}/ControlAlgorithms/Src/AM_FixedControl.cpp
+  ${ATTITUDE_MANAGER_DIR}/ControlAlgorithms/Src/AM_LevelQuadControl.cpp
+)
 
 file(GLOB_RECURSE CXX_SOURCES ${ATTITUDE_MANAGER_CXX_SOURCES})
 #message("C++ Sources: ${CXX_SOURCES}")
