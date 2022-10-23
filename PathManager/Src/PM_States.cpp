@@ -4,12 +4,28 @@
  * Static Member Variable Declarations
  **********************************************************************************************************************/
 
-Telemetry_PIGO_t CommsWithTelemetry::_incomingData;
-SFOutput_t SensorFusion::_sfOutputData;
-IMU_Data_t SensorFusion::_imudata;
-CoordinatedTurnAttitudeManagerCommands_t coordinateTurnElevation::_rollandrudder;
-AltitudeAirspeedCommands_t coordinateTurnElevation::_pitchandairspeed;
+Telemetry_PIGO_t CommsWithTelemetry::incomingData;
+SFOutput_t SensorFusion::sfOutputData;
+IMU_Data_t SensorFusion::imudata;
 CommandsFromAM CommsWithAttitude::receivedData;
+
+
+// TAKEOFF STAGE VARIABLES 
+LandingTakeoffInput TakeoffStage::input;
+LandingTakeoffOutput TakeoffStage::output;
+WaypointData * TakeoffStage::currentLocation;    
+WaypointData * TakeoffStage::targetWaypoint;
+CommandsForAM_t TakeoffStage::takeoffDataForAM; 
+
+// LANDING STAGE VARIABLES 
+LandingTakeoffInput LandingStage::input;
+LandingTakeoffOutput LandingStage::output;
+WaypointData * LandingStage::currentLocation;
+WaypointData * LandingStage::targetWaypoint;
+CommandsForAM_t LandingStage::landingDataForAM;
+
+
+constexpr int LANDING_TIME_THRESHOLD {5};
 
 
 /***********************************************************************************************************************
@@ -21,6 +37,8 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
     
     // Getting data from AM 
     bool newDataAvailable = GetFromAMToPM(&receivedData);
+    
+  
 
     /*_WaypointManager_Data_Out * waypointOutput {}; 
     
@@ -59,7 +77,7 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
                 break;
             default:
         }
-
+        
     SendFromPMToAM(&toSend); // Sends commands to attitude manager
     
 
@@ -137,40 +155,48 @@ static Telemetry_Waypoint_Data_t createTelemetryWaypoint(long double lon, long d
 }
 
 #endif
-/* TODO: Needs to be reworked  */
 void FlightModeSelector::execute(pathManager* pathMgr){
     if(pathMgr->isError)
     {
         pathMgr->setState(fatalFailureMode::getInstance());
     }
 
-    if(!CommsWithTelemetry::GetTelemetryIncomingData()->takeoffCommand)
-    {
-        pathMgr->flight_stage = LANDING;
-    
-    }
-
-    //when flight time passes threshold -> Landed 
-
+    // May need to go to a preflight stage later
     /*if(CommsWithTelemetry::GetTelemetryIncomingData()->takeoffCommand && SensorFusion::GetSFOutput()->altitude < ON_GROUND_ALT)
     {
         pathMgr->flight_stage = PREFLIGHT;
 
     }*/
 
+    // Prev code had a preflight stage for motor spin up...may be used later. 
     //if (pathMgr->flight_stage == PREFLIGHT && PreflightStage::getPreFlightCompleteStatus){
+
+
+    // Checking if we are going from disarmed to armed to start takeoff stage. 
     if (CommsWithAttitude::GetCommFromAttitude()->armed && pathMgr->flight_stage == DISARMED){
         pathMgr->flight_stage = TAKEOFF; 
 
     }
 
-    // check if altitude target 
-    
-    if(SensorFusion::GetSFOutput()->altitude > SOME_ALT_TARGET  && pathMgr->flight_stage == TAKEOFF)
+    // Check if altitude target has been reached for takeoff to start cruising stage. 
+    if(SensorFusion::GetSFOutput()->altitude > LandingTakeoffManager::getTakeoffAltitudeTarget && pathMgr->flight_stage == TAKEOFF)
     {
         pathMgr->flight_stage = CRUISING;
 
     }
+
+     if(!CommsWithTelemetry::GetTelemetryIncomingData()->takeoffCommand)
+    {
+        pathMgr->flight_stage = LANDING;
+    
+    }
+
+    // Assuming SF can give elapsed time, check if below landing target for a certain amount of time to start landed stage. 
+    if (SensorFusion::GetSFOutput()->altitude < LandingTakeoffManager::getLandingAltitudeTarget && SensorFusion::GetSFOutput()->deltaTime > LANDING_TIME_THRESHOLD){
+        pathMgr->flight_stage = LANDED; 
+    }
+
+    //when flight time passes threshold -> Landed 
  
     switch(pathMgr->flight_stage){
         case LANDING:
@@ -187,7 +213,8 @@ void FlightModeSelector::execute(pathManager* pathMgr){
             pathMgr->setState(TakeoffStage::getInstance());
             break;
         default:
-            pathMgr->setState(cruisingState::getInstance());
+            // Any other stage (Disarmed, Landed) should go back to comms with AM
+            pathMgr->setState(CommsWithAttitude::getInstance()); 
     }
 }
 

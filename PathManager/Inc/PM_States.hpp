@@ -48,7 +48,7 @@ class CommsWithTelemetry : public pathManagerState
         commsWithTelemetry() {CommWithTelemInit();}
         commsWithTelemetry(const commsWithTelemetry& other);
         commsWithTelemetry& operator =(const commsWithTelemetry& other);
-        static Telemetry_PIGO_t _incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
+        static Telemetry_PIGO_t incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
 };
 
 class SensorFusion : public pathManagerState
@@ -58,14 +58,14 @@ class SensorFusion : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-        static SFOutput_t* GetSFOutput(void) { return &_sfOutputData; }
-        static IMU_Data_t* GetIMUData(void) { return &_imudata; }
+        static SFOutput_t* GetSFOutput(void) { return &sfOutputData; }
+        static IMU_Data_t* GetIMUData(void) { return &imudata; }
     private:
         sensorFusion() {}
         sensorFusion(const sensorFusion& other);
         sensorFusion& operator =(const sensorFusion& other);
-        static SFOutput_t _sfOutputData;
-        static IMU_Data_t _imudata;
+        static SFOutput_t sfOutputData;
+        static IMU_Data_t imudata;
         // If additional raw sensor data is needed, add the static struct here and implement
         // it like the IMU_Data_t struct above
 };
@@ -130,8 +130,8 @@ class TakeoffStage : public pathManagerState
         static LandingTakeoffOutput output;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
-        static WaypointManager_Data_In waypointInput;
-        static WaypointManager_Data_Out waypointOutput;
+        //static WaypointManager_Data_In waypointInput;
+        //static WaypointManager_Data_Out waypointOutput;
         static CommandsForAM_t takeoffDataForAM; 
         takeoffStage() {}
         takeoffStage(const takeoffStage& other);
@@ -180,8 +180,8 @@ class LandingStage : public pathManagerState
     private:
         static LandingTakeoffInput input;
         static LandingTakeoffOutput output;
-        static WaypointManager_Data_In waypointInput;
-        static WaypointManager_Data_Out waypointOutput;
+        //static WaypointManager_Data_In waypointInput;
+        //static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         static CommandsForAM_t landingDataForAM;
