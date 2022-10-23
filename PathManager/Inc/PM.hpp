@@ -24,11 +24,9 @@ class pathManager
 
         //used to determine the stage of the landing sequence
         LandingTakeoffManager vtolManager;
-        _FlightStage stage;
-        bool madeLandingPoints;
-        bool madeTakeoffPoints;
+        FlightStage flight_stage;
         bool isError;
-        bool isPackage;
+       
     private:
         pathManagerState* currentState;
         PathMan::_Path_Manager_Cycle_Status status;

@@ -28,12 +28,12 @@ class CommsWithAttitude : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-       // static AttitudeData* GetCommWithAttitudeData(void) { return &_receivedData; }
+        static CommandsFromAM* GetCommFromAttitude(void) { return &receivedData; }
     private:
         commsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
         commsWithAttitude(const commsWithAttitude& other);
         commsWithAttitude& operator =(const commsWithAttitude& other);
-        //static AttitudeData _receivedData;
+        static CommandsFromAM receivedData;
 };
 
 class CommsWithTelemetry : public pathManagerState
@@ -124,6 +124,7 @@ class TakeoffStage : public pathManagerState
         static WaypointStatus waypointStatus;
         static WaypointManager_Data_Out* GetOutputData(void) {return &waypointOutput;}
         static LandingTakeoffOutput* getControlOutput(){return &output;}
+        static CommandsForAM_t* getTakeoffDataForAM() {return &takeoffDataForAM;} 
     private:
         static LandingTakeoffInput input;
         static LandingTakeoffOutput output;
@@ -131,6 +132,7 @@ class TakeoffStage : public pathManagerState
         static WaypointData * targetWaypoint;
         static WaypointManager_Data_In waypointInput;
         static WaypointManager_Data_Out waypointOutput;
+        static CommandsForAM_t takeoffDataForAM; 
         takeoffStage() {}
         takeoffStage(const takeoffStage& other);
         takeoffStage& operator =(const takeoffStage& other);
@@ -171,6 +173,7 @@ class LandingStage : public pathManagerState
         static pathManagerState& getInstance();
         static WaypointManager_Data_Out* GetOutputData(void) {return &waypointOutput;}
         static LandingTakeoffOutput* getControlOutput(){return &output;}
+        static CommandsForAM_t* getLandingDataForAM() {return &landingDataForAM;} 
         static WaypointManager landingPath;
         static WaypointStatus waypointStatus; //used to catch errors
         static LandingPath path; //used to load in path
@@ -181,6 +184,7 @@ class LandingStage : public pathManagerState
         static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
+        static CommandsForAM_t landingDataForAM;
         landingStage() {}
         landingStage(const landingStage& other);
         landingStage& operator =(const landingStage& other);
