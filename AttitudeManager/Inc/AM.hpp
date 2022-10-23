@@ -9,30 +9,39 @@
 #ifndef ZPSW3_AM_HPP
 #define ZPSW3_AM_HPP
 
-#include "LOS_Link.hpp"
-#include "LOS_Actuators.hpp"
-#include "AM_StateManager.hpp"
-
-class AttitudeState;
+// #include "LOS_Actuators.hpp"
+#include "AM_ControlInterface.hpp"
 
 namespace AM {
-    // Gives status of attitude manager so we know when it has completed a cycle (its state is FetchInstructionsMode) or entered failure mode
-    enum _Attitude_Manager_Cycle_Status {COMPLETED_CYCLE = 0, IN_CYCLE, FAILURE_MODE};
-}
+
 
 class AttitudeManager {
 public:
-    AttitudeManager(LOS_Link *link, LOS_Actuators *output);
-    inline AttitudeState* getCurrentState() const {return currentState;}
-    void execute();
-    void setState(AttitudeState& newState);
-    AM::_Attitude_Manager_Cycle_Status getStatus() {return status;}
-    LOS_Link *link;
-    LOS_Actuators *output;
+    template<class ...Controller, class ...Actuator>
+    AttitudeManager(const Controller &...controllers, 
+                    const Actuator &...actuators) :
+        controllers{controllers...},
+        controllersLen(sizeof...(controllers)),
+        actuators{actuators...},
+        actuatorsLen(sizeof...(actuators)),
+        outputsLen(actuatorsLen)
+         {};
+
+    void runControlLoopIteration(AttitudeManagerInput instructions);
 private:
-    AttitudeState* currentState;
-    AM::_Attitude_Manager_Cycle_Status status;
-    AttitudeManager();
+    void setup();
+    static const int controllersLen;
+    const ControlInterface* controllers[];
+
+    static const int actuatorsLen;
+    const ActuatorConfig actuators[];
+
+    // Could be optimized for cases where a single actuator is used for 
+    // multiple control algorithms
+    static const int outputsLen; 
+    // stored as [Controller][Output Channel]
+    
 };
+} // namespace AM
 
 #endif //ZPSW3_AM_HPP

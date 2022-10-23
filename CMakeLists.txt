@@ -6,6 +6,8 @@ set(ELF_NAME ${PROJECT_NAME}.elf)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/CtrlAlgo/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Interface/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Drivers/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/Core/Inc
@@ -22,7 +24,14 @@ add_subdirectory(LaminarOS)
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})
 
-add_executable(${ELF_NAME} main.c ${STARTUP_ASM_FILE})
+
+set(ATTITUDE_MANAGER_CXX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Src/*.cpp")
+set(PATH_MANAGER_CXX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/PathManager/Src/*.cpp")
+
+file(GLOB_RECURSE CXX_SOURCES ${ATTITUDE_MANAGER_CXX_SOURCES})
+#message("C++ Sources: ${CXX_SOURCES}")
+
+add_executable(${ELF_NAME} main.cpp ${CXX_SOURCES} ${STARTUP_ASM_FILE})
 
 target_link_libraries(${ELF_NAME} LaminarOS)
 

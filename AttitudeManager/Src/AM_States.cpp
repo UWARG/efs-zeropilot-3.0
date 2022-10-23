@@ -1,159 +1,159 @@
-/*
- * AM_States.cpp
- *
- * Attitude Manager State-Machine classes
- *
- * Created on: Oct 12, 2022
- * Author(s): Anthony (anni) Luo; Dhruv Upadhyay
- */
+// /*
+//  * AM_States.cpp
+//  *
+//  * Attitude Manager State-Machine classes
+//  *
+//  * Created on: Oct 12, 2022
+//  * Author(s): Anthony (anni) Luo; Dhruv Upadhyay
+//  */
 
 
-#include "../Inc/AM_States.hpp"
-#include "LOS_Link.hpp"
-#include "LOS_Actuators.hpp"
+// #include "../Inc/AM_States.hpp"
+// #include "LOS_Link.hpp"
+// #include "LOS_Actuators.hpp"
 
-/********************
- * DisArm Mode
- ********************/
-void DisarmMode::execute(AttitudeManager *att_man) {
-    // set all pwm to 0
-    const uint8_t TIMEOUT_THRESHOLD = 2; //Max cycles without data until connection is considered broken
+// /********************
+//  * DisArm Mode
+//  ********************/
+// void DisarmMode::execute(AttitudeManager *att_man) {
+//     // set all pwm to 0
+//     const uint8_t TIMEOUT_THRESHOLD = 2; //Max cycles without data until connection is considered broken
 
-    //Get Arm Disarm instruction
-    if (ReceiveArmDisarmInstruction(attitudeMgr)) {
-        armDisarmTimeoutCount = 0;
-    } else {
-        if (armDisarmTimeoutCount < TIMEOUT_THRESHOLD)
-            armDisarmTimeoutCount++;
-    }
-
-
-    /*
-        3 possibilities:
-             1. Go into FatalFailureMode bec of timeout
-             2. Go into fetchInstructionsMode bec "Arm" instruction was sent
-             3. Do nothing, stay in the disarm state
-    */
-    if (armDisarmTimeoutCount > TIMEOUT_THRESHOLD && CommsFailed()) {
-        //Abort due to timeout failures
-        attitudeMgr->setState(FatalFailureMode::getInstance());
-        return;
-    } else if (isArmed()) {
-        attitudeMgr->setState(fetchInstructionsMode::getInstance());
-    } else {
-        //Do nothing, stay in this state
-        //attitudeMgr->setState(DisarmMode::getInstance());
-    }
-}
-
-AttitudeState& DisarmMode::getInstance() {
-    static DisarmMode singleton;
-    return singleton;
-}
-
-bool DisarmMode::receiveArmDisarmInstruction(AttitudeManager* att_man) {
-    // if am dc; return false
-    // if connected, return arm channel value
-}
-
-bool DisarmMode::isArmed() {
-    // check arm channel value > min arm value
-
-}
+//     //Get Arm Disarm instruction
+//     if (ReceiveArmDisarmInstruction(attitudeMgr)) {
+//         armDisarmTimeoutCount = 0;
+//     } else {
+//         if (armDisarmTimeoutCount < TIMEOUT_THRESHOLD)
+//             armDisarmTimeoutCount++;
+//     }
 
 
-/********************
- * FetchInstructions Mode
- ********************/
-void FetchInstructionsMode::execute(AttitudeManager *att_man) {
-    const uint8_t TIMEOUT_THRESH = 2;
+//     /*
+//         3 possibilities:
+//              1. Go into FatalFailureMode bec of timeout
+//              2. Go into fetchInstructionsMode bec "Arm" instruction was sent
+//              3. Do nothing, stay in the disarm state
+//     */
+//     if (armDisarmTimeoutCount > TIMEOUT_THRESHOLD && CommsFailed()) {
+//         //Abort due to timeout failures
+//         attitudeMgr->setState(FatalFailureMode::getInstance());
+//         return;
+//     } else if (isArmed()) {
+//         attitudeMgr->setState(fetchInstructionsMode::getInstance());
+//     } else {
+//         //Do nothing, stay in this state
+//         //attitudeMgr->setState(DisarmMode::getInstance());
+//     }
+// }
 
-    FetchInstructionsMode::m_flight_mode = fm_stabilize;
-    if (receiveTeleopInstructions(att_man)) {
-        m_teleop_timeout_count = 0;
-    } else {
-        if (m_teleop_timeout_count < TIMEOUT_THRESH) {
-            m_teleop_timeout_count++;
-        }
-    }
+// AttitudeState& DisarmMode::getInstance() {
+//     static DisarmMode singleton;
+//     return singleton;
+// }
 
-    // TODO: add section to move to disarmed state
+// bool DisarmMode::receiveArmDisarmInstruction(AttitudeManager* att_man) {
+//     // if am dc; return false
+//     // if connected, return arm channel value
+// }
 
-    if (m_teleop_timeout_count < TIMEOUT_THRESH) {
-        // TODO: add comms failed cehck
-        FetchInstructionsMode::m_flight_mode = fm_stabilize;
-    } else {
-        att_man->setState(FatalFailureMode::getInstance());
-    }
+// bool DisarmMode::isArmed() {
+//     // check arm channel value > min arm value
 
-    /* at this point, we can run our actual instructions processing */
-    // TODO: get position data
-    // TODO: move flight mode as needed
-}
+// }
 
-AttitudeState &FetchInstructionsMode::getInstance() {
-    static FetchInstructionsMode singleton;
-    return singleton;
-}
 
-bool FetchInstructionsMode::receiveTeleopInstructions(AttitudeManager *att_man) {
-    bool is_dc{true};
-    if (is_dc) {
-        return false;
-    }
+// /********************
+//  * FetchInstructions Mode
+//  ********************/
+// void FetchInstructionsMode::execute(AttitudeManager *att_man) {
+//     const uint8_t TIMEOUT_THRESH = 2;
 
-    // !TODO: get information from the link
-    // (and somehow process it)
-}
+//     FetchInstructionsMode::m_flight_mode = fm_stabilize;
+//     if (receiveTeleopInstructions(att_man)) {
+//         m_teleop_timeout_count = 0;
+//     } else {
+//         if (m_teleop_timeout_count < TIMEOUT_THRESH) {
+//             m_teleop_timeout_count++;
+//         }
+//     }
 
-bool FetchInstructionsMode::isArmed() {
-    bool retval = false;
-    if (m_teleop_instructions.is_armed >= MIN_ARM_VALUE) {
-        retval = true;
-    }
-    return retval;
-}
+//     // TODO: add section to move to disarmed state
 
-/********************
- * ControlLoop Mode
- ********************/
+//     if (m_teleop_timeout_count < TIMEOUT_THRESH) {
+//         // TODO: add comms failed cehck
+//         FetchInstructionsMode::m_flight_mode = fm_stabilize;
+//     } else {
+//         att_man->setState(FatalFailureMode::getInstance());
+//     }
 
-void ControlLoopMode::execute(AttitudeManager *att_man) {
-    Controls_Output_t *ctrl_out = nullptr;
-    Teleop_Instructions_t *m_teleop_instructions = FetchInstructionsMode::getTeleopInstructions();
-    if (FetchInstructionsMode::getFlightMode() == fm_autonomous) {
-        // run certain modes
-    } else if (FetchInstructionsMode::getFlightMode() == fm_gps) {
+//     /* at this point, we can run our actual instructions processing */
+//     // TODO: get position data
+//     // TODO: move flight mode as needed
+// }
 
-    } else if (FetchInstructionsMode::getFlightMode() == fm_stabilize) {
+// AttitudeState &FetchInstructionsMode::getInstance() {
+//     static FetchInstructionsMode singleton;
+//     return singleton;
+// }
 
-    } else if (FetchInstructionsMode::getFlightMode() == fm_limp) {
-        // limp mode
-    } else {
-        // fatal failure mode
-    }
-}
+// bool FetchInstructionsMode::receiveTeleopInstructions(AttitudeManager *att_man) {
+//     bool is_dc{true};
+//     if (is_dc) {
+//         return false;
+//     }
 
-/********************
- * OutputMixing Mode
- ********************/
+//     // !TODO: get information from the link
+//     // (and somehow process it)
+// }
 
-void OutputMixingMode::execute(AttitudeManager *att_man) {
-    Controls_Output_t *ctrl_out = ControlLoopMode::getControlsOutput();
+// bool FetchInstructionsMode::isArmed() {
+//     bool retval = false;
+//     if (m_teleop_instructions.is_armed >= MIN_ARM_VALUE) {
+//         retval = true;
+//     }
+//     return retval;
+// }
 
-    // match types?
-    att_man->output->set(ctrl_out);
-}
+// /********************
+//  * ControlLoop Mode
+//  ********************/
 
-/********************
- * FatalFailure Mode
- ********************/
+// void ControlLoopMode::execute(AttitudeManager *att_man) {
+//     Controls_Output_t *ctrl_out = nullptr;
+//     Teleop_Instructions_t *m_teleop_instructions = FetchInstructionsMode::getTeleopInstructions();
+//     if (FetchInstructionsMode::getFlightMode() == fm_autonomous) {
+//         // run certain modes
+//     } else if (FetchInstructionsMode::getFlightMode() == fm_gps) {
 
-void FatalFailureMode::execute(AttitudeManager *att_man) {
-    att_man->setState(FatalFailureMode::getInstance());
-}
+//     } else if (FetchInstructionsMode::getFlightMode() == fm_stabilize) {
 
-AttitudeState &FatalFailureMode::getInstance() {
-    static FatalFailureMode singleton;
-    return singleton;
-}
+//     } else if (FetchInstructionsMode::getFlightMode() == fm_limp) {
+//         // limp mode
+//     } else {
+//         // fatal failure mode
+//     }
+// }
+
+// /********************
+//  * OutputMixing Mode
+//  ********************/
+
+// void OutputMixingMode::execute(AttitudeManager *att_man) {
+//     Controls_Output_t *ctrl_out = ControlLoopMode::getControlsOutput();
+
+//     // match types?
+//     att_man->output->set(ctrl_out);
+// }
+
+// /********************
+//  * FatalFailure Mode
+//  ********************/
+
+// void FatalFailureMode::execute(AttitudeManager *att_man) {
+//     att_man->setState(FatalFailureMode::getInstance());
+// }
+
+// AttitudeState &FatalFailureMode::getInstance() {
+//     static FatalFailureMode singleton;
+//     return singleton;
+// }
