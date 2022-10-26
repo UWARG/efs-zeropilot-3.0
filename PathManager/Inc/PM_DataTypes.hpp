@@ -56,12 +56,6 @@ struct WaypointData {
     double velocity_target; 
 };
 
-struct LandingTakeoffInput //this structure is used to hold the telemetry and sensorfusion outputs, which are needed for landing and takeoff inputs
-{
-    Telemetry_PIGO_t * telemetryData;
-    SFOutput_t * sensorOutput;
-};
-
 struct LandingTakeoffOutput //this structure is used to hold the outputs of each landing state
 {
     double desiredHeading; //desired heading is used when useHeading is true
