@@ -10,6 +10,11 @@ double LandingTakeoffManager::getTakeoffAltitudeTarget(double currentAltitude)
         groundHeight = currentAltitude;
     }
 
+    //Calculate the takeoff range constant if just entering takeoff state.
+    if (takeoffRangeConstant == 0) {
+        takeoffRangeConstant = getRangeConstant(groundHeight + 2);
+    }
+
     // Return the takeoff altitude target for use when determining when to exit Takeoff
     return groundHeight + TAKEOFF_TARGET;
 }
@@ -18,12 +23,11 @@ double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
 {
     //Calculate the landing range constant if just entering landing state.
     if (landingRangeConstant == 0) {
-        landingRangeConstant = getLandingRange(currentAltitude);
+        landingRangeConstant = getRangeConstant(groundHeight + (currentAltitude - groundHeight) / 2);
     }
     // Return ground height for use to determine when to transition out of Landing
     return groundHeight;
 }
-
 
 static CommandsForAM_t LandingTakeoffManager::createTakeoffWaypoint(const SFOutput_t & input)
 {
@@ -37,8 +41,7 @@ static CommandsForAM_t LandingTakeoffManager::createTakeoffWaypoint(const SFOutp
     double currentAltitude = input.altitude;
 
     desiredWaypoint.velocity = getSpeedTarget(currentAltitude);
-    desiredWaypoint.heading_magnitude = currentAltitude + desiredWaypoint.velocity * (1.0 / CONTROLLER_FREQ);
-    // TODO Find Controller Freq definition/location
+    desiredWaypoint.heading_magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
 }
@@ -55,20 +58,20 @@ static CommandsForAM_t LandingTakeoffManager::createLandingWaypoint(const SFOutp
     double currentAltitude = input.altitude;
 
     desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude);
-    desiredWaypoint.heading_magnitude = currentAltitude - desiredWaypoint.velocity * (1.0 / CONTROLLER_FREQ);
+    desiredWaypoint.heading_magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
 }
 
-double LandingTakeoffManager::getSpeedTarget(double currentAltitude)
+double LandingTakeoffManager::getSpeedTarget(double currentAltitude, double rangeConstant)
 {
     double speedTarget;
-    speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / RANGE_CONSTANT))
+    speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / rangeConstant))
     return speedTarget;
 }
 
-double LandingTakeoffManager::getLandingRange(double currentAltitude)
+double LandingTakeoffManager::getRangeConstant(double midpointAltitude)
 {
-    double pathMidpoint = (currentAltitude - groundHeight) / 2;
-    return sqrt((pathMidpoint ^ 2) / (-2 * (log(LANDING_SPEED / MAX_SPEED))));
+    return sqrt((midpointAltitude ^ 2) / (-2 * (log(LANDING_SPEED / MAX_SPEED))));
+    // Note log here is log base e (ln)
 }
