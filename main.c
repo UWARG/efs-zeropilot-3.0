@@ -3,15 +3,10 @@
 int main()
 {
 
-    //MUST INITIALIZE SYSTEM AND HAL
+    losInit();
 
-    while(1)
-    {
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-        HAL_Delay(1000);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
-        HAL_Delay(1000);
-    }
+    //should not get here bec losInit() starts the scheduler
+    while(1){}
 
     return 0;
 }
