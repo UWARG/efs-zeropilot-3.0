@@ -6,9 +6,17 @@ set(ELF_NAME ${PROJECT_NAME}.elf)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(
+    ## ZP Software Includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
+
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core/Inc
+
+    ## LOS Driver Includes ##
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Common/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
+
+    ## LOS Boardfiles ##
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core/Inc
