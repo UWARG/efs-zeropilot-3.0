@@ -48,15 +48,17 @@ void LevelQuadControl::runControlsAlgo(const AttitudeManagerInput &instructions,
     float altitude =
         pid_yaw.execute(targetAltitude, currentAttitude.rateOfClimb);
 
-    // mix the PID's.
-    float frontRightOutput =
-        mixPIDs(configs[FrontRight].stateMix, roll, pitch, yaw, altitude);
-    float frontLeftOutput =
-        mixPIDs(configs[FrontLeft].stateMix, roll, pitch, yaw, altitude);
-    float backLeftOutput =
-        mixPIDs(configs[BackLeft].stateMix, roll, pitch, yaw, altitude);
-    float backRightOutput =
-        mixPIDs(configs[BackRight].stateMix, roll, pitch, yaw, altitude);
+//    // mix the PID's.
+//    float frontRightOutput =
+//        mixPIDs(configs[FrontRight].stateMix, roll, pitch, yaw, altitude);
+//    float frontLeftOutput =
+//        mixPIDs(configs[FrontLeft].stateMix, roll, pitch, yaw, altitude);
+//    float backLeftOutput =
+//        mixPIDs(configs[BackLeft].stateMix, roll, pitch, yaw, altitude);
+//    float backRightOutput =
+//        mixPIDs(configs[BackRight].stateMix, roll, pitch, yaw, altitude);
+
+    float frontRightOutput, frontLeftOutput, backLeftOutput, backRightOutput;
 
     // return output
     assert(configs[FrontRight].channel < outputsLength);

@@ -16,21 +16,21 @@ namespace AM {
 
 class AttitudeManager {
   public:
-    AttitudeManager(const ControlInterface *controllers[],
-                    uint8_t numControllers, const uint8_t actuatorChannelMap[],
-                    uint8_t numActuatorChannels)
-        : numControllers(numControllers),
-          numActuatorChannels(numActuatorChannels), controllers(controllers),
-          actuatorChannelMap(actuatorChannelMap){};
+    AttitudeManager(const ControlInterface *controller_interfaces[],
+                    uint8_t num_atti_controllers, const uint8_t actuator_channel_map[],
+                    uint8_t num_actuator_channels)
+        : num_controllers(num_controllers),
+          num_actuator_channels(num_actuator_channels), controller_interfaces(controller_interfaces),
+          actuator_channel_map(actuator_channel_map){};
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 
   private:
-    const int numControllers = 0;
-    const int numActuatorChannels = 0;
+    const int num_controllers = 0;
+    const int num_actuator_channels = 0;
 
-    const ControlInterface **controllers;
-    const uint8_t *actuatorChannelMap;
+    const ControlInterface **controller_interfaces;
+    const uint8_t *actuator_channel_map;
 };
 } // namespace AM
 

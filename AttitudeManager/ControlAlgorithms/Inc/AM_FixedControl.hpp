@@ -23,7 +23,7 @@ class FixedControl : public ControlInterface {
                                                     elevator} {};
 
     void runControlsAlgo(const AttitudeManagerInput &instructions,
-                         float outputs[], uint8_t outputsLength) const;
+                         float outputs[], uint8_t outputs_length) const;
 
     enum ActuatorIdx {
         Engine = 0,

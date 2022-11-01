@@ -15,7 +15,7 @@ namespace AM {
 
 class ControlInterface {
   public:
-    ControlInterface(uint8_t numActuators) : numActuators(numActuators){};
+    ControlInterface(uint8_t num_actuators) : num_actuators(num_actuators){};
 
     /// @brief Run the controls algorithm for the given flight model.
     ///
@@ -24,14 +24,14 @@ class ControlInterface {
     /// @param outputs
     ///   An array of actuator percentage throttles that the flight model
     ///   believes should be used before mixing to meet the instructions
-    /// @param outputsLength
+    /// @param outputs_length
     ///   The length of the outputs array. This should be equivilent to the
     ///   number of actuator channels
     virtual void runControlsAlgo(const AttitudeManagerInput &instructions,
                                  float outputs[],
-                                 uint8_t outputsLength) const = 0;
+                                 uint8_t output_length) const = 0;
 
-    const uint8_t numActuators; //< Number of actuators for given flight model
+    const uint8_t num_actuators; //< Number of actuators for given flight model
 
   private:
     ControlInterface();

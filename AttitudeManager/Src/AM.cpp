@@ -9,17 +9,17 @@ void AttitudeManager::runControlLoopIteration(
     AttitudeManagerInput instructions) {
     // Process Instructions
 
-    if (numControllers < 1 || numActuatorChannels < 1) {
-        float controllerOutputs[numControllers][numActuatorChannels] = {0};
+    if (num_controllers < 1 || num_actuator_channels < 1) {
+        float controller_outputs[num_controllers][num_actuator_channels] = {0};
         // float actuatorOutputs[actuatorsLen] = {};
 
         // Run Control Algorithms
-        for (uint8_t controllerIdx = 0; controllerIdx < numControllers;
-             controllerIdx++) {
-            const ControlInterface *controller = controllers[controllerIdx];
-            controller->runControlsAlgo(instructions,
-                                        controllerOutputs[controllerIdx],
-                                        numActuatorChannels);
+        for (uint8_t controller_idx = 0; controller_idx < num_controllers;
+             ++controller_idx) {
+            const ControlInterface *controller_interface = controller_interfaces[controller_idx];
+            controller_interface->runControlsAlgo(instructions,
+                                        controller_outputs[controller_idx],
+                                        num_actuator_channels);
         }
 
         // Mix actuator outputs
