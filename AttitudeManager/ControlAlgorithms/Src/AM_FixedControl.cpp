@@ -4,10 +4,10 @@
  // #include math_constants if we plan to go this route
 constexpr double ZP_PI = 3.14159265358979311599796346854; // more precise pi value
 
-void DEG_TO_RAD(float angleInDegrees); 
+static float DEG_TO_RAD(float angleInDegrees); 
 
-void DEG_TO_RAD(float angleInDegrees) {
-    ((angleInDegrees) * ZP_PI / 180.0);
+static float DEG_TO_RAD(float angleInDegrees) {
+    return ((angleInDegrees) * ZP_PI / 180.0);
 }
 
 namespace AM {
@@ -29,10 +29,10 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
    //                                         cluttering in files)
    // SFOutput_t currentAttitude; // TODO: This needs to be retrieved from LOS
     
-    // Compute the difference between our current and desired heading 
-       
+    // Compute desired (target) values
+
     float desiredHeading = currentAttitude.heading - instructions.heading;
-    float desiredPitch = instructions.z_dir;
+    float desiredPitch = instructions.z_dir; // define maxPitchAngle ? prevent straight ascension ?
     float desiredAltitude = instructions.x_dir * maxPitchAngle;
     float desiredBank = instructions.y_dir * maxBankAngle;
      
@@ -53,15 +53,50 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
                             pitch_i_windup, -maxPitchAngle, maxPitchAngle};
 
     // do something
-    float bankAngle = pid_bank.execute
+    float bank = pid_bank.execute(desiredBank, currentAttitude.roll, currentAttitude.rollRate);
 
+    float pitch = pid_pitch.execute(desiredPitch, currentAttitude.pitch, currentAttitude.pitchRate);
 
-    float desiredRoll =
+    float rudder = rudderPercent(bank);
+    
+    rudder = pid_rudder.execute(0.0f, desiredHeading);
+    
+    float desiredRoll = DEG_TO_RAD(bank);
+
+    // mix the PID's ?
+
+    // what should our actuator outputs be ?
+    
+    float engineOutput, leftAileronOutput, rightAileronOutput, rudder, elevator;
+
     // return output
+    assert(configs[Engine].channel < outputsLength); // I assume engine is airspeed ?
+    outputs[configs[Engine].channel] = engineOutput;
+
+    assert(configs[LeftAileron].channel < outputsLength); 
+    outputs[configs[LeftAileron].channel] = leftAileronOutput;
+        
+    assert(configs[RightAileron].channel < outputsLength);
+    outputs[configs[RightAileron].channel] = rightAileronOutput;
+        
+    assert(configs[Rudder].channel < outputsLength);
+    outputs[configs[Rudder].channel] = rudder;
+        
+    assert(configs[Elevator].channel < outputsLength);
+    outputs[configs[Elevator].channel] = elevator;
+
+    // ActuatorOutput actuator;
+    // assert(actuator.channel < outputsLength);
+    // outputs[actuator.channel] = actuator.percent;
 }
 
-static float rudderPercent(float bankAngle) {
-    return((rudder_scaling_factor*bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
+float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
+                  float altitude) {
+
+}
+
+float FixedControl::rudderPercent(float bankAngle) {
+    return((rudder_scaling_factor * bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
 }
 
 } // namespace AM

@@ -30,6 +30,11 @@ class FixedControl : public ControlInterface {
     void rudderPercent(float bankAngle);
     static float rudderPercent(float bankAngle);
 
+    void runControlsAlgo(const AttitudeManagerInput &instructions,
+                         float outputs[], uint8_t outputs_length) const;
+    float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
+                  float altitude);
+    float rudderPercent(const float bankAngle);
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -63,7 +68,7 @@ class FixedControl : public ControlInterface {
     static constexpr float pitch_kd = 0.0;
     static constexpr float pitch_i_windup = 0.0;
 
-    static constexpr float rudder_scaling_factor = 0.5f; // should be experimentally determined
+    static constexpr float rudder_scaling_factor = 0.5; // should be experimentally determined
 };
 }  // namespace AM
 
