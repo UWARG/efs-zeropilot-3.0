@@ -27,6 +27,8 @@ class FixedControl : public ControlInterface {
     void updatePid() override { return; }
 
    private:
+    void rudderPercent(float bankAngle);
+
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -37,6 +39,30 @@ class FixedControl : public ControlInterface {
     };
 
     const ActuatorConfig configs[NumActuatorIdx];
+    
+    // confirm values before flight ??
+    
+    static constexpr float maxBankAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more information.
+    static constexpr float maxPitchAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more infomration.
+
+    static constexpr int max_i_windup = 1;
+
+    static constexpr float bank_kp = 4.2;           
+    static constexpr float bank_ki = 0.0;          
+    static constexpr float bank_kd = 0.0;   
+    static constexpr float bank_i_windup = 0.0; 
+
+    static constexpr float rudder_kp = 0.2;          
+    static constexpr float rudder_ki = 0.2;         
+    static constexpr float rudder_kd = 7;  
+    static constexpr float rudder_i_windup = 0.0;       
+
+    static constexpr float pitch_kp = 1.0;            
+    static constexpr float pitch_ki = 0.0;            
+    static constexpr float pitch_kd = 0.0;
+    static constexpr float pitch_i_windup = 0.0;
+
+    static constexpr float rudder_scaling_factor = 0.5f; // should be experimentally determined
 };
 }  // namespace AM
 
