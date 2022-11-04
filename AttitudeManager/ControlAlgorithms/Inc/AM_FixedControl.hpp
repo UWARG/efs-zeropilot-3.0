@@ -28,6 +28,7 @@ class FixedControl : public ControlInterface {
 
    private:
     void rudderPercent(float bankAngle);
+    static float rudderPercent(float bankAngle);
 
     enum ActuatorIdx {
         Engine = 0,

@@ -1,8 +1,9 @@
 #include "AM_FixedControl.hpp"
 #include "PID.hpp"
 
-
+ // #include math_constants if we plan to go this route
 constexpr double ZP_PI = 3.14159265358979311599796346854; // more precise pi value
+
 void DEG_TO_RAD(float angleInDegrees); 
 
 void DEG_TO_RAD(float angleInDegrees) {
@@ -29,14 +30,17 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
    // SFOutput_t currentAttitude; // TODO: This needs to be retrieved from LOS
     
     // Compute the difference between our current and desired heading 
+       
     float desiredHeading = currentAttitude.heading - instructions.heading;
     float desiredPitch = instructions.z_dir;
-
+    float desiredAltitude = instructions.x_dir * maxPitchAngle;
+    float desiredBank = instructions.y_dir * maxBankAngle;
+     
     // Adjust heading difference for the PID
-    if (error <= (-180)) {
-        error += 180;
-    } else if (error > 180){
-        error -=360;
+    if (desiredHeading <= (-180)) {
+        desiredHeading += 180;
+    } else if (desiredHeading > 180){
+        desiredHeading -=360;
     }
    
 
@@ -50,10 +54,13 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
 
     // do something
     float bankAngle = pid_bank.execute
+
+
+    float desiredRoll =
     // return output
 }
 
-void rudderPercent(float bankAngle) {
+static float rudderPercent(float bankAngle) {
     return((rudder_scaling_factor*bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
 }
 
