@@ -33,7 +33,7 @@ class FixedControl : public ControlInterface {
     void runControlsAlgo(const AttitudeManagerInput &instructions,
                          float outputs[], uint8_t outputs_length) const;
 
-    void rudderPercent(float bankAngle);
+    static float rudderPercent(float bankAngle);
 
     enum ActuatorIdx {
         Engine = 0,
