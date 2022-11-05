@@ -89,15 +89,16 @@ struct WaypointManager_Data_Out{
 
 //Commands for path manager to send to attitude manager.
 typedef struct CommandsForAM_t{
-  WaypointType waypoint_type; 
-
-  // heading unit vector and magnitude
-  float heading_dist_x; 
-  float heading_dist_y; 
-  float heading_dist_z; 
-  float heading_magnitude; // Magnitude distance to waypoint target
-  double speed; // Target velocity of drone approaching target
-} CommandsForAM;
+2  WaypointType waypoint_type;  // not necessary
+3
+4  // heading unit vector and magnitude
+5  float dist_x; 
+6  float dist_y; 
+7  float dist_z; 
+8  float magnitude; // Magnitude distance to waypoint target
+9  float heading; // heading at target waypoint
+10  double speed_target; // Target velocity of drone approaching target
+11} CommandsForAM;
 
 
 // AM will tell us when drone is armed and ready to fly, then we will progress to Takeoff
@@ -105,15 +106,22 @@ typedef struct CommandsFromAM{
     bool armed;  
 } CommandsFromAM;
 
-struct GpsCoordinates{
-    double longitude; 
-    double lattiude; 
+
+// Data given from CV/TM to PM 
+struct TelemWaypointData {    
+  double longitude;  //    
+  double lattiude;   
+  uint8_t waypoint_id; 
 };
 
-struct TelemWaypointData {
-    struct gpsCoordinatesFIJO gps_coords;
-    int waypoint_id; 
-};
+typedef struct CommandsFromTM{
+    bool start_landing;
+    uint8_t num_waypoints; // number of waypoints in the list 
+    TelemWaypointData waypoints[num_waypoints]; 
+} CommandsFromTM;
+
+
+
 
 /* Not needed right now 
 //Data for path manager to send to telemetry.
@@ -167,6 +175,22 @@ struct Telemetry_PIGO_t {
     float gimbalYaw;
 
 };
+
+
+/* DATA FROM SF */
+typedef struct {
+    float roll, pitch, yaw; //rad
+    float rollRate, pitchRate, yawRate; //rad/s
+    float airspeed; //m/s
+    float altitude; //m
+    float rateOfClimb; //m/s
+    long double latitude; //Decimal degrees
+    float latitudeSpeed; //m/s
+    long double longitude; //Decimal degrees
+    float longitudeSpeed; //m/s
+    double track; // degrees
+    double heading; //degrees
+} SFOutput_t;
 
 #endif
 
