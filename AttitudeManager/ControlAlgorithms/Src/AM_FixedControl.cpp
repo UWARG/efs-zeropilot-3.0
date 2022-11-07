@@ -55,18 +55,17 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
    //                                         cluttering in files)
    // SFOutput_t currentAttitude; // TODO: This needs to be retrieved from LOS
     
-    // Compute desired (target) values
-
-    float desiredHeading = currentAttitude.heading - instructions.heading;
-    float desiredPitch = instructions.z_dir; // define maxPitchAngle ? prevent straight ascension ?
-    float desiredAltitude = instructions.x_dir * maxPitchAngle;
-    float desiredBank = instructions.y_dir * maxBankAngle;
+    // Compute target (target) values
+    float targetHeading = currentAttitude.heading - instructions.heading;
+    float targetAltitude = instructions.z_dir; 
+    float targetPitch = instructions.x_dir * maxPitchAngle;
+    float targetBank = instructions.y_dir * maxBankAngle;
      
     // Adjust heading difference for the PID
-    if (desiredHeading <= (-180)) {
-        desiredHeading += 180;
-    } else if (desiredHeading > 180){
-        desiredHeading -=360;
+    if (targetHeading <= (-180)) {
+        targetHeading += 180;
+    } else if (targetHeading > 180){
+        targetHeading -=360;
     }
    
 
@@ -77,20 +76,33 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
                              rudder_i_windup, -100,      100};
     PIDController pid_pitch{pitch_kp,       pitch_ki,       pitch_kd, 
                             pitch_i_windup, -maxPitchAngle, maxPitchAngle};
+    PIDController pid_airspeed{airspeed_kp,       airspeed_ki,  airspeed_kd, 
+                               airspeed_i_windup, airspeed_min, airspeed_max};                        
 
     // do something
-    float bank = pid_bank.execute(desiredBank, currentAttitude.roll, currentAttitude.rollRate);
+    float bank = pid_bank.execute(targetBank, currentAttitude.roll, currentAttitude.rollRate);
 
-    float pitch = pid_pitch.execute(desiredPitch, currentAttitude.pitch, currentAttitude.pitchRate);
+    float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch, currentAttitude.pitchRate);
 
     float rudder = rudderPercent(bank);
     
-    rudder = pid_rudder.execute(0.0f, desiredHeading);
+    rudder = pid_rudder.execute(0.0f, targetHeading);
+
+    float airspeed = pid_airspeed.execute(targetAltitude, currentAttitude.altitude);
     
-    float desiredRoll = DEG_TO_RAD(bank);
+    float targetRoll = DEG_TO_RAD(bank);
 
     // mix the PID's ?
-
+    float engineOutput = 
+        mixPIDs(configs[Engine].stateMix, bank, pitch, rudder, altitude);
+    float engineOutput = 
+        mixPIDs(configs[LeftAileron].stateMix, bank, pitch, rudder, altitude);
+    float engineOutput = 
+        mixPIDs(configs[RightAileron].stateMix, bank, pitch, rudder, altitude);
+    float engineOutput = 
+        mixPIDs(configs[Rudder].stateMix, bank, pitch, rudder, altitude);
+    float engineOutput = 
+        mixPIDs(configs[Elevator].stateMix, bank, pitch, rudder, altitude);
     // what should our actuator outputs be ?
     
     float engineOutput, leftAileronOutput, rightAileronOutput, rudder, elevator;
@@ -129,7 +141,7 @@ float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
 
 }
 
-float FixedControl::rudderPercent(float bankAngle) {
+float FixedControl::rudderPercent(float bankAngle) const {
     return((rudder_scaling_factor * bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
 }
 

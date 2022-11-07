@@ -33,8 +33,8 @@ class FixedControl : public ControlInterface {
     void runControlsAlgo(const AttitudeManagerInput &instructions,
                          float outputs[], uint8_t outputs_length) const;
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
-                  float altitude);
-    float rudderPercent(const float bankAngle);
+                  float altitude) const;
+    float rudderPercent(float bankAngle) const;
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -46,8 +46,8 @@ class FixedControl : public ControlInterface {
 
     const ActuatorConfig configs[NumActuatorIdx];
     
-    // confirm values before flight ??
-    
+    // confirm values before flight ?
+    // this entire secion feels bloated. Improvements ?
     static constexpr float maxBankAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more information.
     static constexpr float maxPitchAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more infomration.
 
@@ -68,7 +68,14 @@ class FixedControl : public ControlInterface {
     static constexpr float pitch_kd = 0.0;
     static constexpr float pitch_i_windup = 0.0;
 
-    static constexpr float rudder_scaling_factor = 0.5; // should be experimentally determined
+    static constexpr float airspeed_kp = 80.0;
+    static constexpr float airspeed_ki = 0.0;
+    static constexpr float airspeed_kd = 0.0;
+    static constexpr float airspeed_i_windup = 0.0;
+    static constexpr float airspeed_min = 0.0;
+    static constexpr float airspeed_max = 100;
+
+    static constexpr float rudder_scaling_factor = 0.5; // "should be experimentally determined"
 };
 }  // namespace AM
 
