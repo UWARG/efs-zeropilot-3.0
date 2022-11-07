@@ -89,8 +89,6 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
         mixPIDs(configs[Rudder].stateMix, roll, pitch, rudderSet, airspeed);
     float elevator = 
         mixPIDs(configs[Elevator].stateMix, roll, pitch, rudderSet, airspeed);
-    
-    float engineOutput, leftAileronOutput, rightAileronOutput, rudder, elevator;
 
     // Verify values
     assert(configs[Engine].channel < outputsLength); // Question: Engine controlled as some percentage? Indicative of airspeed?
