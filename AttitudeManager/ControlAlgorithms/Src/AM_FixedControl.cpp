@@ -107,7 +107,7 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
     outputs[configs[Elevator].channel] = elevator;
 
 }
-
+// Modify for fixed wing?
 float FixedControl::mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
                   float altitude) const {
     return constrain<float>(actuator.pitch * pitch + actuator.roll * roll +
