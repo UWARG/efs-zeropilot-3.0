@@ -28,14 +28,20 @@ class SystemManager {
 public:
     SystemManager();
     void execute();
+    void setState(SystemState& newState);
 private:
     SystemState* currentState;
     SM::_System_Manager_Cycle_Status status;
     SystemManager();
 
-    // TODO Bulk message from telemeetry stored here
+    // TODO PM, AM, TM instances here
 
-    // TODO Responses from PM/AM stored here to be merged and sent to Telemetry
+    // TODO LOS actuator instance here
+
+    // TODO Bulk message from telemetry stored here
+
+    // TODO Responses from SF/AM stored here to be merged and sent to Telemetry
+
     inputs_to_AM_t* AM_Waypoints;
 };
 

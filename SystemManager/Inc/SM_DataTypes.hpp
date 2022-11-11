@@ -11,6 +11,12 @@
 #define ZPSW3_SM_DATATYPES_HPP
 
 // TODO Fill these out
+typedef struct CommandsFromSM{
+    WaypointType waypoint_type;
+    TelemWaypointData telemetry_waypoint;
+    CommandsFromTM telemetry_commands;
+    LosSFData sf_data;
+} CommandsFromSM;
 
 // typedef struct {
 //     int some_data_here;
