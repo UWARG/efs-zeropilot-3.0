@@ -14,15 +14,23 @@
  * Boot Mode
  ********************/
 void BootMode::execute(SystemManager *sys_man) {
-    // Only Executes once
+    // Only Executes once, Configure sensors, LOS, Everything startup
     // TODO
+    sys_man->setState(ReadTelemetryMode::getInstance());
+}
+
+SystemState &BootMode::getInstance() {
+    static BootMode singleton;
+    return singleton;
 }
 
 /********************
  * Read Telemetry Mode
  ********************/
 void ReadTelemetryMode::execute(SystemManager *sys_man) {
+    // Get big packet message from TM and store it
     // TODO
+    sys_man->setState(ReadLosSensorsMode::getInstance());
 }
 
 SystemState& ReadTelemetryMode::getInstance() {
@@ -30,22 +38,14 @@ SystemState& ReadTelemetryMode::getInstance() {
     return singleton;
 }
 
-// bool ReadTelemetryMode::receiveArmDisarmInstruction(SystemManager* sys_man) {
-//     // if sm dc; return false
-//     // if connected, return arm channel value
-// }
-
-// bool DisarmMode::isArmed() {
-//     // check arm channel value > min arm value
-
-// }
-
 
 /********************
  * Read Los Sensors Mode
  ********************/
 void ReadLosSensorsMode::execute(SystemManager *sys_man) {
+    // Get sensor fusion data from LOS interfaces
     // TODO
+    sys_man->setState(SendFlightPlanMode::getInstance());
 }
 
 SystemState &ReadLosSensorsMode::getInstance() {
@@ -53,39 +53,61 @@ SystemState &ReadLosSensorsMode::getInstance() {
     return singleton;
 }
 
-// bool ReadLosSensorsMode::receiveTeleopInstructions(SystemManager *sys_man) {
-//     bool is_dc{true};
-//     if (is_dc) {
-//         return false;
-//     }
-
-//     // !TODO: get information from the link
-//     // (and somehow process it)
-// }
-
 /********************
- * Generate Flight Plan Mode
+ * Send Flight Plan Mode
  ********************/
 
-void GenerateFlightPlanMode::execute(SystemManager *sys_man) {
-    // Reading from bulk message from Telemetry
+void SendFlightPlanMode::execute(SystemManager *sys_man) {
+    // Get waypoint(s) and pass SF data and waypoint(s) to PM (who sends to AM)
+    // TODO
+    sys_man->setState(SendFlightPlanMode::getInstance());
+}
+
+inputs_to_AM_t* SendFlightPlanMode::generateWaypoint() {
+    // Generate a waypoint to be sent to PM
     if (telemetryMsg.manual_control) {
-        AM_Waypoints = throttleToWaypoint();
+        AM_Waypoints = getManualWaypoint();
     } else {
         AM_Waypoints = getPathManagerWaypoint();
     }
+    return AM_Waypoints;
 }
 
-inputs_to_AM_t* GenerateFlightPlanMode::throttleToWaypoint() {
-    // Handled by Aadi
-    // Convert throttle inputs to waypoint that AM can read
-    // telemetryMsg.throttle;
+inputs_to_AM_t* SendFlightPlanMode::getManualWaypoint() {
+    // Convert manual pilot controls to AM waypoint
+    // TODO
     return 0;
 }
 
-inputs_to_AM_t* GenerateFlightPlanMode::getPathManagerWaypoint() {
-    // call PM for next waypoint? Also feed in SF data?
+inputs_to_AM_t* SendFlightPlanMode::getPathManagerWaypoint() {
+    // Create the waypoint(s) to pass to path manager
+    // TODO
     return 0;
+}
+
+CommandsFromSM* SendFlightPlanMode::generatePMPacket() {
+    // Pack SF and Waypoint data to packet sent to PM
+    //TODO
+    return 0;
+}
+
+SystemState &SendFlightPlanMode::getInstance() {
+    static SendFlightPlanMode singleton;
+    return singleton;
+}
+
+/********************
+ * Write Telemetry Mode
+ ********************/
+void WriteTelemetryMode::execute(SystemManager *sys_man) {
+    // Create packet and send through mail queue to TM
+    // TODO
+    sys_man->setState(ReadTelemetryMode::getInstance());
+}
+
+SystemState& WriteTelemetryMode::getInstance() {
+    static WriteTelemetryMode singleton;
+    return singleton;
 }
 
 /********************
@@ -93,6 +115,9 @@ inputs_to_AM_t* GenerateFlightPlanMode::getPathManagerWaypoint() {
  ********************/
 
 void FatalFailureMode::execute(SystemManager *sys_man) {
+    // Kill PM
+    // Kill AM
+    // Write 0 to LOS actuators
     sys_man->setState(FatalFailureMode::getInstance());
 }
 

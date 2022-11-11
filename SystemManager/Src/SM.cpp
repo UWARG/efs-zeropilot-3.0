@@ -7,3 +7,23 @@
  * Author(s): Gordon Fountain
  */
 
+
+#include "SM.hpp"
+#include "SM_States.hpp"
+
+SystemManager::SystemManager()
+{
+    currentState = &BootMode::getInstance();
+}
+
+void SystemManager::setState(SystemState& newState)
+{
+    currentState->exit(this);
+    currentState = &newState;
+    currentState->enter(this);
+}
+
+void SystemManager::execute()
+{
+    currentState->execute(this);
+}

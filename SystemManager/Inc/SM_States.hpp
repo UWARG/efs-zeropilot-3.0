@@ -10,8 +10,7 @@
  * 
  * boot (executes only once) ->
  * readTelemetry -> readLosSensors -> 
- * generateFlightPlan (writePathManager OR throttleToAttitude) ->
- * writeAttitudeManager -> writeTelemetryManager -> repeat 
+ * sendFlightPlan -> writeTelemetryManager -> repeat 
  * Also holds fatalFailure to shut down all other systems.
  *
  */
@@ -80,7 +79,7 @@ private:
 
 };
 
-class GenerateFlightPlanMode: public SystemState {
+class SendFlightPlanMode: public SystemState {
 public:
     void enter(SystemManager *sys_man) {
         (void) sys_man;
@@ -91,13 +90,15 @@ public:
     }
     static SystemState& getInstance();
 private:
-    GenerateFlightPlanMode() {
+    SendFlightPlanMode() {
     }
-    GenerateFlightPlanMode(const GenerateFlightPlanMode &other);
-    GenerateFlightPlanMode& operator =(const GenerateFlightPlanMode &other);
+    SendFlightPlanMode(const SendFlightPlanMode &other);
+    SendFlightPlanMode& operator =(const SendFlightPlanMode &other);
 
-    static inputs_to_AM_t* throttleToWaypoint(); // Get RSSI info from bulk telemetry message stored
+    static inputs_to_AM_t* generateWaypoint();
+    static inputs_to_AM_t* getManualWaypoint();
     static inputs_to_AM_t* getPathManagerWaypoint();
+    static CommandsFromSM* generatePMPacket();
 };
 
 class WriteAttitudeManagerMode: public SystemState {
@@ -118,7 +119,7 @@ private:
 
 };
 
-class WriteTelemetryManagerMode: public SystemState {
+class WriteTelemetryMode: public SystemState {
 public:
     void enter(SystemManager *sys_man) {
         (void) sys_man;
@@ -129,10 +130,10 @@ public:
     }
     static SystemState& getInstance();
 private:
-    WriteTelemetryManagerMode() {
+    WriteTelemetryMode() {
     }
-    WriteTelemetryManagerMode(const WriteTelemetryManagerMode &other);
-    WriteTelemetryManagerMode& operator =(const WriteTelemetryManagerMode &other);
+    WriteTelemetryMode(const WriteTelemetryMode &other);
+    WriteTelemetryMode& operator =(const WriteTelemetryMode &other);
 
 };
 
