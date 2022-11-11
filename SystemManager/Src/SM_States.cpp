@@ -16,11 +16,45 @@
 void BootMode::execute(SystemManager *sys_man) {
     // Only Executes once, Configure sensors, LOS, Everything startup
     // TODO
-    sys_man->setState(ReadTelemetryMode::getInstance());
+    sys_man->setState(DisarmMode::getInstance());
 }
 
 SystemState &BootMode::getInstance() {
     static BootMode singleton;
+    return singleton;
+}
+
+/********************
+ * Disarm Mode
+ ********************/
+void DisarmMode::execute(SystemManager *sys_man) {
+    // Check all arming mechnisms triggered then move to GroundOp
+    // TODO
+    sys_man->setState(GroundOpMode::getInstance());
+}
+
+SystemState &DisarmMode::getInstance() {
+    static DisarmMode singleton;
+    return singleton;
+}
+
+/********************
+ * Ground Op Mode
+ ********************/
+void GroundOpMode::execute(SystemManager *sys_man) {
+    // Slow TM speed of operation
+    // TODO
+    sys_man->setState(ReadTelemetryMode::getInstance());
+}
+
+void GroundOpMode::exit(SystemManager *sys_man) {
+    // Start the PM and AM threads running
+    // TODO
+    sys_man->setState(ReadTelemetryMode::getInstance());
+}
+
+SystemState &GroundOpMode::getInstance() {
+    static GroundOpMode singleton;
     return singleton;
 }
 

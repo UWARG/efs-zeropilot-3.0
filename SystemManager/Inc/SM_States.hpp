@@ -39,6 +39,40 @@ private:
     BootMode& operator =(const BootMode &other);
 };
 
+class DisarmMode: public SystemState {
+public:
+    void enter(SystemManager *sys_man) {
+        (void) sys_man;
+    }
+    void execute(SystemManager *sys_man);
+    void exit(SystemManager *sys_man) {
+        (void) sys_man;
+    }
+    static SystemState& getInstance();
+private:
+    DisarmMode() {
+    }
+    DisarmMode(const DisarmMode &other);
+    DisarmMode& operator =(const DisarmMode &other);
+};
+
+class GroundOpMode: public SystemState {
+public:
+    void enter(SystemManager *sys_man) {
+        (void) sys_man;
+    }
+    void execute(SystemManager *sys_man);
+    void exit(SystemManager *sys_man) {
+        (void) sys_man;
+    }
+    static SystemState& getInstance();
+private:
+    GroundOpMode() {
+    }
+    GroundOpMode(const GroundOpMode &other);
+    GroundOpMode& operator =(const GroundOpMode &other);
+};
+
 class ReadTelemetryMode: public SystemState {
 public:
     void enter(SystemManager *sys_man) {
@@ -99,24 +133,6 @@ private:
     static inputs_to_AM_t* getManualWaypoint();
     static inputs_to_AM_t* getPathManagerWaypoint();
     static CommandsFromSM* generatePMPacket();
-};
-
-class WriteAttitudeManagerMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    WriteAttitudeManagerMode() {
-    }
-    WriteAttitudeManagerMode(const WriteAttitudeManagerMode &other);
-    WriteAttitudeManagerMode& operator =(const WriteAttitudeManagerMode &other);
-
 };
 
 class WriteTelemetryMode: public SystemState {
