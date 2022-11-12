@@ -12,25 +12,23 @@
 // #include "LOS_Actuators.hpp"
 #include "AM_ControlInterface.hpp"
 
+#include <vector>
+
 namespace AM {
 
 class AttitudeManager {
   public:
-    AttitudeManager(const ControlInterface *controller_interfaces[],
-                    uint8_t num_atti_controllers, const uint8_t actuator_channel_map[],
-                    uint8_t num_actuator_channels)
-        : num_controllers(num_controllers),
-          num_actuator_channels(num_actuator_channels), controller_interfaces(controller_interfaces),
-          actuator_channel_map(actuator_channel_map){};
+    AttitudeManager(std::vector<ControlInterface *> controller_interfaces)
+        : controller_interfaces(controller_interfaces){};
+
+    template <typename... Args>
+    AttitudeManager(Args... controllers)
+        : controller_interfaces{controllers...} {};
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 
   private:
-    const int num_controllers = 0;
-    const int num_actuator_channels = 0;
-
-    const ControlInterface **controller_interfaces;
-    const uint8_t *actuator_channel_map;
+    const std::vector<ControlInterface *> controller_interfaces;
 };
 } // namespace AM
 

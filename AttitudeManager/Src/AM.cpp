@@ -9,27 +9,18 @@ void AttitudeManager::runControlLoopIteration(
     AttitudeManagerInput instructions) {
     // Process Instructions
 
-    if (num_controllers < 1 || num_actuator_channels < 1) {
-        float controller_outputs[num_controllers][num_actuator_channels] = {0};
-        // float actuatorOutputs[actuatorsLen] = {};
-
-        // Run Control Algorithms
-        for (uint8_t controller_idx = 0; controller_idx < num_controllers;
-             ++controller_idx) {
-            const ControlInterface *controller_interface =
-                controller_interfaces[controller_idx];
-
-            std::vector<ActuatorOutput> output =
-                controller_interface->runControlsAlgo(instructions);
-        }
-
-        // Mix actuator outputs
-
-        // Write actuator outputs
-        // for (uint8_t i = 0; i < actuatorsLen; i++) {
-        // LosActuators.set(actuatorOutputs[i])
-        // }
+    // Run Control Algorithms
+    for (auto controller : controller_interfaces) {
+        std::vector<ActuatorOutput> output =
+            controller->runControlsAlgo(instructions);
     }
+
+    // Mix actuator outputs
+
+    // Write actuator outputs
+    // for (uint8_t i = 0; i < actuatorsLen; i++) {
+    // LosActuators.set(actuatorOutputs[i])
+    // }
 }
 
 } // namespace AM
