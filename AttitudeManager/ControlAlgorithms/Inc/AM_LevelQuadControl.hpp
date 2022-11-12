@@ -23,7 +23,7 @@ class LevelQuadControl : public ControlInterface {
     void runControlsAlgo(const AttitudeManagerInput &instructions,
                          float outputs[], uint8_t outputs_length) const;
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
-                  float altitude);
+                  float altitude) const;
     enum ActuatorIdx {
         FrontRight = 0,
         FrontLeft,
