@@ -19,7 +19,7 @@ https://uwarg-docs.atlassian.net/wiki/spaces/ZP/overview?homepageId=20217925
 # Merge Checklist:
 
 - [ ] The changes have been well commented, particularly in hard-to-understand areas.
-- [ ] The code has been tested on hardware, either by me or somone else.
+- [ ] The code has been tested on hardware, either by me or someone else.
 - [ ] Comprehensive unit tests have been made for this change
 - [ ] Corresponding changes to documentation have been created and links to this documentation are provided within the pull request.
 - [ ] The changes generate no new warnings and compile and run; A screenshot of a successful compile message is attached to the bottom of this PR.
