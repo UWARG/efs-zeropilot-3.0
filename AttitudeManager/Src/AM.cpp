@@ -16,10 +16,11 @@ void AttitudeManager::runControlLoopIteration(
         // Run Control Algorithms
         for (uint8_t controller_idx = 0; controller_idx < num_controllers;
              ++controller_idx) {
-            const ControlInterface *controller_interface = controller_interfaces[controller_idx];
-            controller_interface->runControlsAlgo(instructions,
-                                        controller_outputs[controller_idx],
-                                        num_actuator_channels);
+            const ControlInterface *controller_interface =
+                controller_interfaces[controller_idx];
+
+            std::vector<ActuatorOutput> output =
+                controller_interface->runControlsAlgo(instructions);
         }
 
         // Mix actuator outputs

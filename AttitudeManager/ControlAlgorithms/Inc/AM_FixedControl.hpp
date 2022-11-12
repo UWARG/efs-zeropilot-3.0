@@ -22,8 +22,8 @@ class FixedControl : public ControlInterface {
                                                     rightAileron, rudder,
                                                     elevator} {};
 
-    void runControlsAlgo(const AttitudeManagerInput &instructions,
-                         float outputs[], uint8_t outputs_length) const;
+    std::vector<ActuatorOutput>
+    runControlsAlgo(const AttitudeManagerInput &instructions) const;
 
     enum ActuatorIdx {
         Engine = 0,

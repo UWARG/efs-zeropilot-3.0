@@ -10,6 +10,7 @@
 #define ZPSW3_AM_CONTROL_INTERFACE_HPP
 
 #include "AM_DataTypes.hpp"
+#include <vector>
 
 namespace AM {
 
@@ -27,9 +28,8 @@ class ControlInterface {
     /// @param outputs_length
     ///   The length of the outputs array. This should be equivilent to the
     ///   number of actuator channels
-    virtual void runControlsAlgo(const AttitudeManagerInput &instructions,
-                                 float outputs[],
-                                 uint8_t output_length) const = 0;
+    virtual std::vector<ActuatorOutput>
+    runControlsAlgo(const AttitudeManagerInput &instructions) const = 0;
 
     const uint8_t num_actuators; //< Number of actuators for given flight model
 

@@ -19,9 +19,8 @@ typedef struct {
 
 namespace AM {
 
-void LevelQuadControl::runControlsAlgo(const AttitudeManagerInput &instructions,
-                                       float outputs[],
-                                       uint8_t outputsLength) const {
+std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgo(
+    const AttitudeManagerInput &instructions) const {
 
     // Get current attitude from sensorfusion
     SFOutput_t currentAttitude; // TODO: This needs to be retrieved from LOS
@@ -48,7 +47,7 @@ void LevelQuadControl::runControlsAlgo(const AttitudeManagerInput &instructions,
     float altitude =
         pid_yaw.execute(targetAltitude, currentAttitude.rateOfClimb);
 
-   // mix the PID's.
+    // mix the PID's.
     float frontRightOutput =
         mixPIDs(configs[FrontRight].stateMix, roll, pitch, yaw, altitude);
     float frontLeftOutput =
@@ -58,28 +57,17 @@ void LevelQuadControl::runControlsAlgo(const AttitudeManagerInput &instructions,
     float backRightOutput =
         mixPIDs(configs[BackRight].stateMix, roll, pitch, yaw, altitude);
 
-
     // return output
-    assert(configs[FrontRight].channel < outputsLength);
-    outputs[configs[FrontRight].channel] = frontRightOutput;
-
-    assert(configs[FrontLeft].channel < outputsLength);
-    outputs[configs[FrontLeft].channel] = frontLeftOutput;
-
-    assert(configs[BackLeft].channel < outputsLength);
-    outputs[configs[BackLeft].channel] = backLeftOutput;
-
-    assert(configs[BackRight].channel < outputsLength);
-    outputs[configs[BackRight].channel] = backRightOutput;
+    return std::vector<ActuatorOutput>{
+        {configs[FrontRight].channel, frontRightOutput},
+        {configs[FrontLeft].channel, frontLeftOutput},
+        {configs[BackRight].channel, backRightOutput},
+        {configs[BackLeft].channel, backLeftOutput}};
 }
 
-float LevelQuadControl::mixPIDs(StateMix actuator,
-                                float roll,
-                                float pitch,
-                                float yaw,
-                                float altitude) const {
-    return constrain<float>((actuator.pitch * pitch +
-                             actuator.roll * roll +
+float LevelQuadControl::mixPIDs(StateMix actuator, float roll, float pitch,
+                                float yaw, float altitude) const {
+    return constrain<float>((actuator.pitch * pitch + actuator.roll * roll +
                              actuator.yaw * yaw +
                              actuator.velocity_z * altitude),
                             100, 0);

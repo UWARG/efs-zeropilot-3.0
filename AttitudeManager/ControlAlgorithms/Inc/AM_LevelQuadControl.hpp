@@ -20,8 +20,8 @@ class LevelQuadControl : public ControlInterface {
         : ControlInterface(NumActuatorIdx), configs{frontRight, frontLeft,
                                                     backRight, backLeft} {};
 
-    void runControlsAlgo(const AttitudeManagerInput &instructions,
-                         float outputs[], uint8_t outputs_length) const;
+    std::vector<ActuatorOutput>
+    runControlsAlgo(const AttitudeManagerInput &instructions) const;
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
                   float altitude) const;
     enum ActuatorIdx {
@@ -34,7 +34,6 @@ class LevelQuadControl : public ControlInterface {
 
   private:
     ActuatorConfig configs[NumActuatorIdx];
-
 
     static constexpr float maxRoll = 60;
     static constexpr float maxPitch = 60;

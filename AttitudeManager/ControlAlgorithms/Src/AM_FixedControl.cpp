@@ -2,9 +2,8 @@
 
 namespace AM {
 
-void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
-                                   float outputs[],
-                                   uint8_t outputsLength) const {
+std::vector<ActuatorOutput>
+FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions) const {
 
     // do something
 
