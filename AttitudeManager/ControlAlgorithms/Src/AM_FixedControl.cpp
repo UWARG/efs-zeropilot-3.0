@@ -2,9 +2,8 @@
 
 namespace AM {
 
-std::vector<ActuatorOutput>
-FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions) const {
-
+std::vector<ActuatorOutput> FixedControl::runControlsAlgo(
+    const AttitudeManagerInput &instructions) const {
     // do something
 
     // return output
@@ -13,4 +12,4 @@ FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions) const {
     // outputs[actuator.channel] = actuator.percent;
 }
 
-} // namespace AM
+}  // namespace AM

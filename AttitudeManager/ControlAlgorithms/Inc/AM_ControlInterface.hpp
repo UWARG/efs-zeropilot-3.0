@@ -15,7 +15,7 @@
 namespace AM {
 
 class ControlInterface {
-  public:
+   public:
     ControlInterface(uint8_t num_actuators) : num_actuators(num_actuators){};
 
     /// @brief Run the controls algorithm for the given flight model.
@@ -28,14 +28,14 @@ class ControlInterface {
     /// @param outputs_length
     ///   The length of the outputs array. This should be equivilent to the
     ///   number of actuator channels
-    virtual std::vector<ActuatorOutput>
-    runControlsAlgo(const AttitudeManagerInput &instructions) const = 0;
+    virtual std::vector<ActuatorOutput> runControlsAlgo(
+        const AttitudeManagerInput &instructions) const = 0;
 
-    const uint8_t num_actuators; //< Number of actuators for given flight model
+    const uint8_t num_actuators;  //< Number of actuators for given flight model
 
-  private:
+   private:
     ControlInterface();
 };
-} // namespace AM
+}  // namespace AM
 
-#endif // ZPSW3_AM_CONTROL_INTERFACE_HPP
+#endif  // ZPSW3_AM_CONTROL_INTERFACE_HPP

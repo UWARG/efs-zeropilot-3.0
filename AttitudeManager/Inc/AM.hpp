@@ -17,8 +17,8 @@
 namespace AM {
 
 class AttitudeManager {
-  public:
-    AttitudeManager(std::vector<ControlInterface *> controller_interfaces)
+   public:
+    AttitudeManager(std::vector<const ControlInterface *> controller_interfaces)
         : controller_interfaces(controller_interfaces){};
 
     template <typename... Args>
@@ -27,9 +27,10 @@ class AttitudeManager {
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 
-  private:
-    const std::vector<ControlInterface *> controller_interfaces;
+   private:
+    AttitudeManager();
+    const std::vector<const ControlInterface *> controller_interfaces;
 };
-} // namespace AM
+}  // namespace AM
 
-#endif // ZPSW3_AM_HPP
+#endif  // ZPSW3_AM_HPP

@@ -23,4 +23,4 @@ void AttitudeManager::runControlLoopIteration(
     // }
 }
 
-} // namespace AM
+}  // namespace AM

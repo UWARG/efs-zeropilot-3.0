@@ -41,8 +41,8 @@ typedef struct {
 typedef struct {
     const float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
                 speed = 0;
-} AttitudeManagerInput; // TODO: What is the correct name?
+} AttitudeManagerInput;  // TODO: What is the correct name?
 
-} // namespace AM
+}  // namespace AM
 
-#endif // ZPSW3_AM_DATATYPES_HPP
+#endif  // ZPSW3_AM_DATATYPES_HPP

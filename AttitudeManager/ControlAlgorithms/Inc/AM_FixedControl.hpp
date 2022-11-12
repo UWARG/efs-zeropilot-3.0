@@ -14,16 +14,15 @@
 namespace AM {
 
 class FixedControl : public ControlInterface {
-  public:
+   public:
     FixedControl(ActuatorConfig &engine, ActuatorConfig &leftAileron,
                  ActuatorConfig &rightAileron, ActuatorConfig &rudder,
                  ActuatorConfig &elevator)
-        : ControlInterface(NumActuatorIdx), configs{engine, leftAileron,
-                                                    rightAileron, rudder,
-                                                    elevator} {};
+        : ControlInterface(NumActuatorIdx),
+          configs{engine, leftAileron, rightAileron, rudder, elevator} {};
 
-    std::vector<ActuatorOutput>
-    runControlsAlgo(const AttitudeManagerInput &instructions) const;
+    std::vector<ActuatorOutput> runControlsAlgo(
+        const AttitudeManagerInput &instructions) const;
 
     enum ActuatorIdx {
         Engine = 0,
@@ -31,12 +30,12 @@ class FixedControl : public ControlInterface {
         RightAileron,
         Rudder,
         Elevator,
-        NumActuatorIdx // Must always be last
+        NumActuatorIdx  // Must always be last
     };
 
-  private:
+   private:
     const ActuatorConfig configs[NumActuatorIdx];
 };
-} // namespace AM
+}  // namespace AM
 
-#endif // ZPSW3_AM_FIXED_CONTROL_HPP
+#endif  // ZPSW3_AM_FIXED_CONTROL_HPP

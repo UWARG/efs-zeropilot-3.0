@@ -14,25 +14,27 @@
 namespace AM {
 
 class LevelQuadControl : public ControlInterface {
-  public:
+   public:
     LevelQuadControl(ActuatorConfig &frontRight, ActuatorConfig &frontLeft,
                      ActuatorConfig &backRight, ActuatorConfig &backLeft)
-        : ControlInterface(NumActuatorIdx), configs{frontRight, frontLeft,
-                                                    backRight, backLeft} {};
+        : ControlInterface(NumActuatorIdx),
+          configs{frontRight, frontLeft, backRight, backLeft} {};
 
-    std::vector<ActuatorOutput>
-    runControlsAlgo(const AttitudeManagerInput &instructions) const;
+    std::vector<ActuatorOutput> runControlsAlgo(
+        const AttitudeManagerInput &instructions) const;
+
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
                   float altitude) const;
+
     enum ActuatorIdx {
         FrontRight = 0,
         FrontLeft,
         BackRight,
         BackLeft,
-        NumActuatorIdx // Must always be last
+        NumActuatorIdx  // Must always be last
     };
 
-  private:
+   private:
     ActuatorConfig configs[NumActuatorIdx];
 
     static constexpr float maxRoll = 60;
@@ -54,6 +56,6 @@ class LevelQuadControl : public ControlInterface {
     static constexpr float yaw_ki = 0.01;
     static constexpr float yaw_kd = 0.05;
 };
-} // namespace AM
+}  // namespace AM
 
-#endif // ZPSW3_AM_LEVEL_QUAD_CONTROL_HPP
+#endif  // ZPSW3_AM_LEVEL_QUAD_CONTROL_HPP
