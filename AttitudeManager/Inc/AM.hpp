@@ -11,14 +11,13 @@
 
 // #include "LOS_Actuators.hpp"
 #include "AM_ControlInterface.hpp"
-
-#include <vector>
+#include "AM_DataTypes.hpp"
 
 namespace AM {
 
 class AttitudeManager {
    public:
-    AttitudeManager(std::vector<const ControlInterface *> controller_interfaces)
+    AttitudeManager(std::vector<ControlInterface *> controller_interfaces)
         : controller_interfaces(controller_interfaces){};
 
     template <typename... Args>
@@ -27,9 +26,14 @@ class AttitudeManager {
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 
+    const int getCurrentControlId() { return controller_id; }
+    void setDesiredControlAlgorithm(int id) { desired_controller = id; }
+
    private:
     AttitudeManager();
-    const std::vector<const ControlInterface *> controller_interfaces;
+    uint8_t controller_id = 0;
+    uint8_t desired_controller = 0;
+    const std::vector<ControlInterface *> controller_interfaces;
 };
 }  // namespace AM
 

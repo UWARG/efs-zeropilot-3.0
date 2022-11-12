@@ -22,8 +22,11 @@ class FixedControl : public ControlInterface {
           configs{engine, leftAileron, rightAileron, rudder, elevator} {};
 
     std::vector<ActuatorOutput> runControlsAlgo(
-        const AttitudeManagerInput &instructions) const;
+        const AttitudeManagerInput &instructions) const override;
 
+    void updatePid() override { return; }
+
+   private:
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -33,7 +36,6 @@ class FixedControl : public ControlInterface {
         NumActuatorIdx  // Must always be last
     };
 
-   private:
     const ActuatorConfig configs[NumActuatorIdx];
 };
 }  // namespace AM

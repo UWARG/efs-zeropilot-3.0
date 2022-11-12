@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <stdint.h>
+#include <vector>
 
 namespace AM {
 

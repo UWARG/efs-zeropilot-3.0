@@ -10,7 +10,6 @@
 #define ZPSW3_AM_CONTROL_INTERFACE_HPP
 
 #include "AM_DataTypes.hpp"
-#include <vector>
 
 namespace AM {
 
@@ -30,6 +29,8 @@ class ControlInterface {
     ///   number of actuator channels
     virtual std::vector<ActuatorOutput> runControlsAlgo(
         const AttitudeManagerInput &instructions) const = 0;
+
+    virtual void updatePid() = 0;
 
     const uint8_t num_actuators;  //< Number of actuators for given flight model
 
