@@ -17,7 +17,7 @@ namespace AM {
 
 class AttitudeManager {
    public:
-    AttitudeManager(std::vector<ControlInterface *> controller_interfaces)
+    AttitudeManager(ControlInterfaceList controller_interfaces)
         : controller_interfaces(controller_interfaces){};
 
     template <typename... Args>
@@ -33,7 +33,7 @@ class AttitudeManager {
     AttitudeManager();
     uint8_t controller_id = 0;
     uint8_t desired_controller = 0;
-    const std::vector<ControlInterface *> controller_interfaces;
+    const ControlInterfaceList controller_interfaces;
 };
 }  // namespace AM
 

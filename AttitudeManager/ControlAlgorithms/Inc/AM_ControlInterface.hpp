@@ -37,6 +37,9 @@ class ControlInterface {
    private:
     ControlInterface();
 };
+
+typedef std::vector<ControlInterface *> ControlInterfaceList;
+
 }  // namespace AM
 
 #endif  // ZPSW3_AM_CONTROL_INTERFACE_HPP
