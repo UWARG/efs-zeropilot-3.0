@@ -14,7 +14,7 @@
 #include "cmsis_os.h"
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
-// #include "AM_StateManager.hpp"
+#include "SM_StateManager.hpp"
 
 class SystemState;
 
@@ -37,7 +37,7 @@ private:
 
     // TODO PM, AM, TM instances here
 
-    // TODO Mail Queues here
+    // Mail Queues here
     osMailQId TM_to_SM_queue;
     osMailQId SM_to_TM_queue;
     osMailQId SM_to_PM_queue;
