@@ -7,9 +7,8 @@
  * Author(s): Gordon Fountain
  */
 
-
-#include "SM.hpp"
-#include "SM_States.hpp"
+#include "../Inc/SM.hpp"
+#include "../Inc/SM_States.hpp"
 
 SystemManager::SystemManager()
 {

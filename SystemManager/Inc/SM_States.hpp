@@ -8,9 +8,8 @@
  *
  * Describes the states of SM:
  * 
- * boot (executes only once) ->
- * readTelemetry -> readLosSensors -> 
- * sendFlightPlan -> writeTelemetryManager -> repeat 
+ * Boot (executes only once) -> Disarm -> Ground Ops -> Flight
+ * 
  * Also holds fatalFailure to shut down all other systems.
  *
  */
@@ -73,7 +72,7 @@ private:
     GroundOpMode& operator =(const GroundOpMode &other);
 };
 
-class ReadTelemetryMode: public SystemState {
+class FlightMode: public SystemState {
 public:
     void enter(SystemManager *sys_man) {
         (void) sys_man;
@@ -84,73 +83,15 @@ public:
     }
     static SystemState& getInstance();
 private:
-    ReadTelemetryMode() {
+    FlightMode() {
     }
-    ReadTelemetryMode(const ReadTelemetryMode &other);
-    ReadTelemetryMode& operator =(const ReadTelemetryMode &other);
-
-    static enum _System_Manager_Drone_Operation_Mode getOperationMode();
-
-    // static bool receieveArmDisarmInstruction(SystemManager *sys_man);
-    // static bool isArmed();
-};
-
-class ReadLosSensorsMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    ReadLosSensorsMode() {
-    }
-    ReadLosSensorsMode(const ReadLosSensorsMode &other);
-    ReadLosSensorsMode& operator =(const ReadLosSensorsMode &other);
-
-};
-
-class SendFlightPlanMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    SendFlightPlanMode() {
-    }
-    SendFlightPlanMode(const SendFlightPlanMode &other);
-    SendFlightPlanMode& operator =(const SendFlightPlanMode &other);
+    FlightMode(const FlightMode &other);
+    FlightMode& operator =(const FlightMode &other);
 
     static inputs_to_AM_t* generateWaypoint();
     static inputs_to_AM_t* getManualWaypoint();
     static inputs_to_AM_t* getPathManagerWaypoint();
     static CommandsFromSM* generatePMPacket();
-};
-
-class WriteTelemetryMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    WriteTelemetryMode() {
-    }
-    WriteTelemetryMode(const WriteTelemetryMode &other);
-    WriteTelemetryMode& operator =(const WriteTelemetryMode &other);
-
 };
 
 class FatalFailureMode: public SystemState {

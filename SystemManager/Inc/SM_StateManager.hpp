@@ -24,4 +24,4 @@ public:
 
     virtual ~SystemState() {}
 };
-#endif //ZPSW3_AM_STATEMANAGER_HPP
+#endif //ZPSW3_SM_STATEMANAGER_HPP
