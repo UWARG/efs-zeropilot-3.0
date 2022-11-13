@@ -11,6 +11,7 @@
 #define ZPSW3_SM_HPP
 
 #include <stdint.h>
+#include "cmsis_os.h"
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
 // #include "AM_StateManager.hpp"
@@ -35,6 +36,14 @@ private:
     SystemManager();
 
     // TODO PM, AM, TM instances here
+
+    // TODO Mail Queues here
+    osMailQId TM_to_SM_queue;
+    osMailQId SM_to_TM_queue;
+    osMailQId SM_to_PM_queue;
+    osMailQId PM_to_AM_queue;
+    osMailQId SM_to_AM_queue;
+    osMailQId AM_to_SM_queue;
 
     // TODO LOS actuator instance here
 

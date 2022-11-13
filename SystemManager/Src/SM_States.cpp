@@ -13,9 +13,16 @@
 /********************
  * Boot Mode
  ********************/
-void BootMode::execute(SystemManager *sys_man) {
+void BootMode::enter(SystemManager *sys_man) {
     // Only Executes once, Configure sensors, LOS, Everything startup
-    // TODO
+    // Start TM at slow speed
+
+    // Update TM mail queue ID
+    TM_to_SM_queue = osMailCreate();
+}
+
+void BootMode::execute(SystemManager *sys_man) {
+    // Immediately move to Disarm mode
     sys_man->setState(DisarmMode::getInstance());
 }
 
@@ -41,16 +48,28 @@ SystemState &DisarmMode::getInstance() {
 /********************
  * Ground Op Mode
  ********************/
+void GroundOpMode::enter(SystemManager *sys_man) {
+    // Start AM to accept PID tunings
+    // TODO
+    SM_to_AM_queue = osMailCreate();
+}
+
 void GroundOpMode::execute(SystemManager *sys_man) {
-    // Slow TM speed of operation
+    // Forward any AM PID tuning messages.
+
     // TODO
     sys_man->setState(ReadTelemetryMode::getInstance());
 }
 
 void GroundOpMode::exit(SystemManager *sys_man) {
-    // Start the PM and AM threads running
+    // Delete SM to AM queue to prevent PID tuning midair
+    osMailFree(SM_to_AM_queue);
+    SM_to_AM_queue = NULL;
+
+    // Start the PM thread and increase TM speed
+    SM_to_PM_queue = osMailCreate();
+    PM_to_AM_queue = osMailCreate();
     // TODO
-    sys_man->setState(ReadTelemetryMode::getInstance());
 }
 
 SystemState &GroundOpMode::getInstance() {
@@ -148,10 +167,24 @@ SystemState& WriteTelemetryMode::getInstance() {
  * FatalFailure Mode
  ********************/
 
-void FatalFailureMode::execute(SystemManager *sys_man) {
+void FatalFailureMode::enter(SystemManager *sys_man) {
     // Kill PM
     // Kill AM
+    
+    osMailFree(SM_to_PM_queue);
+    SM_to_PM_queue = NULL;
+    osMailFree(PM_to_AM_queue);
+    PM_to_AM_queue = NULL;
+    osMailFree(PM_to_AM_queue);
+    AM_to_SM_queue = NULL;
+
     // Write 0 to LOS actuators
+    // TODO
+}
+
+void FatalFailureMode::execute(SystemManager *sys_man) {
+    // Maybe report something? Log timstamps to SD card?
+    // TBD
     sys_man->setState(FatalFailureMode::getInstance());
 }
 
