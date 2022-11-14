@@ -10,6 +10,7 @@ set(ATTITUDE_MANAGER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager")
 set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
 
 include_directories(
+    Common/Inc
     ${ATTITUDE_MANAGER_DIR}/Inc
     ${ATTITUDE_MANAGER_DIR}/ControlAlgorithms/Inc
     ${LAMINAR_OS_DIR}/Interface/Inc
