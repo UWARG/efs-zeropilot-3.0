@@ -25,16 +25,22 @@ class AttitudeManager {
     AttitudeManager(Args... controllers)
         : controller_interfaces{controllers...} {};
 
-    void runControlLoopIteration(AttitudeManagerInput instructions);
-
-    int getCurrentControlId() { return controller_id; }
-    void setDesiredControlAlgorithm(int id) { desired_controller = id; }
+    void runControlLoopIteration(const AttitudeManagerInput &instructions);
 
    private:
     AttitudeManager();
-    uint8_t controller_id = 0;
-    uint8_t desired_controller = 0;
+
+    uint8_t current_controller_index = 0;
+    uint8_t desired_controller_index = 0;
     const ControlInterfaceList controller_interfaces;
+    static constexpr uint64_t transition_time_ms = 5000;
+    uint64_t transition_start_time_ms = 0;
+
+    void setDesiredControlAlgorithm(uint8_t id);
+
+    std::vector<ActuatorOutput> runTransitionMixingIteration(
+        ControlInterface *current, ControlInterface *desired,
+        const AttitudeManagerInput &instructions);
 };
 }  // namespace AM
 
