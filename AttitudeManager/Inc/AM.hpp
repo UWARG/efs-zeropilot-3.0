@@ -20,6 +20,7 @@ class AttitudeManager {
     AttitudeManager(ControlInterfaceList controller_interfaces)
         : controller_interfaces(controller_interfaces){};
 
+    // https://en.cppreference.com/w/cpp/language/parameter_pack
     template <typename... Args>
     AttitudeManager(Args... controllers)
         : controller_interfaces{controllers...} {};

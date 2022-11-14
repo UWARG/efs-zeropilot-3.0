@@ -20,7 +20,7 @@ class LevelQuadControl : public ControlInterface {
         : ControlInterface(NumActuatorIdx),
           configs{frontRight, frontLeft, backRight, backLeft} {};
 
-    std::vector<ActuatorOutput> runControlsAlgo(
+    std::vector<ActuatorOutput> runControlsAlgorithm(
         const AttitudeManagerInput &instructions) const override;
 
     void updatePid() override { return; }

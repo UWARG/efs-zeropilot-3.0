@@ -12,7 +12,7 @@ void AttitudeManager::runControlLoopIteration(
     // Run Control Algorithms
     for (auto controller : controller_interfaces) {
         std::vector<ActuatorOutput> output =
-            controller->runControlsAlgo(instructions);
+            controller->runControlsAlgorithm(instructions);
     }
 
     // Mix actuator outputs

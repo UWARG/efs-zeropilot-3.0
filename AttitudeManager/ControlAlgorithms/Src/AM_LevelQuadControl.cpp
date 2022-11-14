@@ -19,7 +19,7 @@ typedef struct {
 
 namespace AM {
 
-std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgo(
+std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) const {
     // Get current attitude from sensorfusion
     SFOutput_t currentAttitude;  // TODO: This needs to be retrieved from LOS

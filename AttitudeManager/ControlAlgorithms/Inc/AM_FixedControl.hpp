@@ -21,7 +21,7 @@ class FixedControl : public ControlInterface {
         : ControlInterface(NumActuatorIdx),
           configs{engine, leftAileron, rightAileron, rudder, elevator} {};
 
-    std::vector<ActuatorOutput> runControlsAlgo(
+    std::vector<ActuatorOutput> runControlsAlgorithm(
         const AttitudeManagerInput &instructions) const override;
 
     void updatePid() override { return; }
