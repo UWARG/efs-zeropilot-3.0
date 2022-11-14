@@ -15,7 +15,7 @@ float PIDController::execute(float desired, float actual, float actualRate) {
     float derivative;
 
     // avoid integral windup
-    integral = constrain<float>(integral + error, i_max, -i_max);
+    integral = constrain<float>(integral + error, pid.i_max, -pid.i_max);
 
     // if we are provided with a measured derivative (say from a gyroscope), it
     // is always less noisy to use that than to compute it ourselves.
@@ -32,8 +32,8 @@ float PIDController::execute(float desired, float actual, float actualRate) {
                       (historicalValue[2]));
     }
 
-    float ret =
-        constrain<float>((kp * error) + (ki * integral) - (kd * derivative),
-                         max_output, min_output);
+    float ret = constrain<float>(
+        (pid.kp * error) + (pid.ki * integral) - (pid.kd * derivative),
+        pid.max_output, pid.min_output);
     return ret;
 }
