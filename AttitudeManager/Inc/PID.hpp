@@ -30,7 +30,13 @@ class PIDController {
      * computations return larger, the output will be set to this value.
      */
     PIDController(float _kp, float _ki, float _kd, float _i_max,
-                  float _min_output, float _max_output);
+                  float _min_output, float _max_output)
+        : kp(_kp),
+          kd(_kd),
+          ki(_ki),
+          i_max(_i_max),
+          min_output(_min_output),
+          max_output(_max_output) {}
 
     /**
      * Executes a PID computation.
@@ -52,12 +58,13 @@ class PIDController {
     float execute_p(float desired, float actual);
 
    private:
-    float kp, kd, ki;
-    float i_max;
-    float integral;
-    float historicalValue[3];
-    float min_output;
-    float max_output;
+    const float kp, kd, ki;
+    const float i_max;
+    const float min_output;
+    const float max_output;
+
+    float integral = 0.0f;
+    float historicalValue[3] = {0.0f};
 };
 
 #endif /* PID_HPP_ */

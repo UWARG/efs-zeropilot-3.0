@@ -69,10 +69,9 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
 
 float LevelQuadControl::mixPIDs(StateMix actuator, float roll, float pitch,
                                 float yaw, float altitude) const {
-    return constrain<float>(
-        (actuator.pitch * pitch + actuator.roll * roll + actuator.yaw * yaw +
-         actuator.velocity_z * altitude),
-        100, 0);
+    return constrain<float, 100, 0>((actuator.pitch * pitch +
+                                     actuator.roll * roll + actuator.yaw * yaw +
+                                     actuator.velocity_z * altitude));
 }
 
 }  // namespace AM

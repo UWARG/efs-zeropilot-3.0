@@ -5,29 +5,23 @@
 #ifndef ZPSW3_AM_DATATYPES_HPP
 #define ZPSW3_AM_DATATYPES_HPP
 
-#include <cassert>
+#include "constrain.h"
 #include <stdint.h>
 #include <vector>
 
 namespace AM {
-
-template <typename T>
-static constexpr T constrain(const T input, const T max, const T min) {
-    assert(max > min);
-    return (input > max ? max : (input < min ? min : input));
-}
 
 class StateMix {
    public:
     const float velocity_x, velocity_y, velocity_z, pitch, roll, yaw;
     StateMix(float velocity_x, float velocity_y, float velocity_z, float pitch,
              float roll, float yaw)
-        : velocity_x(constrain<float>(velocity_x, 1, -1)),
-          velocity_y(constrain<float>(velocity_y, 1, -1)),
-          velocity_z(constrain<float>(velocity_z, 1, -1)),
-          pitch(constrain<float>(pitch, 1, -1)),
-          roll(constrain<float>(roll, 1, -1)),
-          yaw(constrain<float>(yaw, 1, -1)) {}
+        : velocity_x(constrain<float, 1, -1>(velocity_x)),
+          velocity_y(constrain<float, 1, -1>(velocity_y)),
+          velocity_z(constrain<float, 1, -1>(velocity_z)),
+          pitch(constrain<float, 1, -1>(pitch)),
+          roll(constrain<float, 1, -1>(roll)),
+          yaw(constrain<float, 1, -1>(yaw)) {}
 };
 
 class ActuatorConfig {
