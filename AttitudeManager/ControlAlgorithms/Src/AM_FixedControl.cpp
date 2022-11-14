@@ -4,12 +4,12 @@ namespace AM {
 
 std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) const {
-    // do something
-
+#warning Unimplemented
+    // get attitude
+    // interpret instructions
+    // calculate pids
+    // mix pids
     // return output
-    // ActuatorOutput actuator;
-    // assert(actuator.channel < outputsLength);
-    // outputs[actuator.channel] = actuator.percent;
 }
 
 }  // namespace AM
