@@ -17,7 +17,8 @@ static constexpr T constrain(const T input, const T max, const T min) {
     return (input > max ? max : (input < min ? min : input));
 }
 
-struct StateMix {
+class StateMix {
+   public:
     const float velocity_x, velocity_y, velocity_z, pitch, roll, yaw;
     StateMix(float velocity_x, float velocity_y, float velocity_z, float pitch,
              float roll, float yaw)
@@ -29,20 +30,23 @@ struct StateMix {
           yaw(constrain<float>(yaw, 1, -1)) {}
 };
 
-typedef struct {
+class ActuatorConfig {
+   public:
     uint8_t channel = UINT8_MAX;
     StateMix stateMix;
-} ActuatorConfig;
+};
 
-typedef struct {
+class ActuatorOutput {
+   public:
     uint8_t channel;
     float percent;
-} ActuatorOutput;
+};
 
-typedef struct {
+class AttitudeManagerInput {
+   public:
     const float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
                 speed = 0;
-} AttitudeManagerInput;  // TODO: What is the correct name?
+};  // TODO: What is the correct name?
 
 }  // namespace AM
 

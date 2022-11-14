@@ -27,7 +27,7 @@ class AttitudeManager {
 
     void runControlLoopIteration(AttitudeManagerInput instructions);
 
-    const int getCurrentControlId() { return controller_id; }
+    int getCurrentControlId() { return controller_id; }
     void setDesiredControlAlgorithm(int id) { desired_controller = id; }
 
    private:
