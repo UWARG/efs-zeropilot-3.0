@@ -22,7 +22,8 @@ namespace AM {
 std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) const {
     // Get current attitude from sensorfusion
-    SFOutput_t currentAttitude;  // TODO: This needs to be retrieved from LOS
+    // TODO: This needs to be retrieved from LOS
+    SFOutput_t currentAttitude{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // convert instructions into level mode quad instructions
     float targetPitch = instructions.x_dir * maxPitch;
@@ -36,6 +37,8 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
                            max_i_windup, -pid_abs_max, pid_abs_max};
     PIDController pid_yaw{yaw_kp,       yaw_ki,       yaw_kd,
                           max_i_windup, -pid_abs_max, pid_abs_max};
+    PIDController pid_altitude{altitude_kp,  altitude_ki,  altitude_kd,
+                               max_i_windup, -pid_abs_max, pid_abs_max};
 
     // get PID result
     float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch,
@@ -44,7 +47,7 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
                                   currentAttitude.rollRate);
     float yaw = pid_yaw.execute(targetYaw, currentAttitude.yawRate);
     float altitude =
-        pid_yaw.execute(targetAltitude, currentAttitude.rateOfClimb);
+        pid_altitude.execute(targetAltitude, currentAttitude.rateOfClimb);
 
     // mix the PID's.
     float frontRightOutput =

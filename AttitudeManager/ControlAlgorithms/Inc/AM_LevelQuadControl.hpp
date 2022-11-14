@@ -55,6 +55,10 @@ class LevelQuadControl : public ControlInterface {
     static constexpr float yaw_ki = 0.01;
     static constexpr float yaw_kd = 0.05;
 
+    static constexpr float altitude_kp = 0.25;
+    static constexpr float altitude_ki = 0.01;
+    static constexpr float altitude_kd = 0.05;
+
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
                   float altitude) const;
 };
