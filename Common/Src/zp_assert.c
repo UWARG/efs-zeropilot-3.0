@@ -1,5 +1,4 @@
-#include "assert.h"
-#include <stdbool.h>
+#include "zp_assert.h"
 
 void zp_assert(bool expr) {
     if (expr) {
