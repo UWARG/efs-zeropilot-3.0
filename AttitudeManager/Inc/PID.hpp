@@ -5,8 +5,8 @@
  *      Author: Anthony (anni) Luo
  */
 
-#ifndef PID_HPP_
-#define PID_HPP_
+#ifndef PID_HPP
+#define PID_HPP
 
 #include <cmath>
 #include <cstdint>

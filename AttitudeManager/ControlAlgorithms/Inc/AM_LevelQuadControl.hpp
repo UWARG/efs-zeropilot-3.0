@@ -37,8 +37,8 @@ class LevelQuadControl : public ControlInterface {
 
     ActuatorConfig configs[NumActuatorIdx];
 
-    static constexpr float max_roll = 60;
-    static constexpr float max_pitch = 60;
+    static constexpr float max_roll_deg = 60;
+    static constexpr float max_pitch_deg = 60;
 
     static constexpr int pid_abs_max = 100;
     // ? not sure if we need specifics for each angle

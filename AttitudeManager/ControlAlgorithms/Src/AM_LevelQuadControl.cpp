@@ -26,8 +26,8 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     SFOutput_t currentAttitude{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // convert instructions into level mode quad instructions
-    float targetPitch = instructions.x_dir * max_pitch;
-    float targetRoll = instructions.y_dir * max_roll;
+    float targetPitch = instructions.x_dir * max_pitch_deg;
+    float targetRoll = instructions.y_dir * max_roll_deg;
     float targetYaw = currentAttitude.yaw + instructions.heading;
     float targetAltitude = instructions.z_dir;
 
