@@ -28,7 +28,7 @@ class ControlInterface {
     ///   The length of the outputs array. This should be equivilent to the
     ///   number of actuator channels
     virtual std::vector<ActuatorOutput> runControlsAlgorithm(
-        const AttitudeManagerInput &instructions) const = 0;
+        const AttitudeManagerInput &instructions) = 0;
 
     virtual void updatePid() = 0;
 

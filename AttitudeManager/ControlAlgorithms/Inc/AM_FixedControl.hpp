@@ -22,7 +22,7 @@ class FixedControl : public ControlInterface {
           configs{engine, leftAileron, rightAileron, rudder, elevator} {};
 
     std::vector<ActuatorOutput> runControlsAlgorithm(
-        const AttitudeManagerInput &instructions) const override;
+        const AttitudeManagerInput &instructions) override;
 
     void updatePid() override { return; }
 

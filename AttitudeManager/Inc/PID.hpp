@@ -66,8 +66,19 @@ class PIDController {
                   float actualRate = std::nanf(""));
     float execute_p(float desired, float actual);
 
+    void setNewPid(PID _pid) { pid = _pid; }
+    void setNewPid(float _kp, float _ki, float _kd, float _i_max,
+                   float _min_output, float _max_output) {
+        pid = PID{.kp = _kp,
+                  .kd = _kd,
+                  .ki = _ki,
+                  .i_max = _i_max,
+                  .min_output = _min_output,
+                  .max_output = _max_output};
+    }
+
    private:
-    const PID pid;
+    PID pid;
 
     float integral = 0.0f;
     float historicalValue[3] = {0.0f};

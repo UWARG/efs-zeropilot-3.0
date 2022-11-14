@@ -10,6 +10,7 @@
 #define ZPSW3_AM_LEVEL_QUAD_CONTROL_HPP
 
 #include "AM_ControlInterface.hpp"
+#include "PID.hpp"
 
 namespace AM {
 
@@ -21,7 +22,7 @@ class LevelQuadControl : public ControlInterface {
           configs{frontRight, frontLeft, backRight, backLeft} {};
 
     std::vector<ActuatorOutput> runControlsAlgorithm(
-        const AttitudeManagerInput &instructions) const override;
+        const AttitudeManagerInput &instructions) override;
 
     void updatePid() override { return; }
 
@@ -36,8 +37,8 @@ class LevelQuadControl : public ControlInterface {
 
     ActuatorConfig configs[NumActuatorIdx];
 
-    static constexpr float maxRoll = 60;
-    static constexpr float maxPitch = 60;
+    static constexpr float max_roll = 60;
+    static constexpr float max_pitch = 60;
 
     static constexpr int pid_abs_max = 100;
     // ? not sure if we need specifics for each angle
@@ -55,12 +56,21 @@ class LevelQuadControl : public ControlInterface {
     static constexpr float yaw_ki = 0.01;
     static constexpr float yaw_kd = 0.05;
 
-    static constexpr float altitude_kp = 0.25;
-    static constexpr float altitude_ki = 0.01;
-    static constexpr float altitude_kd = 0.05;
+    static constexpr float velocity_z_kp = 0.25;
+    static constexpr float velocity_z_ki = 0.01;
+    static constexpr float velocity_z_kd = 0.05;
+
+    PIDController pid_pitch{pitch_kp,     pitch_ki,     pitch_kd,
+                            max_i_windup, -pid_abs_max, pid_abs_max};
+    PIDController pid_roll{roll_kp,      roll_ki,      roll_kd,
+                           max_i_windup, -pid_abs_max, pid_abs_max};
+    PIDController pid_yaw{yaw_kp,       yaw_ki,       yaw_kd,
+                          max_i_windup, -pid_abs_max, pid_abs_max};
+    PIDController pid_z{velocity_z_kp, velocity_z_ki, velocity_z_kd,
+                        max_i_windup,  -pid_abs_max,  pid_abs_max};
 
     float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
-                  float altitude) const;
+                  float velocity_z) const;
 };
 }  // namespace AM
 

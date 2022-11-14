@@ -3,7 +3,7 @@
 namespace AM {
 
 std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
-    const AttitudeManagerInput &instructions) const {
+    const AttitudeManagerInput &instructions) {
 #warning Unimplemented
     // get attitude
     // interpret instructions
