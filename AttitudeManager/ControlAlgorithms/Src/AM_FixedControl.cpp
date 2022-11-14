@@ -1,29 +1,13 @@
 #include "AM_FixedControl.hpp"
 #include "PID.hpp"
 
- // #include math_constants to remove sloppy definitions
+
 constexpr double ZP_PI = 3.14159265358979311599796346854; // more precise pi value
+void DEG_TO_RAD(float angleInDegrees); 
 
-static float DEG_TO_RAD(float angleInDegrees); 
-
-static float DEG_TO_RAD(float angleInDegrees) {
-    return ((angleInDegrees) * ZP_PI / 180.0);
+void DEG_TO_RAD(float angleInDegrees) {
+    ((angleInDegrees) * ZP_PI / 180.0);
 }
-// Remove in future to mitigate cluttering
-typedef struct {
-    float roll, pitch, yaw;             // Degrees. Yaw of 180 is north.
-    float rollRate, pitchRate, yawRate; // Degrees/second
-    float airspeed;                     // m/s
-    float altitude;                     // m
-    float rateOfClimb;                  // m/s
-    long double latitude;               // Decimal degrees
-    float latitudeSpeed;                // m/s
-    long double longitude;              // Decimal degrees
-    float longitudeSpeed;               // m/s
-    double track;                       // Degrees. Track of 0 is north.
-    float groundSpeed;                  // m/s
-    double heading;                     // Degrees. Heading of 0 is north.
-} SFOutput_t;
 
 namespace AM {
 
@@ -64,48 +48,38 @@ void FixedControl::runControlsAlgo(const AttitudeManagerInput &instructions,
     PIDController pid_airspeed{airspeed_kp,       airspeed_ki,  airspeed_kd, 
                                airspeed_i_windup, airspeed_min, airspeed_max};                        
 
-    // Compute values for mixing
-    float bank = pid_bank.execute(targetBank, currentAttitude.roll, currentAttitude.rollRate);
-
-    float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch, currentAttitude.pitchRate);
-
-    float rudderSet = rudderPercent(bank);
+   // fixed controls shoudl get commands detailed in confluence ? 
+   
+   // Get current attitude from sensorfusion (commented currently to avoid 
+   //                                         cluttering in files)
+   // SFOutput_t currentAttitude; // TODO: This needs to be retrieved from LOS
     
-    rudderSet = pid_rudder.execute(0.0f, targetHeading);
+    // Compute the difference between our current and desired heading 
+    float desiredHeading = currentAttitude.heading - instructions.heading;
+    float desiredPitch = instructions.z_dir;
 
-    float airspeed = pid_airspeed.execute(targetAltitude, currentAttitude.altitude, // handling altitude with airspeed? Define altitude and airspeed seperately?
-                                          currentAttitude.rateOfClimb);
-    
-    float roll = DEG_TO_RAD(bank);
+    // Adjust heading difference for the PID
+    if (error <= (-180)) {
+        error += 180;
+    } else if (error > 180){
+        error -=360;
+    }
+   
 
-    // mix the PID's
-    float engineOutput = 
-        mixPIDs(configs[Engine].stateMix, roll, pitch, rudderSet, airspeed); 
-    float leftAileronOutput = 
-        mixPIDs(configs[LeftAileron].stateMix, roll, pitch, rudderSet, airspeed);
-    float rightAileronOutput = 
-        mixPIDs(configs[RightAileron].stateMix, roll, pitch, rudderSet, airspeed);
-    float rudder = 
-        mixPIDs(configs[Rudder].stateMix, roll, pitch, rudderSet, airspeed);
-    float elevator = 
-        mixPIDs(configs[Elevator].stateMix, roll, pitch, rudderSet, airspeed);
+    // replace bank and rudder with pitch roll and yaw ??
+    PIDController pid_bank{bank_kp,        bank_ki,      bank_kd, 
+                           bank_i_windup, -maxBankAngle, maxBankAngle };
+    PIDController pid_rudder{rudder_kp,       rudder_ki, rudder_kd, 
+                             rudder_i_windup, -100,      100};
+    PIDController pid_pitch{pitch_kp,       pitch_ki,       pitch_kd, 
+                            pitch_i_windup, -maxPitchAngle, maxPitchAngle};
 
-    // Verify values
-    assert(configs[Engine].channel < outputsLength); // Question: Engine controlled as some percentage? Indicative of airspeed?
-    outputs[configs[Engine].channel] = engineOutput;
-
-    assert(configs[LeftAileron].channel < outputsLength); 
-    outputs[configs[LeftAileron].channel] = leftAileronOutput;
-        
-    assert(configs[RightAileron].channel < outputsLength);
-    outputs[configs[RightAileron].channel] = rightAileronOutput;
-        
-    assert(configs[Rudder].channel < outputsLength);
-    outputs[configs[Rudder].channel] = rudder;
-        
-    assert(configs[Elevator].channel < outputsLength);
-    outputs[configs[Elevator].channel] = elevator;
-
+    // do something
+    float bankAngle = pid_bank.execute
+    // return output
+    // ActuatorOutput actuator;
+    // assert(actuator.channel < outputsLength);
+    // outputs[actuator.channel] = actuator.percent;
 }
 // Modify for fixed wing?
 float FixedControl::mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
@@ -116,8 +90,8 @@ float FixedControl::mixPIDs(StateMix actuator, float roll, float pitch, float ya
                             100, 0);
 }
 
-float FixedControl::rudderPercent(float bankAngle) const {
-    return((rudder_scaling_factor * bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
+void rudderPercent(float bankAngle) {
+    return((rudder_scaling_factor*bankAngle) / (ZP_PI / 2.0)) * 100.0; // "very simple for now. Experiments may give us a better formula. The PID will fix any discrepancy though"
 }
 
 } // namespace AM
