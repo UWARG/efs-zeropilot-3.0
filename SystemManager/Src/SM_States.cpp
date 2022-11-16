@@ -33,7 +33,15 @@ SystemState &BootMode::getInstance() {
 /********************
  * Disarm Mode
  ********************/
+void DisarmMode::enter(SystemManager *sys_man) {
+    // Start AM to accept PID tunings
+    // TODO
+    SM_to_AM_queue = osMailCreate();
+}
+
 void DisarmMode::execute(SystemManager *sys_man) {
+    // Forward any AM PID tuning messages.
+    // TODO
     // Check all arming mechnisms triggered then move to GroundOp
     // TODO
     sys_man->setState(GroundOpMode::getInstance());
@@ -47,15 +55,8 @@ SystemState &DisarmMode::getInstance() {
 /********************
  * Ground Op Mode
  ********************/
-void GroundOpMode::enter(SystemManager *sys_man) {
-    // Start AM to accept PID tunings
-    // TODO
-    SM_to_AM_queue = osMailCreate();
-}
-
 void GroundOpMode::execute(SystemManager *sys_man) {
-    // Forward any AM PID tuning messages.
-    // TODO
+    
     sys_man->setState(FlightMode::getInstance());
 }
 
