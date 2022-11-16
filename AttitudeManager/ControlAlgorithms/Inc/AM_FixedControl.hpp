@@ -27,14 +27,6 @@ class FixedControl : public ControlInterface {
     void updatePid() override { return; }
 
    private:
-    void rudderPercent(float bankAngle);
-    static float rudderPercent(float bankAngle);
-
-    void runControlsAlgo(const AttitudeManagerInput &instructions,
-                         float outputs[], uint8_t outputs_length) const;
-    float mixPIDs(StateMix actuator, float roll, float pitch, float yaw,
-                  float altitude) const;
-    float rudderPercent(float bankAngle) const;
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -46,36 +38,48 @@ class FixedControl : public ControlInterface {
 
     const ActuatorConfig configs[NumActuatorIdx];
     
-    // confirm values before flight ?
-    // this entire secion feels bloated. Improvements ?
-    static constexpr float maxBankAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more information.
-    static constexpr float maxPitchAngle = 20; // Max angle defined in degrees. See coordinated turns on confluence for more infomration.
+    static constexpr float MAX_BANK_ANGLE = 20;   // Max angle defined in degrees. See coordinated turns on confluence for more information.
+    static constexpr float MAX_PITCH_ANGLE = 20; // Max angle defined in degrees. See coordinated turns on confluence for more infomration.
 
-    static constexpr int max_i_windup = 1;
+    static constexpr int MAX_I_WINDUP = 1;
 
-    static constexpr float bank_kp = 4.2;           
-    static constexpr float bank_ki = 0.0;          
-    static constexpr float bank_kd = 0.0;   
-    static constexpr float bank_i_windup = 0.0; 
+    static constexpr float BANK_KP = 4.2;           
+    static constexpr float BANK_KI = 0.0;          
+    static constexpr float BANK_KD = 0.0;   
+    static constexpr float BANK_I_WINDUP = 0.0; 
 
-    static constexpr float rudder_kp = 0.2;          
-    static constexpr float rudder_ki = 0.2;         
-    static constexpr float rudder_kd = 7;  
-    static constexpr float rudder_i_windup = 0.0;       
+    static constexpr float RUDDER_KP = 0.2;          
+    static constexpr float RUDDER_KI = 0.2;         
+    static constexpr float RUDDER_KD = 7;  
+    static constexpr float RUDDER_I_WINDUP = 0.0;       
 
-    static constexpr float pitch_kp = 1.0;            
-    static constexpr float pitch_ki = 0.0;            
-    static constexpr float pitch_kd = 0.0;
-    static constexpr float pitch_i_windup = 0.0;
+    static constexpr float PITCH_KP = 1.0;            
+    static constexpr float PITCH_KI = 0.0;            
+    static constexpr float PITCH_KD = 0.0;
+    static constexpr float PITCH_I_WINDUP = 0.0;
 
-    static constexpr float airspeed_kp = 80.0;
-    static constexpr float airspeed_ki = 0.0;
-    static constexpr float airspeed_kd = 0.0;
-    static constexpr float airspeed_i_windup = 0.0;
-    static constexpr float airspeed_min = 0.0;
-    static constexpr float airspeed_max = 100;
+    static constexpr float AIRSPEED_KP = 80.0;
+    static constexpr float AIRSPEED_KI = 0.0;
+    static constexpr float AIRSPEED_KD = 0.0;
+    static constexpr float AIRSPEED_I_WINDUP = 0.0;
+    static constexpr float AIRSPEED_MIN = 0.0;
+    static constexpr float AIRSPEED_MAX = 100;
 
-    static constexpr float rudder_scaling_factor = 0.5; // "should be experimentally determined"
+    //static constexpr float rudder_scaling_factor = 0.5; 
+    
+    // Define PID values once to be passed around
+    PIDController pid_bank{BANK_KP,        BANK_KI,      BANK_KD, 
+                           BANK_I_WINDUP, -MAX_BANK_ANGLE, MAX_BANK_ANGLE };
+    PIDController pid_rudder{RUDDER_KP,       RUDDER_KI, RUDDER_KD, 
+                             RUDDER_I_WINDUP, -100,      100};
+    PIDController pid_pitch{PITCH_KP,       PITCH_KI,       PITCH_KD, 
+                            PITCH_I_WINDUP, -MAX_PITCH_ANGLE, MAX_PITCH_ANGLE};
+    PIDController pid_airspeed{AIRSPEED_KP,       AIRSPEED_KI,  AIRSPEED_KD, 
+                               AIRSPEED_I_WINDUP, AIRSPEED_MIN, AIRSPEED_MAX};  
+    
+    float mixPIDs(StateMix actuator, float bank, float pitch, float yaw,
+                  float throttle) const;
+
 };
 }  // namespace AM
 
