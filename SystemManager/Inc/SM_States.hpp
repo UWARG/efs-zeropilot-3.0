@@ -22,93 +22,93 @@
 
 
 class BootMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    BootMode() {
-    }
-    BootMode(const BootMode &other);
-    BootMode& operator =(const BootMode &other);
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+    private:
+        BootMode() {
+        }
+        BootMode(const BootMode &other);
+        BootMode& operator =(const BootMode &other);
 };
 
 class DisarmMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    DisarmMode() {
-    }
-    DisarmMode(const DisarmMode &other);
-    DisarmMode& operator =(const DisarmMode &other);
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+    private:
+        DisarmMode() {
+        }
+        DisarmMode(const DisarmMode &other);
+        DisarmMode& operator =(const DisarmMode &other);
 };
 
 class GroundOpMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    GroundOpMode() {
-    }
-    GroundOpMode(const GroundOpMode &other);
-    GroundOpMode& operator =(const GroundOpMode &other);
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+    private:
+        GroundOpMode() {
+        }
+        GroundOpMode(const GroundOpMode &other);
+        GroundOpMode& operator =(const GroundOpMode &other);
 };
 
 class FlightMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    FlightMode() {
-    }
-    FlightMode(const FlightMode &other);
-    FlightMode& operator =(const FlightMode &other);
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+    private:
+        FlightMode() {
+        }
+        FlightMode(const FlightMode &other);
+        FlightMode& operator =(const FlightMode &other);
 
-    static inputs_to_AM_t* generateWaypoint();
-    static inputs_to_AM_t* getManualWaypoint();
-    static inputs_to_AM_t* getPathManagerWaypoint();
-    static CommandsFromSM* generatePMPacket();
+        static inputs_to_AM_t* generateWaypoint();
+        static inputs_to_AM_t* getManualWaypoint();
+        static inputs_to_AM_t* getPathManagerWaypoint();
+        static CommandsFromSM* generatePMPacket();
 };
 
 class FatalFailureMode: public SystemState {
-public:
-    void enter(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    void execute(SystemManager *sys_man);
-    void exit(SystemManager *sys_man) {
-        (void) sys_man;
-    }
-    static SystemState& getInstance();
-private:
-    FatalFailureMode() {
-    }
-    FatalFailureMode(const FatalFailureMode &other);
-    FatalFailureMode& operator =(const FatalFailureMode &other);
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+    private:
+        FatalFailureMode() {
+        }
+        FatalFailureMode(const FatalFailureMode &other);
+        FatalFailureMode& operator =(const FatalFailureMode &other);
 };
 
 #endif //ZPSW3_SM_STATES_HPP
