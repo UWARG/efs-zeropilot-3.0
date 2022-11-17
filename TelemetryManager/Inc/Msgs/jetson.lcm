@@ -3,13 +3,12 @@ package messages;
 struct JetsonOdometryData {
    Header header;
    SensorData sensorData;
-   boolean crc[4]; 
+   byte crc[4]; 
 }
-
 
 struct JetsonMovementRequest {
    Header header;
-   boolean crc[4]; 
+   byte crc[4]; 
 }
 
 struct JetsonRelativeMovementCommand {
@@ -18,10 +17,10 @@ struct JetsonRelativeMovementCommand {
     float y;
     float z;
     float heading;
-    boolean crc[4];
+    byte crc[4];
 }
 
 struct JetsonLandingInitiationCommand {
     Header header;
-    boolean crc[4];
+    byte crc[4];
 }

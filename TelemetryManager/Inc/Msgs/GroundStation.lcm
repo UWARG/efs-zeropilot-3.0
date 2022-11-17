@@ -1,0 +1,55 @@
+package messages;
+
+
+struct Waypoint {
+    double longitude;
+    double latitude;
+    double altitude;
+    byte waypoint_id;
+}
+
+struct PIDValues {
+    double P;
+    double I;
+    double D;
+}
+
+struct PIDController {
+    PIDValues axes[6];
+}
+
+struct GroundStationWaypoints {
+    Header header;
+    int8_t num_waypoints;
+    Waypoint waypoints[5];
+    byte crc[4];
+}
+
+struct GroundStationDisarm {
+    Header header;
+    boolean arm;
+    byte crc[4];
+}
+
+struct GroundStationPIDValues {
+    Header header;
+    int8_t controller;
+    int8_t axis;
+    PIDValues values;
+    byte crc[4];
+}
+
+struct GroundStationData {
+    Header header;
+    byte motor_outputs[12];
+    SensorData data;
+    byte battery_voltages[13];
+    byte controller_values[16];
+    byte crc[4];
+}
+
+struct GroundStationPIDSetResponse {
+    Header header;
+    PIDController controllers[6];
+    byte crc[4];
+}
