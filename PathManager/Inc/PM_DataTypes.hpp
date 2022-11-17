@@ -8,13 +8,14 @@
 * Enums
 ********************************************************************/
 
-enum FlightStage{PREFLIGHT = 0, TAKEOFF, CRUISING, LANDING, LANDED, DISARMED}; //used to determine the stage of flight
+// Used by PM to determine the stage of flight
+enum FlightStage{PREFLIGHT = 0, TAKEOFF, CRUISING, LANDING, LANDED, DISARMED, TELEOP}; 
 
 
 // Used to specify the type of output
-enum WaypointType {PATH_FOLLOW = 0, ORBIT_FOLLOW, HOVER_WAYPOINT, TAKEOFF_WAYPOINT, LANDING_WAYPOINT, TRANSITION_WAYPOINT};
+// Where TELEOP_MODE is used by SM to indicate to PM to pass data directly to AM 
+enum WaypointType {PATH_FOLLOW = 0, ORBIT_FOLLOW, HOVER_WAYPOINT, TAKEOFF_WAYPOINT, LANDING_WAYPOINT, TRANSITION_WAYPOINT, TELEOP_MODE};
 
-// Also don't know where to put these 
 enum ModifyFlightPathCommand { NO_FLIGHT_PATH_EDIT = 0, INITIALIZE_FLIGHT_PATH, APPEND, INSERT, UPDATE, DELETE, NUKE }; // Used by cruisingState
 enum GetNextDirectionsCommand { REGULAR_PATH_FOLLOWING = 0, TOGGLE_HOLDING, TOGGLE_HEAD_HOME }; // Used by cruisingState
 
@@ -22,24 +23,6 @@ enum GetNextDirectionsCommand { REGULAR_PATH_FOLLOWING = 0, TOGGLE_HOLDING, TOGG
 /********************************************************************
 * Important Structs
 ********************************************************************/
-
-/*
-* Structure stores manual control information
-* If a certain variable needs to be controlled, set the percent to the desired value and its respective boolean to true
-*/
-struct PassbyControl{
-    double rollPercent;
-    bool rollPassby;
-
-    double rudderPercent;
-    bool rudderPassby;
-
-    double pitchPercent;
-    bool pitchPassby;
-
-    double throttlePercent;
-    bool throttlePassby;
-};
 
 
 /**
@@ -56,16 +39,7 @@ struct WaypointData {
     double velocity_target; 
 };
 
-struct LandingTakeoffOutput //this structure is used to hold the outputs of each landing state
-{
-    double desiredHeading; //desired heading is used when useHeading is true
-    double desiredTrack; //desired track is used when useHEading is false
-    bool useHeading; //this variable is used to determine if heading needs to be controlled, rather than track
-    double desiredAltitude;
-    double desiredAirspeed;
-    PassbyControl controlDetails; //this variable is used to store the controls if passby control is needed
-};
-
+// Used in Cruising State 
 struct WaypointManager_Data_In {
     long double latitude;
     long double longitude;
@@ -89,7 +63,7 @@ struct WaypointManager_Data_Out{
 
 //Commands for path manager to send to attitude manager.
 typedef struct CommandsForAM_t{
-2  WaypointType waypoint_type;  // not necessary
+2  WaypointType waypoint_type;  
 3
 4  // heading unit vector and magnitude
 5  float dist_x; 
@@ -101,84 +75,33 @@ typedef struct CommandsForAM_t{
 11} CommandsForAM;
 
 
-// AM will tell us when drone is armed and ready to fly, then we will progress to Takeoff
-typedef struct CommandsFromAM{
-    bool armed;  
-} CommandsFromAM;
-
-
-// Data given from CV/TM to PM 
+// Data given from CV/TM to PM during regular cruising 
 struct TelemWaypointData {    
-  double longitude;  //    
+  double longitude;     
   double lattiude;   
+  double altitude; 
   uint8_t waypoint_id; 
 };
 
 typedef struct CommandsFromTM{
-    bool start_landing;
     uint8_t num_waypoints; // number of waypoints in the list 
     TelemWaypointData waypoints[num_waypoints]; 
 } CommandsFromTM;
 
+// Data given from CV/TM during search and landing 
+struct JetsonToZpMovementCommand {
+  float x;
+  float y;
+  float z;
+  float heading;
+}
 
-
-
-/* Not needed right now 
-//Data for path manager to send to telemetry.
-typedef struct POGI{
-	int errorCode; //Code for specified errors
-	double gpsLattitude,gpsLongitude,curAltitude; //Current gps position and altitude
-	float curAirspeed; //Airspeed data
-	float roll,pitch,yaw;	//Current orientation (radians)
-	float camRoll,camPitch,camYaw;	//Current camera orientation (radians)
-	bool isLanded; //Switch to check if landed (maybe limit switch?)
-	uint8_t editingFlightPathErrorCode,flightPathFollowingErrorCode; //Flight path error codes
-	uint8_t currentWaypointId, currentWaypointIndex; //current waypoint data
-	bool homeBaseInit; //is home base initialized
-} POGI;
-*/
-
-/*TODO: fix this based on what TM is giving us*/
-struct Telemetry_PIGO_t {
-    /* Parameters for the waypoint manager (crusingState) */
-    int numWaypoints;
-    
-    ModifyFlightPathCommand waypointModifyFlightPathCommand; 
-    bool initializingHomeBase; // 0 = no, 1 = yes
-    GetNextDirectionsCommand waypointNextDirectionsCommand; 
-    int holdingAltitude;
-    int holdingTurnRadius;
-    uint8_t holdingTurnDirection; // 0 = CW, 1 = CCW
-
-    // When modifying the flight path.
-    int nextId;
-    int prevId;
-    int modifyId;
-
-    // Expecting a list of waypoints from TM 
-    TelemWaypointData waypoints[100]; // Somehow need to get PATH_BUFFER_SIZE here...
-    TelemWaypointData homebase;
-
-    // landing and takeoff 
-    bool beginLanding;
-    bool beginTakeoff;
-    float stoppingDirectionHeading;
-    double stoppingLongitude;
-    double stoppingLatitude;
-    float stoppingAltitude;
-    float takeoffDirectionHeading;
-    // Struct for stopping point gps coordinates
-
-
-    // gimbal (pitch and yaw)
-    float gimbalPitch;
-    float gimbalYaw;
-
-};
-
+struct LandingInitiationCommand {
+    bool start_landing; 
+}
 
 /* DATA FROM SF */
-typedef struct {
+typedef struct LosSFData_t {
     float roll, pitch, yaw; //rad
     float rollRate, pitchRate, yawRate; //rad/s
     float airspeed; //m/s
@@ -190,7 +113,19 @@ typedef struct {
     float longitudeSpeed; //m/s
     double track; // degrees
     double heading; //degrees
-} SFOutput_t;
+} LosSFData;
+
+// Receiving LOS data, and CM/TM commands from SM 
+typedef struct CommandsFromSM{
+    WaypointType waypoint_type;
+    CommandsFromTM telemetry_commands;
+    JetsonToZpMovementCommand jetson_commands; 
+    LandingInitiationCommand landing_initiation; 
+    // TODO: add RC data for teleop mode
+    LosSFData sf_data;
+} CommandsFromSM;
+
+
 
 #endif
 
