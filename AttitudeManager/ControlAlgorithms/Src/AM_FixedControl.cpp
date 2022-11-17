@@ -49,7 +49,6 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     float elevator = 
         mixPIDs(configs[Elevator].stateMix, bank, pitch, yaw, throttle);
     
-    float engine_output, left_aileron_output, right_aileron_output, rudder, elevator;
 
     return std::vector<ActuatorOutput> {
         {configs[Engine].channel, engine_output},
