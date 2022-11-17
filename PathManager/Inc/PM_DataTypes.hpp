@@ -62,6 +62,8 @@ struct WaypointManager_Data_Out{
 
 
 //Commands for path manager to send to attitude manager.
+// TODO: Figure out what we are sending in teleop 
+
 typedef struct CommandsForAM_t{
 2  WaypointType waypoint_type;  
 3
