@@ -88,9 +88,7 @@ class FlightMode: public SystemState {
         FlightMode(const FlightMode &other);
         FlightMode& operator =(const FlightMode &other);
 
-        static inputs_to_AM_t* generateWaypoint();
         static inputs_to_AM_t* getManualWaypoint();
-        static inputs_to_AM_t* getPathManagerWaypoint();
         static CommandsFromSM* generatePMPacket();
 };
 
