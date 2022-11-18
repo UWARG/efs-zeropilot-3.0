@@ -8,7 +8,6 @@
 #include "PM_DataTypes.hpp"
 #include "PM_CommsWithAM.hpp"
 #include "PM_CommsWithTM.hpp"
-#include "SensorFusion.hpp"
 //#include "AttitudePathInterface.hpp"
 //#include "gimbal.hpp"
 
@@ -20,21 +19,9 @@
 /***********************************************************************************************************************
  * Code
  **********************************************************************************************************************/
-
-class CommsWithAttitude : public pathManagerState
-{
-    public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
-        static CommandsFromAM* GetCommFromAttitude(void) { return &receivedData; }
-    private:
-        commsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
-        commsWithAttitude(const commsWithAttitude& other);
-        commsWithAttitude& operator =(const commsWithAttitude& other);
-        static CommandsFromAM receivedData;
-};
+/* 
+    CommswithAttitude and CommsWithTelemetry are currently unused 
+    but I am keeping them here in case we need them again
 
 class CommsWithTelemetry : public pathManagerState
 {
@@ -70,6 +57,40 @@ class SensorFusion : public pathManagerState
         // it like the IMU_Data_t struct above
 };
 
+*/
+
+
+class CommsWithAttitude : public pathManagerState
+{
+    public:
+        void enter(pathManager* pathMgr) {(void) pathMgr;}
+        void execute(pathManager* pathMgr);
+        void exit(pathManager* pathMgr) {(void) pathMgr;}
+        static pathManagerState& getInstance();
+        static CommandsForAM* GetCommFromAttitude(void) { return &receivedData; }
+    private:
+        commsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
+        commsWithAttitude(const commsWithAttitude& other);
+        commsWithAttitude& operator =(const commsWithAttitude& other);
+        static CommandsForAM receivedData;
+};
+
+class CommsWithSystemManager : public pathManagerState
+{
+    public:
+        void enter(pathManager* pathMgr) {(void) pathMgr;}
+        void execute(pathManager* pathMgr);
+        void exit(pathManager* pathMgr) {(void) pathMgr;}
+        static pathManagerState& getInstance();
+        static CommandsFromSM* GetSMIncomingData(void) {return &_incomingData;}
+    private:
+        CommsWithSystemManager() {CommWithSMInit();}
+        CommsWithSystemManager(const CommsWithSystemManager& other);
+        CommsWithSystemManager& operator =(const CommsWithSystemManager& other);
+        static CommandsFromSM incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
+};
+
+
 class FlightModeSelector : public pathManagerState
 {
     public:
@@ -103,8 +124,6 @@ class PreflightStage : public pathManagerState
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         int cycleCount = 0; 
-        static LandingTakeoffInput input;
-        static LandingTakeoffOutput output;
         static WaypointManager_Data_Out waypointOutput;
         bool preFlightComplete; 
         preflightStage() {}
@@ -126,12 +145,11 @@ class TakeoffStage : public pathManagerState
         static LandingTakeoffOutput* getControlOutput(){return &output;}
         static CommandsForAM_t* getTakeoffDataForAM() {return &takeoffDataForAM;} 
     private:
-        static LandingTakeoffInput input;
-        static LandingTakeoffOutput output;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
+        static LosSFData LOSData; 
         static CommandsForAM_t takeoffDataForAM; 
         takeoffStage() {}
         takeoffStage(const takeoffStage& other);
@@ -176,14 +194,12 @@ class LandingStage : public pathManagerState
         static CommandsForAM_t* getLandingDataForAM() {return &landingDataForAM;} 
         static WaypointManager landingPath;
         static WaypointStatus waypointStatus; //used to catch errors
-        static LandingPath path; //used to load in path
     private:
-        static LandingTakeoffInput input;
-        static LandingTakeoffOutput output;
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
+        static LosSFData LOSData; 
         static CommandsForAM_t landingDataForAM;
         landingStage() {}
         landingStage(const landingStage& other);

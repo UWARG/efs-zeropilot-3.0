@@ -85,7 +85,7 @@ struct TelemWaypointData {
   uint8_t waypoint_id; 
 };
 
-typedef struct CommandsFromTM{
+typedef struct CommandsFromTM_t{
     uint8_t num_waypoints; // number of waypoints in the list 
     TelemWaypointData waypoints[num_waypoints]; 
 } CommandsFromTM;
@@ -96,11 +96,11 @@ struct JetsonToZpMovementCommand {
   float y;
   float z;
   float heading;
-}
+};
 
 struct LandingInitiationCommand {
     bool start_landing; 
-}
+};
 
 /* DATA FROM SF */
 typedef struct LosSFData_t {
@@ -123,8 +123,9 @@ typedef struct CommandsFromSM{
     CommandsFromTM telemetry_commands;
     JetsonToZpMovementCommand jetson_commands; 
     LandingInitiationCommand landing_initiation; 
-    // TODO: add RC data for teleop mode
     LosSFData sf_data;
+
+    // TODO: add RC data for teleop mode
 } CommandsFromSM;
 
 

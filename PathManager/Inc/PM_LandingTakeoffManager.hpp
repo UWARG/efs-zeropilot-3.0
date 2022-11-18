@@ -5,10 +5,8 @@
 */
 
 #include "PM_WaypointManager.hpp"
-//#include "AutoSteer.hpp"
 #include "SensorFusion.hpp"
 #include "PM_DataTypes.hpp"
-//#include "TelemPathInterface.hpp"
 
 /********************************************************************
 * Constants
@@ -56,7 +54,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits below a certain altitude
         */
-        static WaypointData createLandingWaypoint(const SFOutput_t & input);
+        static WaypointData createLandingWaypoint(const LosSFData & input);
 
         /******************
          * TAKEOFF FUNCTIONS
@@ -71,7 +69,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits at a certain altitude
         */
-        static WaypointData createTakeoffWaypoint(const SFOutput_t & input);
+        static WaypointData createTakeoffWaypoint(const LosSFData & input);
 
         /***********************************
         COMMON LANDING AND TAKEOFF FUNCTIONS

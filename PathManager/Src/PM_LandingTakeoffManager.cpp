@@ -29,7 +29,7 @@ double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
     return groundHeight;
 }
 
-static CommandsForAM_t LandingTakeoffManager::createTakeoffWaypoint(const SFOutput_t & input)
+static CommandsForAM_t LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
 {
     CommandsForAM_t desiredWaypoint;
 
@@ -46,7 +46,7 @@ static CommandsForAM_t LandingTakeoffManager::createTakeoffWaypoint(const SFOutp
     return desiredWaypoint;
 }
 
-static CommandsForAM_t LandingTakeoffManager::createLandingWaypoint(const SFOutput_t & input)
+static CommandsForAM_t LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
 {
     CommandsForAM_t desiredWaypoint;
 
