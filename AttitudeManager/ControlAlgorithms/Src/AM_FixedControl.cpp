@@ -8,11 +8,6 @@ namespace AM {
 std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
 #warning Unimplemented
-    // get attitude
-    // interpret instructions
-    // calculate pids
-    // mix pids
-   // Get current attitude from sensorfusion 
    
     SFOutput_t current_attitude; 
     
@@ -64,6 +59,7 @@ float FixedControl::mixPIDs(StateMix actuator, float bank, float pitch, float ya
                                 actuator.yaw * yaw +
                                 actuator.velocity_x * throttle,
                             100, 0);
+
 }
 
 } // namespace AM

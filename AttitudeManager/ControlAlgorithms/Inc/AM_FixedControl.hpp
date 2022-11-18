@@ -1,15 +1,16 @@
 /*
- * AM_LevelQuadControl.hpp
+ * AM_FixedControl.hpp
  *
  * Attitude Manager Level Mode Quad Controller Algorithm
  *
  * Created on: Oct 22, 2022
- * Author(s): Aidan Bowers
+ * Author(s): Aidan Bowers, Jack Greenwood
  */
 #ifndef ZPSW3_AM_FIXED_CONTROL_HPP
 #define ZPSW3_AM_FIXED_CONTROL_HPP
 
 #include "AM_ControlInterface.hpp"
+#include "PID.hpp"
 
 namespace AM {
 
@@ -63,9 +64,7 @@ class FixedControl : public ControlInterface {
     static constexpr float AIRSPEED_KD = 0.0;
     static constexpr float AIRSPEED_I_WINDUP = 0.0;
     static constexpr float AIRSPEED_MIN = 0.0;
-    static constexpr float AIRSPEED_MAX = 100;
-
-    //static constexpr float rudder_scaling_factor = 0.5; 
+    static constexpr float AIRSPEED_MAX = 100; 
     
     // Define PID values once to be passed around
     PIDController pid_bank{BANK_KP,        BANK_KI,      BANK_KD, 
