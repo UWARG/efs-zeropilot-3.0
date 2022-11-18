@@ -2,6 +2,7 @@
 // Created by Anthony Luo on 2022-10-12.
 //
 #include "AM.hpp"
+#include "LOS_Actuators.hpp"
 #include <array>
 
 namespace AM {
@@ -19,12 +20,13 @@ void AttitudeManager::runControlLoopIteration(
         // Handle transition between flight modes
         controller_output = runTransitionMixingIteration(
             controller_interfaces[current_controller_index],
-            controller_interfaces[desired_controller_index], instructions);
+            controller_intfaces[desired_controller_index], instructions);
     }
 
     // Write actuator outputs
+    LOS_Actuators outputs;
     for (auto output : controller_output) {
-        // LosActuators.set(output.channel, output.percent);
+         outputs.set(output.channel, output.percent);
     }
 }
 
