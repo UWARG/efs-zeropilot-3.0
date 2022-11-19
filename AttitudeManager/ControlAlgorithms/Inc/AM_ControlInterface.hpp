@@ -26,7 +26,7 @@ class ControlInterface {
 
     virtual void updatePid() = 0;
 
-    const uint8_t num_actuators;  //< Number of actuators for given flight model
+    const uint8_t num_actuators;  // Number of actuators for given flight model
 
    private:
     ControlInterface();
