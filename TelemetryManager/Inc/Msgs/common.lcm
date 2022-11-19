@@ -2,7 +2,7 @@ package messages;
 
 struct Header {
     byte flag;
-    int16_t length;
+    byte length[2]; // 16 bit uint doesnt exit
     byte type;
 }
 

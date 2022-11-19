@@ -1,13 +1,31 @@
 script_path=$(dirname $0)
 
-if [ $1 = "clean" ]; then 
-    echo "cleaning messages"
-    rm -r $script_path/../TelemetryManager/Inc/messages
-else
-    echo "building messages"
-#    lcm-gen --cpp --cpp-hpath $script_path/../TelemetryManager/Inc/ $script_path/../TelemetryManager/Inc/Msgs/.
+if [ $# = 0 ]; then 
+    echo "no args passed, exiting"
+    exit
+fi
+
+# for python you must pass a location for the built files
+if [ $1 = "python" ]; then  
+    echo "building python messages"
+    if [ $# != 2 ]; then
+        echo "python option needs a location argument. Not enough args. Exiting"
+        exit
+    fi
     for FILE in $script_path/../TelemetryManager/Inc/Msgs/*; do
-        echo "building hpp for $FILE"
+        echo "building .py for $FILE"
+        lcm-gen --python --ppath $2 $FILE
+    done   
+elif [ $1 = "cpp" ]; then
+    echo "building c++ messages"
+    for FILE in $script_path/../TelemetryManager/Inc/Msgs/*; do
+        echo "building .hpp for $FILE"
         lcm-gen --cpp --cpp-hpath $script_path/../TelemetryManager/Inc/ $FILE
     done   
+elif [ $1 = "clean" ]; then
+    echo "cleaning messages"
+    rm -r $script_path/../TelemetryManager/Inc/messages
+else 
+    echo "arg not recognized. exiting"
+    exit
 fi

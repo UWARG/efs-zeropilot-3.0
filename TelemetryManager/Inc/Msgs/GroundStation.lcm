@@ -20,7 +20,7 @@ struct PIDController {
 
 struct GroundStationWaypoints {
     Header header;
-    int8_t num_waypoints;
+    byte num_waypoints;
     Waypoint waypoints[5];
     byte crc[4];
 }
@@ -51,6 +51,6 @@ struct GroundStationData {
 struct GroundStationPIDSetResponse {
     Header header;
     byte controller_number;
-    PIDController controller
+    PIDController controller;
     byte crc[4];
 }
