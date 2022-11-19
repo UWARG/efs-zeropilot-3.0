@@ -2,6 +2,8 @@
 #include "PID.hpp"
 #include "MathConstants.hpp"
 #include "CommonDataTypes.hpp"
+#include "LOS_Link.hpp"
+#include "LOS_Actuators.hpp"
 
 namespace AM {
 
@@ -15,14 +17,8 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     float target_heading = instructions.heading;
     float target_throttle = instructions.speed; 
     float target_pitch = instructions.x_dir * MAX_PITCH_ANGLE;
-    float target_bank = instructions.y_dir * MAX_BANK_ANGLE;
-     
-    // Adjust heading difference for the PID. Can be reworked 
-    // if (targetHeading <= (-180)) {
-    //     targetHeading += 180;
-    // } else if (targetHeading > 180){
-    //     targetHeading -=360;
-    // }                                      
+    float target_bank = instructions.y_dir * MAX_BANK_ANGLE;  
+
 
     float bank = pid_bank.execute(target_bank, current_attitude.roll, current_attitude.rollRate);
 
@@ -60,6 +56,21 @@ float FixedControl::mixPIDs(StateMix actuator, float bank, float pitch, float ya
                                 actuator.velocity_x * throttle,
                             100, 0);
 
+}
+
+void FixedControl::FixedControlManual::stickMapping() {
+    Los_Link *stick_inputs;
+    LosLinkRx_t outputs;
+    LOS_Actuators actuators;
+
+    stick_inputs->getRx();
+ 
+    std::vector<ActuatorOutput> controller_output;
+    for (auto output : controller_output) {
+        int i = 0;
+        actuators.set(output.channel, outputs.rx_channels[i]);
+        i++;
+    }
 }
 
 } // namespace AM
