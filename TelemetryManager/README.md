@@ -13,8 +13,8 @@ import (
 
 func main() {
 	// generate function defs, includes, etc
-	fmt.Print("#pragma once\n#include <cstdint>\n\n")
-	fmt.Print("uint32_t calculateChecksum(uint8_t* buf, uint8_t size);\n\n")
+	fmt.Print("#pragma once\n\n#include <cstdint>\n\n")
+	fmt.Print("const uint32_t calculateChecksum(uint8_t* buf, uint8_t size);\n\n")
 
 	// generate crc32 table
 	table := crc32.MakeTable(crc32.IEEE) // <- this is where the polynomial is defined
@@ -48,3 +48,13 @@ To build the python messages, do the same as above, but the first argument must 
 
 #### IMPORTANT NOTE
 All LCM messages must have a `Header header;` as the first variable and a `byte crc[4];` as the last variable.
+
+
+## Testing
+
+There is a file in src called TM_test.cpp, meant only for testing TM functions. you can compile and run it by running the following command from the TelemetryManager folder.
+
+```
+g++ -o TM_test Src/* -I Inc ; echo "running now"; ./TM_test; rm TM_test
+``` 
+This will compile all cpp files and use Inc as the includes path, run the program, then delete the compiled program.
