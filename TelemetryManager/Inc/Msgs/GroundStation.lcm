@@ -33,8 +33,8 @@ struct GroundStationDisarm {
 
 struct GroundStationPIDValues {
     Header header;
-    int8_t controller;
-    int8_t axis;
+    byte controller;
+    byte axis;
     PIDValues values;
     byte crc[4];
 }
@@ -50,6 +50,7 @@ struct GroundStationData {
 
 struct GroundStationPIDSetResponse {
     Header header;
-    PIDController controllers[6];
+    byte controller_number;
+    PIDController controller
     byte crc[4];
 }
