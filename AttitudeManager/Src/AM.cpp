@@ -20,7 +20,7 @@ void AttitudeManager::runControlLoopIteration(
         // Handle transition between flight modes
         controller_output = runTransitionMixingIteration(
             controller_interfaces[current_controller_index],
-            controller_intfaces[desired_controller_index], instructions);
+            controller_interfaces[desired_controller_index], instructions);
     }
 
     // Write actuator outputs
@@ -36,8 +36,8 @@ void AttitudeManager::setDesiredControlAlgorithm(uint8_t id) {
         desired_controller_index == current_controller_index) {
         desired_controller_index = id;
 
-#warning This should be getting the current time
-        transition_start_time_ms = 0;  // TODO: Get the current time from los
+        transition_start_airspeed = 0; // get the current airspeed of the drone from somewhere
+        
     }
 }
 
@@ -50,15 +50,14 @@ std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
     std::vector<ActuatorOutput> desired_output =
         desired_controller->runControlsAlgorithm(instructions);
 
-#warning This should be getting the current time
+//#warning This should be getting the current time
     // Determine how much of each mix to apply
-    const uint64_t current_time_ms = 0;  // TODO: Get the current time from los
+    const uint64_t current_airspeed = 0; // get from somewhere? path man
     const float transition_percent =
-        (transition_start_time_ms - current_time_ms) / transition_time_ms;
+        (current_airspeed - transition_start_airspeed) / desired_airspeed;
     const float inv_transition_percent = 1 - transition_percent;
 
-    auto transition_end_time_ms = transition_start_time_ms + transition_time_ms;
-    if (current_time_ms > transition_end_time_ms) {
+    if (desired_airspeed) {
         // Update the active controller
         current_controller_index = desired_controller_index;
     }

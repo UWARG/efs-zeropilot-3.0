@@ -34,7 +34,9 @@ class AttitudeManager {
     uint8_t desired_controller_index = 0;
     const ControlInterfaceList controller_interfaces;
     static constexpr uint64_t transition_time_ms = 5000;
+    static constexpr uint64_t desired_airspeed = 60; 
     uint64_t transition_start_time_ms = 0;
+    uint64_t transition_start_airspeed = 0;
 
     void setDesiredControlAlgorithm(uint8_t id);
 
