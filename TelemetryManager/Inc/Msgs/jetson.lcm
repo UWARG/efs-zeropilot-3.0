@@ -8,6 +8,7 @@ struct JetsonOdometryData {
 
 struct JetsonMovementRequest {
    Header header;
+   boolean req;
    byte crc[4]; 
 }
 
@@ -22,5 +23,6 @@ struct JetsonRelativeMovementCommand {
 
 struct JetsonLandingInitiationCommand {
     Header header;
+    boolean req;
     byte crc[4];
 }
