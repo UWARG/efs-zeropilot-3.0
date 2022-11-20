@@ -12,21 +12,32 @@
 /********************
  * Boot Mode
  ********************/
-void BootMode::execute(SystemManager *sys_man) {
+void BootMode::execute(SystemManager *system_manager) {
     // Only Executes once, Configure sensors, LOS, Everything startup
 
-    los_interface.init(losInitData); // TODO, make this agree with what LOS needs
-
-    // Start TM at slow speed
-    xTaskCreate(sys_man.TMSlowTask, "TM Slow Thread", &sys_man.TM_handle);
+    system_manager->los_interface.init(losInitData); // TODO, make this agree with what LOS needs
     
-    vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
-
+    // Start TM at slow speed
     // Update TM mail queue ID
-    sys_man.TM_to_SM_queue = osMailCreate();
+    // system_manager->TM_to_SM_queue = osMailCreate();
+    // xTaskCreate(system_manager->TMSlowTask, "TM Slow Thread", &system_manager->TM_handle);
+    // vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
+
+    // AM init
+    AM::ActuatorConfig m0{.channel = 0,
+                          .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)};
+    AM::ActuatorConfig m1{.channel = 1,
+                          .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)};
+    AM::ActuatorConfig m2{.channel = 2,
+                          .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)};
+    AM::ActuatorConfig m3{.channel = 3,
+                          .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)};
+    AM::LevelQuadControl quad1(m0, m1, m2, m3);
+
+    system_manager->attitude_manager = attitude_manager(&quad1)
 
     // Immediately move to Disarm mode
-    sys_man->setState(DisarmMode::getInstance());
+    system_manager->setState(DisarmMode::getInstance());
 }
 
 SystemState &BootMode::getInstance() {
@@ -37,21 +48,17 @@ SystemState &BootMode::getInstance() {
 /********************
  * Disarm Mode
  ********************/
-void DisarmMode::enter(SystemManager *sys_man) {
-    // Start AM to accept PID tunings
-    xTaskCreate(sys_man.AMOperationTask, "AM Thread", &sys_man.AM_handle);
+void DisarmMode::execute(SystemManager *system_manager) {
+    // TODO Check if we received new PID tunings and call the AM function here
 
-    vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
-
-    sys_man.SM_to_AM_queue = osMailCreate();
-}
-
-void DisarmMode::execute(SystemManager *sys_man) {
-    // Forward any AM PID tuning messages.
-    // TODO
     // Check all arming mechnisms triggered then move to GroundOp
     // TODO
-    sys_man->setState(GroundOpMode::getInstance());
+
+    // For Nov 27th implementation, 
+    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
+    if (system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 255 && system_manager->rc_data[SM::RC_PITCH_CHANNEL] == 255) {
+        system_manager->setState(GroundOpMode::getInstance());
+    }
 }
 
 SystemState &DisarmMode::getInstance() {
@@ -62,15 +69,17 @@ SystemState &DisarmMode::getInstance() {
 /********************
  * Ground Op Mode
  ********************/
-void GroundOpMode::execute(SystemManager *sys_man) {
-    
-    sys_man->setState(FlightMode::getInstance());
+void GroundOpMode::execute(SystemManager *system_manager) {
+    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
+    if (system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 0 && system_manager->rc_data[SM::RC_PITCH_CHANNEL] == 0) {
+        system_manager->setState(FlightMode::getInstance());
+    }
 }
 
-void GroundOpMode::exit(SystemManager *sys_man) {
+void GroundOpMode::exit(SystemManager *system_manager) {
     // Delete SM to AM queue to prevent PID tuning midair
-    osMailFree(sys_man.SM_to_AM_queue);
-    sys_man.SM_to_AM_queue = NULL;
+    osMailFree(system_manager->SM_to_AM_queue);
+    system_manager->SM_to_AM_queue = NULL;
 }
 
 SystemState &GroundOpMode::getInstance() {
@@ -81,34 +90,54 @@ SystemState &GroundOpMode::getInstance() {
 /********************
  * Flight Mode
  ********************/
-void FlightMode::enter(SystemManager *sys_man) {
+void FlightMode::enter(SystemManager *system_manager) {
     // Start the PM thread and increase TM speed (have to start different task)
-    xTaskCreate(sys_man.PMOperationTask, "PM Thread", &sys_man.PM_handle);
-    vTaskDelete(sys_man.TM_handle);
-    xTaskCreate(sys_man.TMOperationTask, "TM Thread", &sys_man.TM_handle);
+    // xTaskCreate(system_manager->PMOperationTask, "PM Thread", &system_manager->PM_handle);
+    // vTaskDelete(system_manager->TM_handle);
+    // xTaskCreate(system_manager->TMOperationTask, "TM Thread", &system_manager->TM_handle);
 
-    sys_man.SM_to_PM_queue = osMailCreate();
-    sys_man.PM_to_AM_queue = osMailCreate();
+    // system_manager->SM_to_PM_queue = osMailCreate();
+    // system_manager->PM_to_AM_queue = osMailCreate();
+
+    // JUST for the Nov 27th deadline flight:
+
+    system_manager->SM_to_AM_queue = osMailCreate();
+    xTaskCreate(system_manager->AMOperationTask, "AM Thread", &system_manager->AM_handle);
 
     vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
 }
 
-void FlightMode::execute(SystemManager *sys_man) {
+void FlightMode::execute(SystemManager *system_manager) {
     // Get sensor fusion data from LOS interfaces
     // TODO
     // SM.sf_data = los_interface.
+
+    // Get RC data from LOS
+    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
+
+    // Decode RC data and convert to AM message type
+    system_manager->to_am_data = RcToAmInput(system_manager->rc_data);
+
+    // Send to AM mail queue (JUST Nov 27th implementation)
+    osMailPut(system_manager->SM_to_AM_queue, &system_manager->to_am_data)
 
     // Get big packet message from TM and store it
     // TODO
 
     // Determine flight state (Takeoff/cruise/Landing/landed) and update state
     // TODO
+    // if ((system_manager->operation_mode == SM::LANDING && landedCheck()) || system_manager->tm_packet.state == "SM::DISARMED") {
+    //     system_manager->operation_mode = SM::DISARMED;
+    // }
 
-    // If disarm/landed then move to disarm
-    // sys_man->setState(DisarmMode::getInstance());
-
-    // If fatal Failure then move to fatal fail
-    // sys_man->setState(FatalFailMode::getInstance());
+    // // TODO update this when I get what TM sends/have a landing check
+    // if (system_manager->tm_packet.desired_state == "FATAL_FAIL") {
+    //     // If fatal Failure then move to fatal fail mode
+    //     system_manager->setState(FatalFailMode::getInstance());
+    // } else if (system_manager->operation_mode == SM::DISARMED) {
+    //     // If disarm/landed then move to disarm
+    //     system_manager->setState(DisarmMode::getInstance());
+    // }
     
     // Get waypoint(s) from TM/RC (through LOS) and pass SF data and waypoint(s) to PM (who sends to AM)
     // TODO
@@ -121,24 +150,27 @@ void FlightMode::execute(SystemManager *sys_man) {
 
 }
 
-void FlightMode::exit(SystemManager *sys_man) {
+void FlightMode::exit(SystemManager *system_manager) {
     // Stop the AM, PM thread and decrease TM speed
 
-    // Kill PM
-    vTaskDelete(sys_man.PM_handle);
-    // Kill AM
-    vTaskDelete(sys_man.AM_handle);
+    // Stop PM
+    // vTaskDelete(system_manager->PM_handle);
+    // Stop AM
+    vTaskDelete(system_manager->AM_handle);
 
     // Slow TM operation speed
-    vTaskDelete(sys_man.TM_handle);
-    xTaskCreate(sys_man.TMSlowTask, "TM Slow Thread", &sys_man.TM_handle);
+    // vTaskDelete(system_manager->TM_handle);
+    // xTaskCreate(system_manager->TMSlowTask, "TM Slow Thread", &system_manager->TM_handle);
 
     vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
 
-    osMailFree(sys_man.SM_to_PM_queue);
-    sys_man.SM_to_PM_queue = NULL;
-    osMailFree(sys_man.PM_to_AM_queue);
-    sys_man.PM_to_AM_queue = NULL;
+    osMailFree(system_manager->SM_to_AM_queue);
+    system_manager->SM_to_AM_queue = NULL;
+
+    // osMailFree(system_manager->SM_to_PM_queue);
+    // system_manager->SM_to_PM_queue = NULL;
+    // osMailFree(system_manager->PM_to_AM_queue);
+    // system_manager->PM_to_AM_queue = NULL;
 
     // Write 0 to LOS actuators
     // TODO
@@ -155,20 +187,18 @@ inputs_to_AM_t* FlightMode::getManualWaypoint() {
     return 0;
 }
 
-CommandsFromSM* FlightMode::generatePMPacket(SystemManager *sys_man) {
+CommandsFromSM* FlightMode::generatePmPacket(SystemManager *system_manager) {
     // Pack SF and Waypoint data to packet sent to PM
     CommandsFromSM pm_packet;
 
-    pm_packet = sys_man.sf_data;
+    pm_packet = system_manager->sf_data;
 
-    if (sys_man.RC_new_data) { // TODO make this match what we get
-        sys_man.AM_Waypoints = getManualWaypoint(sys_man.RC_msg);
+    if (system_manager->RC_new_data) { // TODO make this match what we get
+        system_manager->AM_Waypoints = getManualWaypoint(system_manager->RC_msg);
     } 
-    
-    
 
     //TODO
-    return 0;
+    return &pm_packet;
 }
 
 
@@ -176,30 +206,29 @@ CommandsFromSM* FlightMode::generatePMPacket(SystemManager *sys_man) {
  * FatalFailure Mode
  ********************/
 
-void FatalFailureMode::enter(SystemManager *sys_man) {
-    // Kill PM
-    vTaskDelete(sys_man.PM_handle);
-    // Kill AM
-    vTaskDelete(sys_man.AM_handle);
+void FatalFailureMode::enter(SystemManager *system_manager) {
+    // Stop PM
+    vTaskDelete(system_manager->PM_handle);
+    // Stop AM
+    vTaskDelete(system_manager->AM_handle);
 
     vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
-    
 
-    osMailFree(sys_man.SM_to_PM_queue);
-    sys_man.SM_to_PM_queue = NULL;
-    osMailFree(sys_man.PM_to_AM_queue);
-    sys_man.PM_to_AM_queue = NULL;
-    osMailFree(sys_man.PM_to_AM_queue);
-    sys_man.AM_to_SM_queue = NULL;
+    osMailFree(system_manager->SM_to_PM_queue);
+    system_manager->SM_to_PM_queue = NULL;
+    osMailFree(system_manager->PM_to_AM_queue);
+    system_manager->PM_to_AM_queue = NULL;
+    osMailFree(system_manager->PM_to_AM_queue);
+    system_manager->AM_to_SM_queue = NULL;
 
     // Write 0 to LOS actuators
     // TODO
 }
 
-void FatalFailureMode::execute(SystemManager *sys_man) {
+void FatalFailureMode::execute(SystemManager *system_manager) {
     // Maybe report something? Log timstamps to SD card?
     // TBD
-    sys_man->setState(FatalFailureMode::getInstance());
+    system_manager->setState(FatalFailureMode::getInstance());
 }
 
 SystemState &FatalFailureMode::getInstance() {
