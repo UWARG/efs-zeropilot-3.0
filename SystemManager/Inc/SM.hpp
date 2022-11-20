@@ -26,7 +26,7 @@ namespace SM {
     enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, TAKEOFF, FLIGHT, LANDING, FATAL_FAILURE = -1};
 
     // Enums for RSSI channel definitions
-    enum RSSI_Channel{RC_THROTTLE_CHANNEL, RC_PITCH_CHANNEL, RC_ROLL_CHANNEL, RC_YAW_CHANNEL}; // Either reconfigure controller or this to match
+    enum RSSI_Channel{RC_THROTTLE_CHANNEL, RC_PITCH_CHANNEL, RC_ROLL_CHANNEL, RC_YAW_CHANNEL, RC_ARM_CHANNEL}; // Either reconfigure controller or this to match
 
     int AM_PERIOD_MS = 5; // TODO, figure out what these should be
     int PM_PERIOD_MS = 5; // 200Hz.
