@@ -15,13 +15,19 @@
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
 #include "SM_StateManager.hpp"
-#include "AM.hpp"
+#include "../../AttitudeManager/Inc/AM_DataTypes.hpp"
+#include "../../AttitudeManager/Inc/AM.hpp"
+#include "../../LaminarOS/LOS_Interface/Inc/interface_datatypes.hpp"
 
 class SystemState;
 
 namespace SM {
     // Enumerates the current drone status
-    enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, FLIGHT, FATAL_FAILURE = -1};
+    enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, TAKEOFF, FLIGHT, LANDING, FATAL_FAILURE = -1};
+
+    // Enums for RSSI channel definitions
+    enum RSSI_Channel{RC_THROTTLE_CHANNEL, RC_PITCH_CHANNEL, RC_ROLL_CHANNEL, RC_YAW_CHANNEL}; // Either reconfigure controller or this to match
+
     int AM_PERIOD_MS = 5; // TODO, figure out what these should be
     int PM_PERIOD_MS = 5; // 200Hz.
     int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
@@ -68,14 +74,18 @@ class SystemManager {
         // TODO Bulk message from telemetry stored here
 
         // TODO Message from RC here
-        // TODO new_message flag here for RC or some other way to knof if data is new
+        LosLinkRx_t rc_data;
+        // TODO new_message flag here for RC or some other way to know if data is new
 
         // Data from SF
         LosSFData sf_data;
         
         // TODO Response from AM stored here to be merged and sent to Telemetry
 
-        inputs_to_AM_t* AM_Waypoints;
+        AttitudeManagerInputs AM_Waypoints;
+
+        // Function to convert RC to AM input messages
+        AttitudeManagerInputs RcToAmInput(LosLinkRx_t rc_message);
 };
 
 #endif //ZPSW3_SM_HPP
