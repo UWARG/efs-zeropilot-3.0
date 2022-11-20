@@ -20,7 +20,7 @@ set -o nounset
 CLEAN=true
 BUILD_TYPE="Debug"
 GENERATOR="Unix Makefiles"
-PLATFORM="STM32F401RE"
+PLATFORM="nucleof401re"
 
 while getopts c:p: flag
 do
@@ -66,7 +66,7 @@ cmake -E chdir $BUILD_DIR \
   cmake \
     -G "${GENERATOR}" \
     -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-    -DCMAKE_TOOLCHAIN_FILE="LaminarOS/$PLATFORM.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE="LaminarOS/boardfiles/$PLATFORM/$PLATFORM.cmake" \
     -Wdev\
     -Wdeprecated\
     ../
