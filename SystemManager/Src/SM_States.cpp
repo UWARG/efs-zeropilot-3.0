@@ -54,9 +54,9 @@ void DisarmMode::execute(SystemManager *system_manager) {
     // Check all arming mechnisms triggered then move to GroundOp
     // TODO
 
-    // For Nov 27th implementation, 
+    // Check switch here that changes modes
     system_manager->rc_data = system_manager->los_interface.los_link.getRx();
-    if (system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 255 && system_manager->rc_data[SM::RC_PITCH_CHANNEL] == 255) {
+    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] == 100) {
         system_manager->setState(GroundOpMode::getInstance());
     }
 }
@@ -71,8 +71,8 @@ SystemState &DisarmMode::getInstance() {
  ********************/
 void GroundOpMode::execute(SystemManager *system_manager) {
     system_manager->rc_data = system_manager->los_interface.los_link.getRx();
-    if (system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 0 && system_manager->rc_data[SM::RC_PITCH_CHANNEL] == 0) {
-        system_manager->setState(FlightMode::getInstance());
+    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] == 100 && system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 100) {
+        system_manager->setState(GroundOpMode::getInstance());
     }
 }
 
