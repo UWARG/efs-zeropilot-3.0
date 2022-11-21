@@ -16,9 +16,48 @@ TM_Status TelemetryManager::execute() {
 
     // check the type variable
 
-    // handle jetson messages first, then handle GSPC messages   
+    uint8_t type = jetsonBuf[3];
 
-    //uint8_t type = 
+    switch(type) {
+        case JETSON_RELATIVE_MOVEMENT_COMMAND:
+            // handle it
+            break;
+        case JETSON_LANDING_COMMAND:
+            // handle it
+            break;
+        // not yet sure if jetson commands that are in the wrong direction need to be handled differently or not
+        case JETSON_ODOM:
+            // we fucked up if the jetson is sending this data
+            // fall through
+        case JETSON_MOVEMENT_REQ:
+            // we fucked up if the jetson is sending this packet
+            // fall through
+        default:
+            // YIKES
+            break;
+    }
+
+
+    type = rfdBuf[3];
+
+    switch(type) {
+        case GSPC_WAYPOINTS:
+        
+            break;
+        case GSPC_DISARM:
+            break;
+        case GSPC_PID_VALUES:
+            break;
+        case GSPC_DATA: 
+            // should not be getting this packet 
+            // fall through
+        case GSPC_PID_SET_RESPONSE:
+            // should not be getting this packet
+            // fall through
+        default:
+            // yikes
+            break;
+    }
 
     // decode based on the type variable 
 
