@@ -9,9 +9,9 @@ namespace AM {
 
 std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
-#warning Unimplemented
    
-    SFOutput_t current_attitude; 
+   // Current attitude from SF
+    SFOutput_t current_attitude {}; 
     
     // Compute target values
     float target_heading = instructions.heading;
@@ -58,19 +58,19 @@ float FixedControl::mixPIDs(StateMix actuator, float bank, float pitch, float ya
 
 }
 
-void FixedControl::FixedControlManual::stickMapping() {
-    Los_Link *stick_inputs;
-    LosLinkRx_t outputs;
-    LOS_Actuators actuators;
+// TODO: Directly mapping values from controller to actuators 
+// void FixedControl::FixedControlManual::stickMapping() {
+//     LosLinkRx_t outputs {};
+//     LOS_Actuators actuators {};
 
-    stick_inputs->getRx();
+//     outputs = Los_Link::getInstance().getRx();
  
-    std::vector<ActuatorOutput> controller_output;
-    for (auto output : controller_output) {
-        int i = 0;
-        actuators.set(output.channel, outputs.rx_channels[i]);
-        i++;
-    }
-}
+//     std::vector<ActuatorOutput> controller_output;
+//     for (auto output : controller_output) {
+//         int i = 0;
+//         actuators.set(output.channel, outputs.rx_channels[i]);
+//         i++;
+//     }
+// }
 
 } // namespace AM

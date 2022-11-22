@@ -37,63 +37,43 @@ class FixedControl : public ControlInterface {
         NumActuatorIdx  // Must always be last
     };
 
-class FixedControlAcro : public AM::FixedControl {
-    public: 
-    void updatePid() override {return;}
+// TODO: Implement different fixed wing controls algorithms
+// class FixedControlAcro : public AM::FixedControl {
+//   public: 
+//     void updatePid() override {return;}
+//   private: 
+//     typedef struct PIDs {
+//     };
+// };
 
 
-
-    private: 
-
-    typedef struct PIDs {
-
-
-    };
-
-
-};
+// class FixedControlLevel : public AM::FixedControl {
+//   public: 
+//     void updatePid() override {return;}
+//   private:
+//       typedef struct PIDs {
+//     };
+// };
 
 
-class FixedControlLevel : public AM::FixedControl {
-    public: 
+// class FixedControlGps : public AM::FixedControl {
+//   public: 
+//     void updatePid() override {return;}    
+//   private:
+//       typedef struct PIDs {
+//         };
+// };
 
+// class FixedControlManual : public AM::FixedControl {
+//     public: 
+//         void stickMapping();
+//     private: 
+// };
 
-    private:
-        typedef struct PIDs {
-
-
-        };
-
-};
-
-
-class FixedControlGps : public AM::FixedControl {
-    public: 
-
-
-    private:
-        typedef struct PIDs {
-
-
-        };
-
-};
-
-class FixedControlManual : public AM::FixedControl {
-    public: 
-        void stickMapping();
-
-
-    private: 
-
-
-
-
-};
     const ActuatorConfig configs[NumActuatorIdx];
     
     static constexpr float MAX_BANK_ANGLE = 20;   // Max angle defined in degrees. 
-    static constexpr float MAX_PITCH_ANGLE = 20; // Max angle defined in degrees. 
+    static constexpr float MAX_PITCH_ANGLE = 20;  // Max angle defined in degrees. 
 
     static constexpr int MAX_I_WINDUP = 1;
 
