@@ -1,28 +1,13 @@
 #include "AM_LevelQuadControl.hpp"
 #include "PID.hpp"
-
-// #include "LOS_SensorFusion.hpp" Whatever this is it will be needed
-typedef struct {
-    float roll, pitch, yaw;              // Degrees. Yaw of 180 is north.
-    float rollRate, pitchRate, yawRate;  // Degrees/second
-    float airspeed;                      // m/s
-    float altitude;                      // m
-    float rateOfClimb;                   // m/s
-    long double latitude;                // Decimal degrees
-    float latitudeSpeed;                 // m/s
-    long double longitude;               // Decimal degrees
-    float longitudeSpeed;                // m/s
-    double track;                        // Degrees. Track of 0 is north.
-    float groundSpeed;                   // m/s
-    double heading;                      // Degrees. Heading of 0 is north.
-} SFOutput_t;
+#include "CommonDataTypes.hpp"
 
 namespace AM {
 
 std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
+    
     // Get current attitude from sensorfusion
-    // TODO: This needs to be retrieved from LOS
     SFOutput_t currentAttitude{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // convert instructions into level mode quad instructions

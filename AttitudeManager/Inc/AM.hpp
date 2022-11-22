@@ -12,6 +12,7 @@
 // #include "LOS_Actuators.hpp"
 #include "AM_ControlInterface.hpp"
 #include "AM_DataTypes.hpp"
+#include "CommonDataTypes.hpp"
 
 namespace AM {
 
@@ -33,9 +34,11 @@ class AttitudeManager {
     uint8_t current_controller_index = 0;
     uint8_t desired_controller_index = 0;
     const ControlInterfaceList controller_interfaces;
-    static constexpr uint64_t transition_time_ms = 5000;
-    uint64_t transition_start_time_ms = 0;
-
+    SFOutput_t current;
+    float desired_airspeed = 0; // could this be determined by our desired controller index?
+    float current_airspeed = 0;
+    float transition_start_airspeed = 0;
+    
     void setDesiredControlAlgorithm(uint8_t id);
 
     std::vector<ActuatorOutput> runTransitionMixingIteration(
