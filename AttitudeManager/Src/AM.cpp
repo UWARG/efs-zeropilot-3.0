@@ -3,6 +3,7 @@
 //
 #include "AM.hpp"
 #include "LOS_Actuators.hpp"
+#include <cstdlib>
 #include <array>
 
 namespace AM {
@@ -24,7 +25,7 @@ void AttitudeManager::runControlLoopIteration(
     }
 
     // Write actuator outputs
-    LOS_Actuators outputs;
+    LOS_Actuators outputs {};
     for (auto output : controller_output) {
          outputs.set(output.channel, output.percent);
     }
@@ -36,8 +37,7 @@ void AttitudeManager::setDesiredControlAlgorithm(uint8_t id) {
         desired_controller_index == current_controller_index) {
         desired_controller_index = id;
 
-        transition_start_airspeed = 0; // get the current airspeed of the drone from somewhere
-        
+        transition_start_airspeed = abs(current.airspeed); 
     }
 }
 
@@ -50,14 +50,13 @@ std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
     std::vector<ActuatorOutput> desired_output =
         desired_controller->runControlsAlgorithm(instructions);
 
-//#warning This should be getting the current time
     // Determine how much of each mix to apply
-    const uint64_t current_airspeed = 0; // get from somewhere? path man
+    current_airspeed = abs(current.airspeed); 
     const float transition_percent =
-        (current_airspeed - transition_start_airspeed) / desired_airspeed;
+        (transition_start_airspeed - current_airspeed) / (transition_start_airspeed - desired_airspeed);
     const float inv_transition_percent = 1 - transition_percent;
 
-    if (desired_airspeed) {
+    if (current_airspeed == desired_airspeed) {
         // Update the active controller
         current_controller_index = desired_controller_index;
     }
