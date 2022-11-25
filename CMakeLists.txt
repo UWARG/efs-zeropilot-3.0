@@ -15,6 +15,13 @@ include_directories(
     ## LOS Driver Includes ##
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Common/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Airspeed/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Altimeter/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Gps/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/IMU/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/SensorFusion/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Common/${FOLDER_NAME}/Inc
 
     ## LOS Boardfiles ##
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Inc
@@ -46,8 +53,9 @@ set(INTERFACE_C_SOURCES "${INTERFACE_DIR}/Src/*.c")
 set(INTERFACE_CXX_SOURCES "${INTERFACE_DIR}/Src/*.cpp")
 
 set(DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver)
-set(DRIVERS_C_SOURCES "${DRIVERS_DIR}/Src/*.c")
-set(DRIVERS_CXX_SOURCES "${DRIVERS_DIR}/Src/*.cpp")
+set(DRIVERS_C_SOURCES "${DRIVERS_DIR}/*/Src/*.c")
+set(DRIVERS_CXX_SOURCES "${DRIVERS_DIR}/*/Src/*.cpp")
+set(DRIVERS_CXX_SOURCES ${DRIVERS_CXX_SOURCES} "${DRIVERS_DIR}/Common/${FOLDER_NAME}/Src/*.cpp")
 
 set(CORE_Dir ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core)
 set(CORE_C_SOURCES "${CORE_Dir}/Src/*.c")
@@ -68,7 +76,7 @@ file(GLOB_RECURSE CXX_SOURCES ${HAL_CORE_CXX_SOURCES}
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})
 
-add_executable(${ELF_NAME} main.c ${C_SOURCES} ${CXX_SOURCES} ${STARTUP_ASM_FILE})
+add_executable(${ELF_NAME} main.cpp ${C_SOURCES} ${CXX_SOURCES} ${STARTUP_ASM_FILE})
 
 # Add project-specific linker flags (.ld script, .map file)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T${LINKER_SCRIPT_FILE} -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map,--cref")
