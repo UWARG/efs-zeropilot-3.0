@@ -172,7 +172,9 @@ void FlightMode::exit(SystemManager *system_manager) {
     // system_manager->PM_to_AM_queue = NULL;
 
     // Write 0 to LOS actuators
-    // TODO
+    for (uint8_t channel; channel < MAX_PPM_CHANNELS; channel++) {
+        Los_Actuators::getInstance().set(channel, 0);
+    }
 }
 
 SystemState& FlightMode::getInstance() {
@@ -217,7 +219,9 @@ void FatalFailureMode::enter(SystemManager *system_manager) {
     // system_manager->AM_to_SM_queue = NULL;
 
     // Write 0 to LOS actuators
-    // TODO
+    for (uint8_t channel; channel < MAX_PPM_CHANNELS; channel++) {
+        Los_Actuators::getInstance().set(channel, 0);
+    }
 }
 
 void FatalFailureMode::execute(SystemManager *system_manager) {
