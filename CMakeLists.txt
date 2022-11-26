@@ -31,6 +31,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_${PORTABLE_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/include
 )
