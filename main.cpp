@@ -1,5 +1,6 @@
 #include "main.h"
 #include "FreeRTOS.h"
+#include "cmsis_os2.h"
 #include "task.h"
 #include "cmsis_os.h"
 #include "LOS_Actuators.hpp"
