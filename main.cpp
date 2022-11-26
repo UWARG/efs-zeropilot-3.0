@@ -4,8 +4,8 @@
 #include "task.h"
 #include "LOS_Actuators.hpp"
 
-void StartBlinkyTest(void const * argument);
-void StartLosActuatorsTest(void const * argument);
+void StartBlinkyTest(void * argument);
+void StartLosActuatorsTest(void * argument);
 
 
 int main()
@@ -25,8 +25,8 @@ int main()
         .priority = osPriorityNormal
     };
 
-    osThreadNew (&StartBlinkyTest, NULL, &blinkyTest);
-    osThreadNew (&StartLosActuatorsTest, NULL, &losActTest);
+    osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+    osThreadNew (StartLosActuatorsTest, NULL, &losActTest);
 
     losInit();
 
@@ -37,7 +37,7 @@ int main()
 }
 
 
-void StartBlinkyTest(void const * argument)
+void StartBlinkyTest(void * argument)
 {
     for(;;)
     {
@@ -47,7 +47,7 @@ void StartBlinkyTest(void const * argument)
     }
 }
 
-void StartLosActuatorsTest(void const * argument)
+void StartLosActuatorsTest(void * argument)
 {
     for (;;)
     {
