@@ -4,19 +4,20 @@
 #include "task.h"
 #include "LOS_Actuators.hpp"
 
-void StartBlinkyTest(void * argument);
+#include "./SystemManager/Inc/SM.hpp"
+
+void SMOperationTask(void *pvParameters);
+const static auto SM_PERIOD_OPERATION_MS = 5;
+
+SystemManager SM_instance;
 
 int main()
 {
     losInit();
 
-    osThreadAttr_t blinkyTest = {
-        .name = "start_blinky",
-        .stack_size = 128,
-        .priority = osPriorityNormal
-    };
+    TaskHandle_t SM_handle = NULL;
 
-    osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+    xTaskCreate(SMOperationTask, "SM Thread", 400, NULL, osPriorityNormal, &SM_handle);
 
     losKernelStart();
 
@@ -26,13 +27,12 @@ int main()
     return 0;
 }
 
-
-void StartBlinkyTest(void * argument)
+void SMOperationTask(void *pvParameters)
 {
-    for(;;)
-    {
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250);
-        osDelay(1);
+    TickType_t xNextWakeTime;
+    xNextWakeTime = xTaskGetTickCount();
+    while (true) {
+        SM_instance.execute();
+        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_OPERATION_MS);
     }
 }

@@ -39,10 +39,6 @@ class SystemManager {
         SystemManager();
         void execute();
         void setState(SystemState& newState);
-    private:
-        SystemState* currentState;
-        SM::Drone_Operation_Mode operation_mode;
-        SystemManager();
 
         // TODO PM, AM, TM instances here
         AttitudeManager& attitude_manager;
@@ -81,8 +77,10 @@ class SystemManager {
 
         AttitudeManagerInputs AM_Input;
 
-        // Function to convert RC to AM input messages
-        AttitudeManagerInputs RcToAmInput(LosLinkRx_t rc_message);
+    private:
+        SystemState* currentState;
+        SM::Drone_Operation_Mode operation_mode;
+
 };
 
 #endif //ZPSW3_SM_HPP
