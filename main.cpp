@@ -13,6 +13,8 @@ void StartLosActuatorsTest(void const * argument);
 
 int main()
 {
+    /* Init scheduler */
+    osKernelInitialize();
 
     osThreadDef(blinkyTest, StartBlinkyTest, osPriorityNormal, 0, 128);
     osThreadDef(losActuatorsTest, StartLosActuatorsTest, osPriorityNormal, 0, 1024);
@@ -43,13 +45,10 @@ void StartLosActuatorsTest(void const * argument)
     for (;;)
     {
         Los_Actuators::getInstance().set(0, 50);
-        Los_Actuators::getInstance().set(1, 50);
         osDelay(2000);
         Los_Actuators::getInstance().set(0, 100);
-        Los_Actuators::getInstance().set(1, 100);
         osDelay(2000);
         Los_Actuators::getInstance().set(0, 0);
-        Los_Actuators::getInstance().set(1, 0);
         osDelay(2000);
     }
 
