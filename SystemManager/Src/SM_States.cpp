@@ -14,8 +14,6 @@
  ********************/
 void BootMode::execute(SystemManager *system_manager) {
     // Only Executes once, Configure sensors, LOS, Everything startup
-
-    system_manager->los_interface.init(losInitData); // TODO, make this agree with what LOS needs
     
     // Start TM at slow speed
     // Update TM mail queue ID
@@ -55,8 +53,8 @@ void DisarmMode::execute(SystemManager *system_manager) {
     // TODO
 
     // Check switch here that changes modes
-    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
-    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] == 100) {
+    system_manager->rc_data = Los_Link::getInstance().getRx();
+    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] > 90) {
         system_manager->setState(GroundOpMode::getInstance());
     }
 }
@@ -70,16 +68,18 @@ SystemState &DisarmMode::getInstance() {
  * Ground Op Mode
  ********************/
 void GroundOpMode::execute(SystemManager *system_manager) {
-    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
-    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] == 100 && system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 100) {
-        system_manager->setState(GroundOpMode::getInstance());
+    // To move to flight check that armed switch is high, throttle and pitch are 0 (both sticks down)
+    system_manager->rc_data = Los_Link::getInstance().getRx();
+    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] > 90 && system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 0 
+        && system_manager->rc_data[SM::RC_PITCH_CHANNEL]) {
+        system_manager->setState(FlightMode::getInstance());
     }
 }
 
 void GroundOpMode::exit(SystemManager *system_manager) {
-    // Delete SM to AM queue to prevent PID tuning midair
-    osMailFree(system_manager->SM_to_AM_queue);
-    system_manager->SM_to_AM_queue = NULL;
+    // Delete SM to AM queue to prevent PID tuning midair (not yet in Nov 27th ver)
+    // osMailFree(system_manager->SM_to_AM_queue);
+    // system_manager->SM_to_AM_queue = NULL;
 }
 
 SystemState &GroundOpMode::getInstance() {
@@ -103,8 +103,7 @@ void FlightMode::enter(SystemManager *system_manager) {
 
     system_manager->SM_to_AM_queue = osMailCreate();
     xTaskCreate(system_manager->AMOperationTask, "AM Thread", &system_manager->AM_handle);
-
-    vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
+    // Task will automatically be added to the FreeRTOS scheduler
 }
 
 void FlightMode::execute(SystemManager *system_manager) {
@@ -113,7 +112,10 @@ void FlightMode::execute(SystemManager *system_manager) {
     // SM.sf_data = los_interface.
 
     // Get RC data from LOS
-    system_manager->rc_data = system_manager->los_interface.los_link.getRx();
+    system_manager->rc_data = Los_Link::getInstance().getRx();
+    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] < 10) {
+        system_manager->setState(DisarmMode::getInstance());
+    }
 
     // Decode RC data and convert to AM message type
     system_manager->to_am_data = RcToAmInput(system_manager->rc_data);
@@ -147,7 +149,6 @@ void FlightMode::execute(SystemManager *system_manager) {
 
     // Create to-ground packet with AM response and SF and send through mail queue to TM
     // TODO
-
 }
 
 void FlightMode::exit(SystemManager *system_manager) {
@@ -161,8 +162,6 @@ void FlightMode::exit(SystemManager *system_manager) {
     // Slow TM operation speed
     // vTaskDelete(system_manager->TM_handle);
     // xTaskCreate(system_manager->TMSlowTask, "TM Slow Thread", &system_manager->TM_handle);
-
-    vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
 
     osMailFree(system_manager->SM_to_AM_queue);
     system_manager->SM_to_AM_queue = NULL;
@@ -181,25 +180,19 @@ SystemState& FlightMode::getInstance() {
     return singleton;
 }
 
-inputs_to_AM_t* FlightMode::getManualWaypoint() {
-    // Convert manual pilot controls from RC to AM waypoint
-    // TODO
-    return 0;
-}
+// CommandsFromSM* FlightMode::generatePmPacket(SystemManager *system_manager) {
+//     // Pack SF and Waypoint data to packet sent to PM
+//     CommandsFromSM pm_packet;
 
-CommandsFromSM* FlightMode::generatePmPacket(SystemManager *system_manager) {
-    // Pack SF and Waypoint data to packet sent to PM
-    CommandsFromSM pm_packet;
+//     pm_packet = system_manager->sf_data;
 
-    pm_packet = system_manager->sf_data;
+//     if (system_manager->RC_new_data) { // TODO make this match what we get
+//         system_manager->AM_Input = getManualWaypoint(system_manager->RC_msg);
+//     } 
 
-    if (system_manager->RC_new_data) { // TODO make this match what we get
-        system_manager->AM_Waypoints = getManualWaypoint(system_manager->RC_msg);
-    } 
-
-    //TODO
-    return &pm_packet;
-}
+//     //TODO
+//     return &pm_packet;
+// }
 
 
 /********************
@@ -208,18 +201,20 @@ CommandsFromSM* FlightMode::generatePmPacket(SystemManager *system_manager) {
 
 void FatalFailureMode::enter(SystemManager *system_manager) {
     // Stop PM
-    vTaskDelete(system_manager->PM_handle);
+    // vTaskDelete(system_manager->PM_handle); Not yetrunning for Nov 27th.
     // Stop AM
     vTaskDelete(system_manager->AM_handle);
 
-    vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
+    // For Nov 27th just free the SM to AM queue
+    osMailFree(system_manager->SM_to_AM_queue);
+    system_manager->SM_to_AM_queue = NULL;
 
-    osMailFree(system_manager->SM_to_PM_queue);
-    system_manager->SM_to_PM_queue = NULL;
-    osMailFree(system_manager->PM_to_AM_queue);
-    system_manager->PM_to_AM_queue = NULL;
-    osMailFree(system_manager->PM_to_AM_queue);
-    system_manager->AM_to_SM_queue = NULL;
+    // osMailFree(system_manager->SM_to_PM_queue);
+    // system_manager->SM_to_PM_queue = NULL;
+    // osMailFree(system_manager->PM_to_AM_queue);
+    // system_manager->PM_to_AM_queue = NULL;
+    // osMailFree(system_manager->PM_to_AM_queue);
+    // system_manager->AM_to_SM_queue = NULL;
 
     // Write 0 to LOS actuators
     // TODO
