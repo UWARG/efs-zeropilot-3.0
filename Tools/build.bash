@@ -20,7 +20,7 @@ set -o nounset
 CLEAN=true
 BUILD_TYPE="Debug"
 GENERATOR="Unix Makefiles"
-PLATFORM="nucleog474re"
+PLATFORM="nucleol552zeq"
 
 while getopts c:p: flag
 do
