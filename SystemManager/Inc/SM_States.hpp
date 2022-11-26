@@ -19,6 +19,7 @@
 
 #include "SM_StateManager.hpp"
 #include "SM_DataTypes.hpp"
+#include "cmsis_os.h"
 
 
 class BootMode: public SystemState {
@@ -88,8 +89,9 @@ class FlightMode: public SystemState {
         FlightMode(const FlightMode &other);
         FlightMode& operator =(const FlightMode &other);
 
-        static inputs_to_AM_t* getManualWaypoint();
-        static CommandsFromSM* generatePmPacket();
+        AttitudeManagerInputs* FlightMode::RcToAmInput(LosLinkRx_t rc_message);
+        // static AttitudeManagerInputs* getManualWaypoint();
+        // static CommandsFromSM* generatePmPacket();
 };
 
 class FatalFailureMode: public SystemState {
