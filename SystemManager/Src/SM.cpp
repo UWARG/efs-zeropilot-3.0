@@ -30,17 +30,25 @@ void SystemManager::execute()
 AttitudeManagerInputs SystemManager::RcToAmInput(LosLinkRx_t rc_message)
 {
     AttitudeManagerInputs am_message;
-    uint8_t throttle = rc_message.rx_channels[RC_THROTTLE_CHANNEL];
-    uint8_t pitch = rc_message.rx_channels[RC_PITCH_CHANNEL];
-    uint8_t roll = rc_message.rx_channels[RC_ROLL_CHANNEL]; // RHR with thumb pointed in direction of flight. CW looking forward = positive
-    uint8_t yaw = rc_message.rx_channels[RC_YAW_CHANNEL];
 
-    am_message.x_dir = throttle * cos(pitch) * cos(yaw);
-    am_message.y_dir = throttle * sin(roll); // Positive right, Yaw or roll here??
-    am_message.z_dir = throttle * sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
-    // TODO normalize the above
+    // Get channel values from RC message
+    // map pitch/roll/yaw to +/- 30 degrees
+    // leave throttle between 0 and 100
+    float throttle = rc_message.rx_channels[SM::RC_THROTTLE_CHANNEL] / 20.0;
+    float pitch = (rc_message.rx_channels[SM::RC_PITCH_CHANNEL] * 60.0 / 100.0) - 30.0; // So pulling down on stick goes up
+    float roll = (rc_message.rx_channels[SM::RC_ROLL_CHANNEL] * 60.0 / 100.0) - 30.0; // RHR with thumb pointed in direction of flight. CW looking forward = positive
+    float yaw = (rc_message.rx_channels[SM::RC_YAW_CHANNEL] * 60.0 / 100.0) - 30.0;
+
+    // map RC values into waypoint, assuming 50 for pitch, roll, and yaw means no change desired.
+    // sets the maximum 
+    am_message.x_dir = cos(pitch) * cos(roll);
+    am_message.y_dir = sin(roll); // Positive right
+    am_message.z_dir = sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
+    // Note that the above is allready normalized
     am_message.magnitude = throttle;
     am_message.heading = yaw;
+    
+    return am_message;
 }
 
 void SystemManager::AMOperationTask(void *pvParameters)
@@ -67,32 +75,32 @@ void SystemManager::AMOperationTask(void *pvParameters)
     }
 }
 
-void SystemManager::TMOperationTask(void *pvParameters)
-{
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
-    while (true) {
-        TM_instance.execute();
-        vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_OPERATION_MS);
-    }
-}
+// void SystemManager::TMOperationTask(void *pvParameters)
+// {
+//     TickType_t xNextWakeTime;
+//     xNextWakeTime = xTaskGetTickCount();
+//     while (true) {
+//         TM_instance.execute();
+//         vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_OPERATION_MS);
+//     }
+// }
 
-void SystemManager::TMSlowTask(void *pvParameters)
-{
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
-    while (true) {
-        TM_instance.execute();
-        vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_SLOW_MS);
-    }
-}
+// void SystemManager::TMSlowTask(void *pvParameters)
+// {
+//     TickType_t xNextWakeTime;
+//     xNextWakeTime = xTaskGetTickCount();
+//     while (true) {
+//         TM_instance.execute();
+//         vTaskDelayUntil(&xNextWakeTime, SM::TM_PERIOD_SLOW_MS);
+//     }
+// }
 
-void SystemManager::PMOperationTask(void *pvParameters)
-{
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
-    while (true) {
-        PM_instance.execute();
-        vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
-    }
-}
+// void SystemManager::PMOperationTask(void *pvParameters)
+// {
+//     TickType_t xNextWakeTime;
+//     xNextWakeTime = xTaskGetTickCount();
+//     while (true) {
+//         PM_instance.execute();
+//         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
+//     }
+// }
