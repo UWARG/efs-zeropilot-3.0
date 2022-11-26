@@ -4,9 +4,6 @@
 #include "task.h"
 #include "LOS_Actuators.hpp"
 
-osThreadId blinkyTestHandle;
-osThreadId losActuatorsTestHandle;
-
 void StartBlinkyTest(void const * argument);
 void StartLosActuatorsTest(void const * argument);
 
@@ -15,8 +12,6 @@ int main()
 {
     /* Init scheduler */
     osKernelInitialize();
-
-    blinkyTestHandle = osThreadCreate();
 
     osThreadAttr_t blinkyTest = {
         .name = "start_blinky",
