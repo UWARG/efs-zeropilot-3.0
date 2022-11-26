@@ -30,8 +30,8 @@ int main()
         .priority = osPriorityNormal
     };
 
-    osThreadNew (blinkyTest, NULL, &blinkyTest);
-    osThreadNew (losActuatorsTest, NULL, &losActuatorsTest);
+    osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+    osThreadNew (StartLosActuatorsTest, NULL, &losActTest);
 
     losInit();
 
