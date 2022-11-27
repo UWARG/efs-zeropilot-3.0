@@ -3,8 +3,10 @@
 #include "cmsis_os2.h"
 #include "task.h"
 #include "LOS_Actuators.hpp"
+#include "LOS_Link.hpp"
 
 void StartBlinkyTest(void * argument);
+void StartLosLinkTest(void * argument);
 
 int main()
 {
@@ -16,7 +18,14 @@ int main()
         .priority = osPriorityNormal
     };
 
+    osThreadAttr_t losLinkTest = {
+        .name = "start_los_link",
+        .stack_size = 128,
+        .priority = osPriorityNormal
+    };
+
     osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+    osThreadNew (StartLosLinkTest, NULL, &losLinkTest);
 
     losKernelStart();
 
@@ -35,4 +44,14 @@ void StartBlinkyTest(void * argument)
         HAL_Delay(250);
         osDelay(1);
     }
+}
+
+void StartLosLinkTest(void * argument)
+{
+    for (;;)
+    {
+        LosLinkRx_t testVal = Los_Link::getInstance().getRx(0);
+        osDelay(1);
+    }
+
 }
