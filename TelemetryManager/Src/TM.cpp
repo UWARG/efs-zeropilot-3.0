@@ -5,7 +5,15 @@ TelemetryManager::TelemetryManager() {
 
 }
 
-TM_Status TelemetryManager::execute() {
+TelemetryManager::Init() {
+    
+}
+
+TM_Status TelemetryManager::ExecuteTx() {
+
+}
+
+TM_Status TelemetryManager::ExecuteRx() {
 
     // copy data into local buffer from jetson and RFD LOS buffers 
 

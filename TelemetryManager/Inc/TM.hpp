@@ -3,7 +3,7 @@
 #include "CRC32.hpp"
 
 
-
+// for now, dont differentiate between different types of failure.
 enum TM_Status {SUCCESS = 0, FAILURE};
 
 // Please ensure this is up to date with Message Formats Doc
@@ -24,7 +24,11 @@ class TelemetryManager {
     public:
         TelemetryManager();
 
-        TM_Status execute();
+        void Init();
+
+        TM_Status ExecuteTx();
+
+        TM_Status ExecuteRx();
 
         
 
