@@ -1,35 +1,38 @@
-#include "AM_LevelQuadControl.hpp"
-#include "AM.hpp"
-
-#include "AM_DataTypes.hpp"
-
 #include "main.h"
+#include "FreeRTOS.h"
+#include "cmsis_os2.h"
+#include "task.h"
+#include "LOS_Actuators.hpp"
 
-int main() {
-    // MUST INITIALIZE SYSTEM AND HAL
+void StartBlinkyTest(void * argument);
 
-#warning This is unimplemented and shouldnt be run
-    AM::ActuatorConfig m1{.channel = 0,
-                          .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)};
-    AM::ActuatorConfig m2{.channel = 0,
-                          .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)};
-    AM::ActuatorConfig m3{.channel = 0,
-                          .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)};
-    AM::ActuatorConfig m4{.channel = 0,
-                          .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)};
-    AM::LevelQuadControl quad1(m1, m2, m3, m4);
-    AM::LevelQuadControl quad2(m4, m3, m2, m1);
-    AM::AttitudeManager attitude_manager(&quad1, &quad2);
+int main()
+{
+    losInit();
 
-    // AM::std::vector<ControlInterface *> controllers =
-    // attitude_manager.getControllers();
+    osThreadAttr_t blinkyTest = {
+        .name = "start_blinky",
+        .stack_size = 128,
+        .priority = osPriorityNormal
+    };
 
-    while (1) {
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-        HAL_Delay(1000);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-        HAL_Delay(1000);
-    }
+    osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+
+    losKernelStart();
+
+    //should not get here bec losInit() starts the scheduler
+    while(1){}
 
     return 0;
+}
+
+
+void StartBlinkyTest(void * argument)
+{
+    for(;;)
+    {
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+        HAL_Delay(250);
+        osDelay(1);
+    }
 }
