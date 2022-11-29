@@ -93,10 +93,10 @@ class FixedControl : public ControlInterface {
     static constexpr float PITCH_I_WINDUP = 0.0;
 
     static constexpr float AIRSPEED_KP = 80.0;
-    static constexpr float AIRSPEED_KI = 0.0;
-    static constexpr float AIRSPEED_KD = 0.0;
-    static constexpr float AIRSPEED_I_WINDUP = 0.0;
-    static constexpr float AIRSPEED_MIN = 0.0;
+    static constexpr float AIRSPEED_KI = 0.0;        // Values pulled from ZPSW1, 
+    static constexpr float AIRSPEED_KD = 0.0;        //  
+    static constexpr float AIRSPEED_I_WINDUP = 0.0;  //
+    static constexpr float AIRSPEED_MIN = 0.0;       // unsure of units or reason 
     static constexpr float AIRSPEED_MAX = 100; 
     
     // Define PID values once to be passed around

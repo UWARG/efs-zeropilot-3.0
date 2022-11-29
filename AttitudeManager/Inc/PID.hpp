@@ -81,7 +81,8 @@ class PIDController {
     PID pid;
 
     float integral = 0.0f;
-    float historicalValue[3] = {0.0f};
+    float historicalValue[3] = {0.0f}; // Allows us to compute our derivative 
+                                       // if necessary
 };
 
 #endif /* PID_HPP_ */

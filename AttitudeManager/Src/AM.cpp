@@ -25,9 +25,8 @@ void AttitudeManager::runControlLoopIteration(
     }
 
     // Write actuator outputs
-    LOS_Actuators outputs {};
     for (auto output : controller_output) {
-         outputs.set(output.channel, output.percent);
+        LOS_Actuators::getInstance().set(output.channel, output.percent);
     }
 }
 
@@ -56,7 +55,8 @@ std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
         (transition_start_airspeed - current_airspeed) / (transition_start_airspeed - desired_airspeed);
     const float inv_transition_percent = 1 - transition_percent;
 
-    if (current_airspeed == desired_airspeed) {
+    if (((desired_airspeed - 2) <= current_airspeed && 
+          current_airspeed <= (desired_airspeed + 2))) {
         // Update the active controller
         current_controller_index = desired_controller_index;
     }
