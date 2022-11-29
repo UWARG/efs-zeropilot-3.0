@@ -5,6 +5,10 @@ set(ELF_NAME ${PROJECT_NAME}.elf)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+
+set(ATTITUDE_MANAGER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager")
+set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
+
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
