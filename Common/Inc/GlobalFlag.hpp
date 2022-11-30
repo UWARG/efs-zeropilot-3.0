@@ -31,7 +31,7 @@ class GlobalFlag {
         SemaphoreHandle_t flagResourceMux;
         SemaphoreHandle_t readerCountMux;
         SemaphoreHandle_t serviceQueue;
-        // Constant of ticks until 1ms
+        // Constant of ticks until timeout
         static const TickType_t TIMEOUT;
 
 };

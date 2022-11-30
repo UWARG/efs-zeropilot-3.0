@@ -7,7 +7,7 @@
  * Author(s): Gordon Fountain
  */
 
-#include "GlobalFlag.hpp"
+#include "../Inc/GlobalFlag.hpp"
 
 void GlobalFlag::writeFlag(bool new_value) {
     // Take spot in line for service
