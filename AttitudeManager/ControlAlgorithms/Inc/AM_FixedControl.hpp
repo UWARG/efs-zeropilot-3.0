@@ -27,7 +27,7 @@ class FixedControl : public ControlInterface {
 
     void updatePid() override { return; }
 
-   private:
+   protected:
     enum ActuatorIdx {
         Engine = 0,
         LeftAileron,
@@ -36,6 +36,10 @@ class FixedControl : public ControlInterface {
         Elevator,
         NumActuatorIdx  // Must always be last
     };
+
+    const ActuatorConfig configs[NumActuatorIdx];
+    
+   private:
 
 // TODO: Implement different fixed wing controls algorithms
 // class FixedControlAcro : public AM::FixedControl {
@@ -70,7 +74,6 @@ class FixedControl : public ControlInterface {
 //     private: 
 // };
 
-    const ActuatorConfig configs[NumActuatorIdx];
     
     static constexpr float MAX_BANK_ANGLE = 20;   // Max angle defined in degrees. 
     static constexpr float MAX_PITCH_ANGLE = 20;  // Max angle defined in degrees. 
