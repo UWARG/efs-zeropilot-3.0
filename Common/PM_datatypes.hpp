@@ -4,8 +4,6 @@
 enum WaypointType {PATH_FOLLOW = 0, ORBIT_FOLLOW, HOVER_WAYPOINT, TAKEOFF_WAYPOINT, LANDING_WAYPOINT, TRANSITION_WAYPOINT, TELEOP_MODE};
 
 struct CommandsFromSMToPM{
-    // please rename this
-    WaypointType waypoint_type;
     WaypointsCommand telemetry_commands;
     JetsonToZpMovementCommand jetson_commands; 
     LandingInitiationCommand landing_initiation; 
@@ -56,3 +54,13 @@ struct TelemWaypoint {
     double latitude;
     double altitude;
 }
+
+struct CommandsForAM_t{
+  // heading unit vector and magnitude
+  float dist_x; 
+  float dist_y; 
+  float dist_z; 
+  float magnitude; // Magnitude distance to waypoint target
+  float heading; // heading at target waypoint
+  double speed_target; // Target velocity of drone approaching target
+} 
