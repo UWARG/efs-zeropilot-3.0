@@ -1,6 +1,6 @@
 #pragma once
 
-struct CommandsFromPMToAM{
+struct PM_AM_Commands {
   // heading unit vector and magnitude
   float dist_x; 
   float dist_y; 
