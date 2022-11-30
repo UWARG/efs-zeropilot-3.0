@@ -4,7 +4,7 @@
 #include "task.h"
 #include "LOS_Actuators.hpp"
 
-#include "./SystemManager/Inc/SM.hpp"
+#include "SM.hpp"
 
 void SMOperationTask(void *pvParameters);
 const static auto SM_PERIOD_OPERATION_MS = 5;
