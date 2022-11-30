@@ -1,11 +1,10 @@
 #pragma once
 
 struct AM_SM_Commands {
-
 };
 
 struct SM_AM_Commands {
-
+    uint8_t motor_outputs[12];
 };
 
 struct PIDValues {
