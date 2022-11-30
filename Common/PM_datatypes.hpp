@@ -1,14 +1,27 @@
 #pragma once
 
-// please change this name
-enum WaypointType {PATH_FOLLOW = 0, ORBIT_FOLLOW, HOVER_WAYPOINT, TAKEOFF_WAYPOINT, LANDING_WAYPOINT, TRANSITION_WAYPOINT, TELEOP_MODE};
+struct CommandsFromPMToAM{
+  // heading unit vector and magnitude
+  float dist_x; 
+  float dist_y; 
+  float dist_z; 
+  float magnitude; // Magnitude distance to waypoint target
+  float heading; // heading at target waypoint
+  double speed_target; // Target velocity of drone approaching target
+}; 
 
-struct CommandsFromSMToPM{
+struct SM_PM_Commands {
     WaypointsCommand telemetry_commands;
     JetsonToZpMovementCommand jetson_commands; 
     LandingInitiationCommand landing_initiation; 
     LosSFData sf_data;
 };
+
+//TODO add CommandsFromPMToSM either here or in SM
+struct PM_SM_Commands {
+
+};
+
 
 struct JetsonToZpMovementCommand {
   float x;
@@ -23,11 +36,7 @@ struct LandingInitiationCommand {
 
 struct JetsonMovementRequest {
     bool request;
-}
-
-struct JetsonOdometryData {
-    LosSFData sensorData;
-}
+};
 
 struct LosSFData_t {
     float roll, pitch, yaw; //rad
@@ -53,14 +62,4 @@ struct TelemWaypoint {
     double longitude;
     double latitude;
     double altitude;
-}
-
-struct CommandsForAM_t{
-  // heading unit vector and magnitude
-  float dist_x; 
-  float dist_y; 
-  float dist_z; 
-  float magnitude; // Magnitude distance to waypoint target
-  float heading; // heading at target waypoint
-  double speed_target; // Target velocity of drone approaching target
-} 
+};
