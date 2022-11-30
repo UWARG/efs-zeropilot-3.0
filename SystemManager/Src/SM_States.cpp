@@ -7,7 +7,7 @@
  * Author(s): Gordon Fountain
  */
 
-#include "../Inc/SM_States.hpp"
+#include "SM_States.hpp"
 #include "task.h"
 
 /********************
@@ -178,9 +178,9 @@ void FlightMode::exit(SystemManager *system_manager) {
     }
 }
 
-AttitudeManagerInputs FlightMode::RcToAmInput(LosLinkRx_t rc_message)
+AttitudeManagerInput FlightMode::RcToAmInput(LosLinkRx_t rc_message)
 {
-    AttitudeManagerInputs am_message;
+    AttitudeManagerInput am_message;
 
     // Get channel values from RC message
     // map pitch/roll/yaw to +/- 30 degrees

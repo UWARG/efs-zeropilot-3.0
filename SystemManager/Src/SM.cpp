@@ -7,8 +7,8 @@
  * Author(s): Gordon Fountain
  */
 
-#include "../Inc/SM.hpp"
-#include "../Inc/SM_States.hpp"
+#include "SM.hpp"
+#include "SM_States.hpp"
 #include "task.h"
 
 SystemManager::SystemManager()
