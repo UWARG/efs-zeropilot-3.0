@@ -89,8 +89,8 @@ class FlightMode: public SystemState {
         FlightMode(const FlightMode &other);
         FlightMode& operator =(const FlightMode &other);
 
-        AttitudeManagerInputs* FlightMode::RcToAmInput(LosLinkRx_t rc_message);
-        // static AttitudeManagerInputs* getManualWaypoint();
+        AttitudeManagerInput* FlightMode::RcToAmInput(LosLinkRx_t rc_message);
+        // static AttitudeManagerInput* getManualWaypoint();
         // static CommandsFromSM* generatePmPacket();
 };
 

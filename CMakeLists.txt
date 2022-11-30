@@ -12,6 +12,11 @@ set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/ControlAlgorithms/Inc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager/Inc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/Common/Inc
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core/Inc

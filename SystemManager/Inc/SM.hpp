@@ -15,9 +15,8 @@
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
 #include "SM_StateManager.hpp"
-#include "../../AttitudeManager/Inc/AM_DataTypes.hpp"
-#include "../../AttitudeManager/Inc/AM.hpp"
-#include "../../LaminarOS/LOS_Interface/Inc/interface_datatypes.hpp"
+#include "AM.hpp"
+#include "interface_datatypes.hpp"
 
 class SystemState;
 
@@ -41,7 +40,7 @@ class SystemManager {
         void setState(SystemState& newState);
 
         // TODO PM, AM, TM instances here
-        AttitudeManager& attitude_manager;
+        AM::AttitudeManager& attitude_manager;
         // PathManager& attitude_manager;
         // TelemetryManager& attitude_manager;
         
@@ -75,7 +74,7 @@ class SystemManager {
         
         // TODO Response from AM stored here to be merged and sent to Telemetry
 
-        AttitudeManagerInputs AM_Input;
+        AM::AttitudeManagerInput AM_Input;
 
     private:
         SystemState* currentState;
