@@ -17,9 +17,9 @@ struct SM_PM_Commands {
     LosSFData sf_data;
 };
 
-//TODO add CommandsFromPMToSM either here or in SM
+// this struct doesnt seem to exist in any form in the PM PR, so heres my best guess at it
 struct PM_SM_Commands {
-
+    JetsonMovementRequest jetson_movement_req;
 };
 
 
