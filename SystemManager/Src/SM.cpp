@@ -11,6 +11,8 @@
 #include "SM_States.hpp"
 #include "task.h"
 
+namespace SM {
+
 SystemManager::SystemManager()
 {
     currentState = &BootMode::getInstance();
@@ -21,6 +23,11 @@ void SystemManager::setState(SystemState& newState)
     currentState->exit(this);
     currentState = &newState;
     currentState->enter(this);
+}
+
+void SystemManager::getMode()
+{
+    return operation_mode;
 }
 
 void SystemManager::execute()
@@ -81,3 +88,5 @@ void SystemManager::AMOperationTask(void *pvParameters)
 //         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
 //     }
 // }
+
+} // namespace SM

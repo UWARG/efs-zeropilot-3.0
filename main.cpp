@@ -9,7 +9,7 @@
 void SMOperationTask(void *pvParameters);
 const static auto SM_PERIOD_OPERATION_MS = 5;
 
-SystemManager SM_instance;
+SM::SystemManager SM_instance;
 
 int main()
 {

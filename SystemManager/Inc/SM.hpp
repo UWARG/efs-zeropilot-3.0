@@ -18,26 +18,40 @@
 #include "AM.hpp"
 #include "interface_datatypes.hpp"
 
-class SystemState;
+
 
 namespace SM {
-    // Enumerates the current drone status
-    enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, TAKEOFF, FLIGHT, LANDING, FATAL_FAILURE = -1};
 
-    // Enums for RSSI channel definitions
-    enum RC_Controller_Channel{RC_THROTTLE_CHANNEL, RC_PITCH_CHANNEL, RC_ROLL_CHANNEL, RC_YAW_CHANNEL, RC_ARM_CHANNEL}; // Either reconfigure controller or this to match
+class SystemState {
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
+};
 
-    int AM_PERIOD_MS = 5; // Current operation speed of 200 Hz.
-    // int PM_PERIOD_MS = 5; // 200Hz.
-    // int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
-    // int TM_PERIOD_OPERATION_MS = 5;
-}
+// Enumerates the current drone status
+enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, TAKEOFF, FLIGHT, LANDING, FATAL_FAILURE = -1};
+
+// Enums for RSSI channel definitions
+enum RC_Controller_Channel{RC_THROTTLE_CHANNEL, RC_PITCH_CHANNEL, RC_ROLL_CHANNEL, RC_YAW_CHANNEL, RC_ARM_CHANNEL}; // Either reconfigure controller or this to match
+
+int AM_PERIOD_MS = 5; // Current operation speed of 200 Hz.
+// int PM_PERIOD_MS = 5; // 200Hz.
+// int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
+// int TM_PERIOD_OPERATION_MS = 5;
+
 
 class SystemManager {
     public:
         SystemManager();
         void execute();
         void setState(SystemState& newState);
+        SM::Drone_Operation_Mode getMode();
 
         // TODO PM, AM, TM instances here
         AM::AttitudeManager& attitude_manager;
@@ -81,5 +95,7 @@ class SystemManager {
         SM::Drone_Operation_Mode operation_mode;
 
 };
+
+} // namespace SM
 
 #endif //ZPSW3_SM_HPP
