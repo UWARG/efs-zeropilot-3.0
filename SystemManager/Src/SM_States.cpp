@@ -15,6 +15,7 @@
  ********************/
 void BootMode::execute(SystemManager *system_manager) {
     // Only Executes once, Configure sensors, LOS, Everything startup
+    // Don't think Enter is used for boot.
     
     // Start TM at slow speed
     // Update TM mail queue ID

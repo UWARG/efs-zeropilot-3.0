@@ -10,6 +10,8 @@
 #ifndef ZPSW3_SM_DATATYPES_HPP
 #define ZPSW3_SM_DATATYPES_HPP
 
+// TODO remove this file once common datatypes are merged
+
 // TODO Fill these out
 typedef struct CommandsFromSM{
     WaypointType waypoint_type;

@@ -24,14 +24,8 @@
 
 class BootMode: public SystemState {
     public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
+        void execute(SystemManager *sys_man) override;
+        static SystemState& getInstance() override;
     private:
         BootMode() {
         }
@@ -41,14 +35,8 @@ class BootMode: public SystemState {
 
 class DisarmMode: public SystemState {
     public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
+        void execute(SystemManager *sys_man) override;
+        static SystemState& getInstance() override;
     private:
         DisarmMode() {
         }
@@ -58,14 +46,9 @@ class DisarmMode: public SystemState {
 
 class GroundOpMode: public SystemState {
     public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
+        void execute(SystemManager *sys_man) override;
+        void exit(SystemManager *sys_man) override;
+        static SystemState& getInstance() override;
     private:
         GroundOpMode() {
         }
@@ -75,14 +58,10 @@ class GroundOpMode: public SystemState {
 
 class FlightMode: public SystemState {
     public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
+        void enter(SystemManager *sys_man) override;
+        void execute(SystemManager *sys_man) override;
+        void exit(SystemManager *sys_man) override;
+        static SystemState& getInstance() override;
     private:
         FlightMode() {
         }
@@ -96,14 +75,9 @@ class FlightMode: public SystemState {
 
 class FatalFailureMode: public SystemState {
     public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
+        void enter(SystemManager *sys_man) override;
+        void execute(SystemManager *sys_man) override;
+        static SystemState& getInstance() override;
     private:
         FatalFailureMode() {
         }
