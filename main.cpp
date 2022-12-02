@@ -14,7 +14,7 @@ int main() {
 
     TaskHandle_t SM_handle = NULL;
 
-    xTaskCreate(SMOperationTask, "SM Thread", 400, NULL, osPriorityNormal, &SM_handle);
+    xTaskCreate(SMOperationTask, "SM Thread", 400U, NULL, osPriorityNormal, &SM_handle);
 
     losKernelStart();
 

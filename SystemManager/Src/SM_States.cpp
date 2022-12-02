@@ -10,6 +10,8 @@
 #include "SM_States.hpp"
 #include "task.h"
 
+namespace SM {
+
 /********************
  * Boot Mode
  ********************/
@@ -19,22 +21,9 @@ void BootMode::execute(SystemManager *system_manager) {
     
     // Start TM at slow speed
     // Update TM mail queue ID
-    // system_manager->TM_to_SM_queue = osMailCreate();
+    // system_manager->TM_to_SM_queue = osMessageQueueNew(1, 256, NULL);
     // xTaskCreate(system_manager->TMSlowTask, "TM Slow Thread", &system_manager->TM_handle);
     // vTaskStartScheduler(); // TODO, make sure I'm using this right, haven't checked
-
-    // AM init
-    AM::ActuatorConfig m0{.channel = 0,
-                          .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)};
-    AM::ActuatorConfig m1{.channel = 1,
-                          .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)};
-    AM::ActuatorConfig m2{.channel = 2,
-                          .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)};
-    AM::ActuatorConfig m3{.channel = 3,
-                          .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)};
-    AM::LevelQuadControl quad1(m0, m1, m2, m3);
-
-    system_manager->attitude_manager = attitude_manager(&quad1)
 
     // Immediately move to Disarm mode
     system_manager->setState(DisarmMode::getInstance());
@@ -56,7 +45,7 @@ void DisarmMode::execute(SystemManager *system_manager) {
 
     // Check switch here that changes modes
     system_manager->rc_data = Los_Link::getInstance().getRx();
-    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] > 90) {
+    if (system_manager->rc_data.rx_channels[SM::RC_ARM_CHANNEL] > 90) {
         system_manager->setState(GroundOpMode::getInstance());
     }
 }
@@ -72,15 +61,15 @@ SystemState &DisarmMode::getInstance() {
 void GroundOpMode::execute(SystemManager *system_manager) {
     // To move to flight check that armed switch is high, throttle and pitch are 0 (both sticks down)
     system_manager->rc_data = Los_Link::getInstance().getRx();
-    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] > 90 && system_manager->rc_data[SM::RC_THROTTLE_CHANNEL] == 0 
-        && system_manager->rc_data[SM::RC_PITCH_CHANNEL]) {
+    if (system_manager->rc_data.rx_channels[SM::RC_ARM_CHANNEL] > 90 && system_manager->rc_data.rx_channels[SM::RC_THROTTLE_CHANNEL] == 0 
+        && system_manager->rc_data.rx_channels[SM::RC_PITCH_CHANNEL]) {
         system_manager->setState(FlightMode::getInstance());
     }
 }
 
 void GroundOpMode::exit(SystemManager *system_manager) {
     // Delete SM to AM queue to prevent PID tuning midair (not yet in Nov 27th ver)
-    // osMailFree(system_manager->SM_to_AM_queue);
+    // osMessageQueueReset(system_manager->SM_to_AM_queue);
     // system_manager->SM_to_AM_queue = NULL;
 }
 
@@ -98,13 +87,13 @@ void FlightMode::enter(SystemManager *system_manager) {
     // vTaskDelete(system_manager->TM_handle);
     // xTaskCreate(system_manager->TMOperationTask, "TM Thread", &system_manager->TM_handle);
 
-    // system_manager->SM_to_PM_queue = osMailCreate();
-    // system_manager->PM_to_AM_queue = osMailCreate();
+    // system_manager->SM_to_PM_queue = osMessageQueueNew(1, 256, NULL);
+    // system_manager->PM_to_AM_queue = osMessageQueueNew(1, 256, NULL);
 
     // JUST for the Nov 27th deadline flight:
 
-    system_manager->SM_to_AM_queue = osMailCreate();
-    xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400, NULL, osPriorityNormal, &system_manager->AM_handle);
+    system_manager->SM_to_AM_queue = osMessageQueueNew(1U, 256U, NULL);
+    xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400U, (void*)system_manager->attitude_manager, osPriorityNormal, &system_manager->AM_handle);
     // Task will automatically be added to the FreeRTOS scheduler
 }
 
@@ -115,7 +104,7 @@ void FlightMode::execute(SystemManager *system_manager) {
 
     // Get RC data from LOS
     system_manager->rc_data = Los_Link::getInstance().getRx();
-    if (system_manager->rc_data[SM::RC_ARM_CHANNEL] < 10) {
+    if (system_manager->rc_data.rx_channels[SM::RC_ARM_CHANNEL] < 10) {
         system_manager->setState(DisarmMode::getInstance());
     }
 
@@ -123,7 +112,7 @@ void FlightMode::execute(SystemManager *system_manager) {
     system_manager->to_am_data = RcToAmInput(system_manager->rc_data);
 
     // Send to AM mail queue (JUST Nov 27th implementation)
-    osMailPut(system_manager->SM_to_AM_queue, &system_manager->to_am_data)
+    osMessageQueuePut(system_manager->SM_to_AM_queue, &system_manager->to_am_data)
 
     // Get big packet message from TM and store it
     // TODO
@@ -165,12 +154,12 @@ void FlightMode::exit(SystemManager *system_manager) {
     // vTaskDelete(system_manager->TM_handle);
     // xTaskCreate(system_manager->TMSlowTask, "TM Slow Thread", &system_manager->TM_handle);
 
-    osMailFree(system_manager->SM_to_AM_queue);
+    osMessageQueueReset(system_manager->SM_to_AM_queue);
     system_manager->SM_to_AM_queue = NULL;
 
-    // osMailFree(system_manager->SM_to_PM_queue);
+    // osMessageQueueReset(system_manager->SM_to_PM_queue);
     // system_manager->SM_to_PM_queue = NULL;
-    // osMailFree(system_manager->PM_to_AM_queue);
+    // osMessageQueueReset(system_manager->PM_to_AM_queue);
     // system_manager->PM_to_AM_queue = NULL;
 
     // Write 0 to LOS actuators
@@ -234,14 +223,14 @@ void FatalFailureMode::enter(SystemManager *system_manager) {
     vTaskDelete(system_manager->AM_handle);
 
     // For Nov 27th just free the SM to AM queue
-    osMailFree(system_manager->SM_to_AM_queue);
+    osMessageQueueReset(system_manager->SM_to_AM_queue);
     system_manager->SM_to_AM_queue = NULL;
 
-    // osMailFree(system_manager->SM_to_PM_queue);
+    // osMessageQueueReset(system_manager->SM_to_PM_queue);
     // system_manager->SM_to_PM_queue = NULL;
-    // osMailFree(system_manager->PM_to_AM_queue);
+    // osMessageQueueReset(system_manager->PM_to_AM_queue);
     // system_manager->PM_to_AM_queue = NULL;
-    // osMailFree(system_manager->PM_to_AM_queue);
+    // osMessageQueueReset(system_manager->PM_to_AM_queue);
     // system_manager->AM_to_SM_queue = NULL;
 
     // Write 0 to LOS actuators
@@ -260,3 +249,5 @@ SystemState &FatalFailureMode::getInstance() {
     static FatalFailureMode singleton;
     return singleton;
 }
+
+} // namespace SM
