@@ -1,4 +1,7 @@
 # ZeroPilot-SW-3
 3rd iteration of ZeroPilot Software
 
-To build from ZeroPilot-SW-3 directory: `./Tools/build.bash -p STM32F401RE"
+Current supported builds (build from ZeroPilot-SW-3 directory):
+    `./Tools/build.bash -p nucleof401re`
+    `./Tools/build.bash -p nucleol552zeq`
+    `./Tools/build.bash -p nucleog474re`

@@ -5,6 +5,10 @@ set(ELF_NAME ${PROJECT_NAME}.elf)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+
+set(ATTITUDE_MANAGER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager")
+set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
+
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
@@ -23,8 +27,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Common/${FOLDER_NAME}/Inc
 
-    ## LOS Boardfiles ##
-    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Device/ST/${FAMILY_NAME}/Include
@@ -41,7 +43,7 @@ set(HAL_DRIVERS_C_SOURCES "${HAL_DRIVERS_DIR}/${FAMILY_NAME}_HAL_Driver/Src/*.c"
 
 set(FREE_RTOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source)
 set(FREE_RTOS_C_SOURCES "${FREE_RTOS_DIR}/*.c"
-                        "${FREE_RTOS_DIR}/CMSIS_RTOS/*.c"
+                        "${FREE_RTOS_DIR}/CMSIS_RTOS_V2/*.c"
                         "${FREE_RTOS_DIR}/portable/GCC/ARM_${PORTABLE_NAME}/*.c"
                         "${FREE_RTOS_DIR}/portable/MemMang/*.c")
 
@@ -50,8 +52,8 @@ set(HAL_CORE_C_SOURCES "${HAL_CORE}/Src/*.c")
 set(HAL_CORE_CXX_SOURCES "${HAL_CORE}/Src/*.cpp")
 
 set(INTERFACE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface)
-set(INTERFACE_C_SOURCES "${INTERFACE_DIR}/Src/*.c")
-set(INTERFACE_CXX_SOURCES "${INTERFACE_DIR}/Src/*.cpp")
+set(INTERFACE_C_SOURCES "${INTERFACE_DIR}/Src/*.c" "${INTERFACE_DIR}/Common/${FOLDER_NAME}/Src/*.c")
+set(INTERFACE_CXX_SOURCES "${INTERFACE_DIR}/Src/*.cpp" "${INTERFACE_DIR}/Common/${FOLDER_NAME}/Src/*.cpp")
 
 set(DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver)
 set(DRIVERS_C_SOURCES "${DRIVERS_DIR}/*/Src/*.c")
