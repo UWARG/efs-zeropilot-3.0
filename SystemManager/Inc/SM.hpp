@@ -22,18 +22,6 @@
 
 namespace SM {
 
-class SystemState {
-    public:
-        void enter(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) {
-            (void) sys_man;
-        }
-        static SystemState& getInstance();
-};
-
 // Enumerates the current drone status
 enum Drone_Operation_Mode{BOOT, DISARMED, GROUND_OPS, TAKEOFF, FLIGHT, LANDING, FATAL_FAILURE = -1};
 
@@ -45,6 +33,7 @@ int AM_PERIOD_MS = 5; // Current operation speed of 200 Hz.
 // int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
 // int TM_PERIOD_OPERATION_MS = 5;
 
+class SystemState;
 
 class SystemManager {
     public:
@@ -94,6 +83,19 @@ class SystemManager {
         SystemState* currentState;
         SM::Drone_Operation_Mode operation_mode;
 
+};
+
+
+class SystemState {
+    public:
+        void enter(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        void execute(SystemManager *sys_man);
+        void exit(SystemManager *sys_man) {
+            (void) sys_man;
+        }
+        static SystemState& getInstance();
 };
 
 } // namespace SM
