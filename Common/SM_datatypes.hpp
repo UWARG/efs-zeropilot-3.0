@@ -1,10 +1,11 @@
-#pragma once
+#ifndef SM_DATATYPES_HPP
+#define SM_DATATYPES_HPP
 
 #include "PM_datatypes.hpp"
 #include "AM_datatypes.hpp"
 
 struct SM_TM_Commands {
-    GroundStationData gspcData;
+    GroundStationData gspc_data;
     JetsonMovementRequest jetson_movement_req;
     GroundStationPIDSetResponse gspc_pid_set_resp;
 };
@@ -27,3 +28,5 @@ struct GroundStationData {
     uint8_t battery_voltages[13];
     uint8_t controller_values[16];
 };
+
+#endif

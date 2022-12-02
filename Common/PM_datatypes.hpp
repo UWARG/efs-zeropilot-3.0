@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PM_DATATYPES_HPP
+#define PM_DATATYPES_HPP
 
 struct PM_AM_Commands {
   // heading unit vector and magnitude
@@ -63,3 +64,5 @@ struct TelemWaypoint {
     double latitude;
     double altitude;
 };
+
+#endif
