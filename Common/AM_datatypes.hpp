@@ -1,6 +1,8 @@
-#pragma once
+#ifndef AM_DATATYPES_HPP
+#define AM_DATATYPES_HPP
 
 struct AM_SM_Commands {
+    bool ok;
 };
 
 struct SM_AM_Commands {
@@ -11,6 +13,7 @@ struct PIDValues {
     double P;
     double I;
     double D;
+    double A;
 };
 
 struct PIDControllerValues {
@@ -27,3 +30,5 @@ struct GroundStationPIDSetResponse {
     uint8_t controller_number;
     PIDControllerValues controller;
 };
+
+#endif
