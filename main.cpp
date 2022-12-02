@@ -4,12 +4,20 @@
 #include "task.h"
 #include "LOS_Actuators.hpp"
 #include "LOS_Link.hpp"
+#include <cstdio>
+#include <string.h>
+//#include <stdlib>
 
 void StartBlinkyTest(void * argument);
 void StartLosLinkTest(void * argument);
 void StartLosLinkTest1(void * argument);
 void StartLosLinkTest2(void * argument);
 
+
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart5;
 int main()
 {
     losInit();
@@ -71,6 +79,13 @@ void StartLosLinkTest(void * argument)
 //        HAL_Delay(250);
         HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
         LosLinkRx_t testVal = Los_Link::getInstance().getRx(0);
+
+        uint8_t txd_msg_buffer[64] = {0};
+//        sprintf((char*)txd_msg_buffer, "\r\n test vals: %d %d %d %d", testVal.rx_channels[0], testVal.rx_channels[1], testVal.rx_channels[2], testVal.rx_channels[3]);
+//        HAL_UART_Transmit(&huart1, txd_msg_buffer, strlen((char*)txd_msg_buffer), 1000);
+//        HAL_UART_Transmit(&huart2, txd_msg_buffer, strlen((char*)txd_msg_buffer), 1000);
+//        HAL_UART_Transmit(&huart3, txd_msg_buffer, strlen((char*)txd_msg_buffer), 1000);
+//        HAL_UART_Transmit(&huart5, txd_msg_buffer, strlen((char*)txd_msg_buffer), 1000);
         osDelay(100);
     }
 
