@@ -18,14 +18,15 @@
 #define ZPSW3_SM_STATES_HPP
 
 #include "SM_StateManager.hpp"
-#include "SM_DataTypes.hpp"
+#include "AM_DataTypes.hpp"
 #include "cmsis_os.h"
 
+namespace SM {
 
 class BootMode: public SystemState {
     public:
-        void execute(SystemManager *sys_man) override;
-        static SystemState& getInstance() override;
+        void execute(SystemManager *sys_man);
+        static SystemState& getInstance();
     private:
         BootMode() {
         }
@@ -35,8 +36,8 @@ class BootMode: public SystemState {
 
 class DisarmMode: public SystemState {
     public:
-        void execute(SystemManager *sys_man) override;
-        static SystemState& getInstance() override;
+        void execute(SystemManager *sys_man);
+        static SystemState& getInstance();
     private:
         DisarmMode() {
         }
@@ -46,9 +47,9 @@ class DisarmMode: public SystemState {
 
 class GroundOpMode: public SystemState {
     public:
-        void execute(SystemManager *sys_man) override;
+        void execute(SystemManager *sys_man);
         void exit(SystemManager *sys_man) override;
-        static SystemState& getInstance() override;
+        static SystemState& getInstance();
     private:
         GroundOpMode() {
         }
@@ -59,16 +60,16 @@ class GroundOpMode: public SystemState {
 class FlightMode: public SystemState {
     public:
         void enter(SystemManager *sys_man) override;
-        void execute(SystemManager *sys_man) override;
+        void execute(SystemManager *sys_man);
         void exit(SystemManager *sys_man) override;
-        static SystemState& getInstance() override;
+        static SystemState& getInstance();
     private:
         FlightMode() {
         }
         FlightMode(const FlightMode &other);
         FlightMode& operator =(const FlightMode &other);
 
-        AttitudeManagerInput* FlightMode::RcToAmInput(LosLinkRx_t rc_message);
+        AM::AttitudeManagerInput* RcToAmInput(LosLinkRx_t rc_message);
         // static AttitudeManagerInput* getManualWaypoint();
         // static CommandsFromSM* generatePmPacket();
 };
@@ -76,13 +77,15 @@ class FlightMode: public SystemState {
 class FatalFailureMode: public SystemState {
     public:
         void enter(SystemManager *sys_man) override;
-        void execute(SystemManager *sys_man) override;
-        static SystemState& getInstance() override;
+        void execute(SystemManager *sys_man);
+        static SystemState& getInstance();
     private:
         FatalFailureMode() {
         }
         FatalFailureMode(const FatalFailureMode &other);
         FatalFailureMode& operator =(const FatalFailureMode &other);
 };
+
+} // namespace SM
 
 #endif //ZPSW3_SM_STATES_HPP

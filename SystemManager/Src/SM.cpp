@@ -7,13 +7,13 @@
  * Author(s): Gordon Fountain
  */
 
+#include "cmsis_os.h"
 #include "SM.hpp"
 #include "SM_States.hpp"
 #include "task.h"
 
 namespace SM {
-
-SystemManager::SystemManager()
+SystemManager::SystemManager() 
 {
     currentState = &BootMode::getInstance();
 }
@@ -25,7 +25,7 @@ void SystemManager::setState(SystemState& newState)
     currentState->enter(this);
 }
 
-void SystemManager::getMode()
+Drone_Operation_Mode SystemManager::getMode()
 {
     return operation_mode;
 }
@@ -37,22 +37,23 @@ void SystemManager::execute()
 
 void SystemManager::AMOperationTask(void *pvParameters)
 {
-    AttitudeManagerInput am_instructions;
+    attitude_manager = (AM::AttitudeManager*)pvParameters;
+    
+    const AM::AttitudeManagerInput* am_instructions;
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
-        // Read MailQ from SM
-        osEvent mail_event = osMailGet(this->SM_to_AM_queue, 3); // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
-        
-        // Clear MailQ from SM
-        osMailFree(this->SM_to_AM_queue);
+        // Read MessageQ from SM
+        uint8_t* msg_priority;
+        void* message_pointer;
+        osMessageQueueGet(this->SM_to_AM_queue, message_pointer, msg_priority, 3); // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
+        am_instructions = (AM::AttitudeManagerInput*)message_pointer;
 
-        if (mail_event.status == osEventMail) {
-            am_instructions = *mail_event.value.p;
-        }
+        // Clear MessageQ from SM
+        osMessageQueueReset(this->SM_to_AM_queue);
 
         // Run AM control loop
-        this->AM_instance.runControlLoopIteration(am_instructions);
+        attitude_manager.runControlLoopIteration(*am_instructions);
 
         // Delay to operate at set frequency
         vTaskDelayUntil(&xNextWakeTime, SM::AM_PERIOD_MS);
