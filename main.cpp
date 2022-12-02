@@ -15,13 +15,13 @@ int main()
 
     osThreadAttr_t blinkyTest = {
         .name = "start_blinky",
-        .stack_size = 128,
+        .stack_size = 512,
         .priority = osPriorityNormal
     };
 
     osThreadAttr_t losActTest = {
         .name = "los_act",
-        .stack_size = 1024,
+        .stack_size = 1024*5,
         .priority = osPriorityNormal
     };
 
@@ -29,6 +29,7 @@ int main()
     osThreadNew (StartLosActuatorsTest, NULL, &losActTest);
 
     losInit();
+    losKernelStart();
 
     //should not get here bec losInit() starts the scheduler
     while(1){}
@@ -41,21 +42,23 @@ void StartBlinkyTest(void * argument)
 {
     for(;;)
     {
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250);
-        osDelay(1);
+        HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+        HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
+        HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+        osDelay(250);
     }
 }
 
 void StartLosActuatorsTest(void * argument)
 {
+    Los_Actuators actuators = Los_Actuators::getInstance();
     for (;;)
     {
-        Los_Actuators::getInstance().set(0, 50);
+        actuators.set(0, 5);
         osDelay(2000);
-        Los_Actuators::getInstance().set(0, 100);
+        actuators.set(0, 10);
         osDelay(2000);
-        Los_Actuators::getInstance().set(0, 0);
+        actuators.set(0, 0);
         osDelay(2000);
     }
 

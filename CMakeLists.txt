@@ -16,6 +16,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core/Inc
 
+    # Include the config header folder
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Common/${FOLDER_NAME}/Inc
+
     ## LOS Driver Includes ##
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Common/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
