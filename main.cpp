@@ -1,18 +1,15 @@
 #include "main.h"
+
 #include "FreeRTOS.h"
+#include "LOS_Actuators.hpp"
+#include "SM.hpp"
 #include "cmsis_os2.h"
 #include "task.h"
-#include "LOS_Actuators.hpp"
-
-#include "SM.hpp"
 
 void SMOperationTask(void *pvParameters);
 const static auto SM_PERIOD_OPERATION_MS = 5;
 
-SM::SystemManager SM_instance;
-
-int main()
-{
+int main() {
     losInit();
 
     TaskHandle_t SM_handle = NULL;
@@ -21,14 +18,16 @@ int main()
 
     losKernelStart();
 
-    //should not get here bec losInit() starts the scheduler
-    while(1){}
+    // should not get here bec losInit() starts the scheduler
+    while (1) {
+    }
 
     return 0;
 }
 
-void SMOperationTask(void *pvParameters)
-{
+void SMOperationTask(void *pvParameters) {
+    SM::SystemManager SM_instance;
+
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
