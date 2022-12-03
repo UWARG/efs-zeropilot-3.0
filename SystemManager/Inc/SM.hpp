@@ -42,7 +42,7 @@ enum RC_Controller_Channel {
     RC_ARM_CHANNEL
 };  // Either reconfigure controller or this to match
 
-int AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
+uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
 // int PM_PERIOD_MS = 5; // 200Hz.
 // int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
 // int TM_PERIOD_OPERATION_MS = 5;

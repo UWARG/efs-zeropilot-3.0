@@ -12,6 +12,7 @@
 #include "AM_ControlInterface.hpp"
 #include "AM_DataTypes.hpp"
 #include "CommonDataTypes.hpp"
+#include "cmsis_os.h"
 
 namespace AM {
 
@@ -26,6 +27,9 @@ class AttitudeManager {
 
     void runControlLoopIteration(const AttitudeManagerInput &instructions);
 
+    void setSmQueue(osMessageQId queueId);
+    osMessageQId getSmQueue();
+
    private:
     AttitudeManager();
 
@@ -36,6 +40,9 @@ class AttitudeManager {
     float desired_airspeed = 0;  // could this be determined by our desired controller index?
     float current_airspeed = 0;
     float transition_start_airspeed = 0;
+
+    // Only stored in AM, reading and clearing done in SM code.
+    osMessageQId SM_to_AM_queue;
 
     void setDesiredControlAlgorithm(uint8_t id);
 
