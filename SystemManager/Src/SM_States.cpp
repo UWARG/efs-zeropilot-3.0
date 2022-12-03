@@ -8,6 +8,10 @@
  */
 
 #include "SM_States.hpp"
+
+#include "LOS_Actuators.hpp"
+#include "LOS_Link.hpp"
+#include "config.hpp"
 #include "task.h"
 
 namespace SM {
@@ -18,7 +22,7 @@ namespace SM {
 void BootMode::execute(SystemManager *system_manager) {
     // Only Executes once, Configure sensors, LOS, Everything startup
     // Don't think Enter is used for boot.
-    
+
     // Start TM at slow speed
     // Update TM mail queue ID
     // system_manager->TM_to_SM_queue = osMessageQueueNew(1, 256, NULL);
@@ -59,10 +63,12 @@ SystemState &DisarmMode::getInstance() {
  * Ground Op Mode
  ********************/
 void GroundOpMode::execute(SystemManager *system_manager) {
-    // To move to flight check that armed switch is high, throttle and pitch are 0 (both sticks down)
+    // To move to flight check that armed switch is high,
+    // throttle and pitch are 0 (both sticks down)
     system_manager->rc_data = Los_Link::getInstance().getRx();
-    if (system_manager->rc_data.rx_channels[SM::RC_ARM_CHANNEL] > 90 && system_manager->rc_data.rx_channels[SM::RC_THROTTLE_CHANNEL] == 0 
-        && system_manager->rc_data.rx_channels[SM::RC_PITCH_CHANNEL]) {
+    if (system_manager->rc_data.rx_channels[SM::RC_ARM_CHANNEL] > 90 &&
+        system_manager->rc_data.rx_channels[SM::RC_THROTTLE_CHANNEL] == 0 &&
+        system_manager->rc_data.rx_channels[SM::RC_PITCH_CHANNEL]) {
         system_manager->setState(FlightMode::getInstance());
     }
 }
@@ -93,7 +99,9 @@ void FlightMode::enter(SystemManager *system_manager) {
     // JUST for the Nov 27th deadline flight:
 
     system_manager->SM_to_AM_queue = osMessageQueueNew(1U, 256U, NULL);
-    xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400U, (void*)system_manager->attitude_manager, osPriorityNormal, &system_manager->AM_handle);
+    xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400U,
+                (void *)system_manager->attitude_manager, osPriorityNormal,
+                &system_manager->AM_handle);
     // Task will automatically be added to the FreeRTOS scheduler
 }
 
@@ -119,7 +127,8 @@ void FlightMode::execute(SystemManager *system_manager) {
 
     // Determine flight state (Takeoff/cruise/Landing/landed) and update state
     // TODO
-    // if ((system_manager->operation_mode == SM::LANDING && landedCheck()) || system_manager->tm_packet.state == "SM::DISARMED") {
+    // if ((system_manager->operation_mode == SM::LANDING && landedCheck()) ||
+    // system_manager->tm_packet.state == "SM::DISARMED") {
     //     system_manager->operation_mode = SM::DISARMED;
     // }
 
@@ -131,8 +140,9 @@ void FlightMode::execute(SystemManager *system_manager) {
     //     // If disarm/landed then move to disarm
     //     system_manager->setState(DisarmMode::getInstance());
     // }
-    
-    // Get waypoint(s) from TM/RC (through LOS) and pass SF data and waypoint(s) to PM (who sends to AM)
+
+    // Get waypoint(s) from TM/RC (through LOS) and pass SF data and waypoint(s)
+    // to PM (who sends to AM)
     // TODO
 
     // Get latest message back from AM
@@ -168,31 +178,34 @@ void FlightMode::exit(SystemManager *system_manager) {
     }
 }
 
-AttitudeManagerInput FlightMode::RcToAmInput(LosLinkRx_t rc_message)
-{
+AttitudeManagerInput FlightMode::RcToAmInput(LosLinkRx_t rc_message) {
     AttitudeManagerInput am_message;
 
     // Get channel values from RC message
     // map pitch/roll/yaw to +/- 30 degrees
     // leave throttle between 0 and 100
     float throttle = rc_message.rx_channels[SM::RC_THROTTLE_CHANNEL] / 20.0;
-    float pitch = (rc_message.rx_channels[SM::RC_PITCH_CHANNEL] * 60.0 / 100.0) - 30.0; // So pulling down on stick goes up
-    float roll = (rc_message.rx_channels[SM::RC_ROLL_CHANNEL] * 60.0 / 100.0) - 30.0; // RHR with thumb pointed in direction of flight. CW looking forward = positive
+    // So pulling down on stick goes up
+    float pitch = (rc_message.rx_channels[SM::RC_PITCH_CHANNEL] * 60.0 / 100.0) - 30.0;
+    // RHR with thumb pointed in direction of flight. CW looking forward = positive
+    float roll = (rc_message.rx_channels[SM::RC_ROLL_CHANNEL] * 60.0 / 100.0) - 30.0;
     float yaw = (rc_message.rx_channels[SM::RC_YAW_CHANNEL] * 60.0 / 100.0) - 30.0;
 
     // map RC values into waypoint, assuming 50 for pitch, roll, and yaw means no change desired.
-    // sets the maximum 
+    // sets the maximum
     am_message.x_dir = cos(pitch) * cos(roll);
-    am_message.y_dir = sin(roll); // Positive right
-    am_message.z_dir = sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
+    // Positive right
+    am_message.y_dir = sin(roll);
+    // Positive down, (so pulling controller stick down moves drone up)
+    am_message.z_dir = sin(pitch);
     // Note that the above is allready normalized
     am_message.magnitude = throttle;
     am_message.heading = yaw;
-    
+
     return am_message;
 }
 
-SystemState& FlightMode::getInstance() {
+SystemState &FlightMode::getInstance() {
     static FlightMode singleton;
     return singleton;
 }
@@ -205,12 +218,11 @@ SystemState& FlightMode::getInstance() {
 
 //     if (system_manager->RC_new_data) { // TODO make this match what we get
 //         system_manager->AM_Input = getManualWaypoint(system_manager->RC_msg);
-//     } 
+//     }
 
 //     //TODO
 //     return &pm_packet;
 // }
-
 
 /********************
  * FatalFailure Mode
@@ -250,4 +262,4 @@ SystemState &FatalFailureMode::getInstance() {
     return singleton;
 }
 
-} // namespace SM
+}  // namespace SM

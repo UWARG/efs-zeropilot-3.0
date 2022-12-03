@@ -27,7 +27,7 @@ void AttitudeManager::runControlLoopIteration(const AttitudeManagerInput &instru
 
     // Write actuator outputs
     for (auto output : controller_output) {
-        LOS_Actuators::getInstance().set(output.channel, output.percent);
+        Los_Actuators::getInstance().set(output.channel, output.percent);
     }
 }
 

@@ -7,38 +7,36 @@
  * Author(s): Gordon Fountain
  */
 
-#include "cmsis_os.h"
 #include "SM.hpp"
+
 #include "SM_States.hpp"
+#include "cmsis_os.h"
 #include "task.h"
 
 namespace SM {
-SystemManager::SystemManager() 
-{
+SystemManager::SystemManager()
+    : back_left_motor{.channel = 0, .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)},
+      front_right_motor{.channel = 1, .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)},
+      back_right_motor{.channel = 2, .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)},
+      front_left_motor{.channel = 3, .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)},
+      quad(back_left_motor, front_right_motor, back_right_motor, front_left_motor),
+      attitude_manager(&quad) {
     currentState = &BootMode::getInstance();
 }
 
-void SystemManager::setState(SystemState& newState)
-{
+void SystemManager::setState(SystemState& newState) {
     currentState->exit(this);
     currentState = &newState;
     currentState->enter(this);
 }
 
-Drone_Operation_Mode SystemManager::getMode()
-{
-    return operation_mode;
-}
+Drone_Operation_Mode SystemManager::getMode() { return operation_mode; }
 
-void SystemManager::execute()
-{
-    currentState->execute(this);
-}
+void SystemManager::execute() { currentState->execute(this); }
 
-void SystemManager::AMOperationTask(void *pvParameters)
-{
-    attitude_manager = (AM::AttitudeManager*)pvParameters;
-    
+void SystemManager::AMOperationTask(void* pvParameters) {
+    // attitude_manager = (AM::AttitudeManager*)pvParameters;
+
     const AM::AttitudeManagerInput* am_instructions;
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
@@ -46,7 +44,8 @@ void SystemManager::AMOperationTask(void *pvParameters)
         // Read MessageQ from SM
         uint8_t* msg_priority;
         void* message_pointer;
-        osMessageQueueGet(this->SM_to_AM_queue, message_pointer, msg_priority, 3); // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
+        // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
+        osMessageQueueGet(this->SM_to_AM_queue, message_pointer, msg_priority, 3);
         am_instructions = (AM::AttitudeManagerInput*)message_pointer;
 
         // Clear MessageQ from SM
@@ -90,4 +89,4 @@ void SystemManager::AMOperationTask(void *pvParameters)
 //     }
 // }
 
-} // namespace SM
+}  // namespace SM
