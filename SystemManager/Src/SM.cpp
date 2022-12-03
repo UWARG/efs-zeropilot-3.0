@@ -55,33 +55,50 @@ void SystemManager::setState(SystemState& newState) {
     currentState->enter(this);
 }
 
-Drone_Operation_Mode SystemManager::getMode() { return operation_mode; }
+Drone_Operation_Mode SystemManager::getMode() 
+{ 
+    return operation_mode; 
+}
 
-void SystemManager::execute() { currentState->execute(this); }
+void SystemManager::execute() 
+{ 
+    currentState->execute(this); 
+}
 
-void SystemManager::AMOperationTask(void* pvParameters) {
-    // attitude_manager = (AM::AttitudeManager*)pvParameters;
+void SystemManager::AMOperationTask(void* pvParameters) 
+{
+    AM::AttitudeManager* attitude_manager = (AM::AttitudeManager*)pvParameters;
 
     const AM::AttitudeManagerInput* am_instructions;
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
         // Read MessageQ from SM
-        uint8_t* msg_priority;
-        void* message_pointer;
+        uint8_t* msg_priority = 0;
+        void* message_pointer = NULL;
         // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
-        osMessageQueueGet(this->SM_to_AM_queue, message_pointer, msg_priority, 3);
+        osMessageQueueGet(attitude_manager->getSmQueue(), message_pointer, msg_priority, 3);
         am_instructions = (AM::AttitudeManagerInput*)message_pointer;
 
         // Clear MessageQ from SM
-        osMessageQueueReset(this->SM_to_AM_queue);
+        osMessageQueueReset(attitude_manager->getSmQueue());
 
         // Run AM control loop
-        attitude_manager.runControlLoopIteration(*am_instructions);
+        attitude_manager->runControlLoopIteration(*am_instructions);
 
         // Delay to operate at set frequency
         vTaskDelayUntil(&xNextWakeTime, SM::AM_PERIOD_MS);
     }
+}
+
+void SystemState::enter(SystemManager *sys_man) 
+{
+    return;
+}
+
+void SystemState::exit(SystemManager *sys_man) 
+{
+    return;
 }
 
 // void SystemManager::TMOperationTask(void *pvParameters)

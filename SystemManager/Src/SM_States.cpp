@@ -9,13 +9,10 @@
 
 #include "SM_States.hpp"
 
-<<<<<<< HEAD
 #include "LOS_Actuators.hpp"
 #include "LOS_Link.hpp"
 #include "config.hpp"
-=======
 #include "cmath"
->>>>>>> 2c8c9f3 (Debug fixes continue)
 #include "task.h"
 #include "LOS_Link.hpp"
 
@@ -104,8 +101,9 @@ void FlightMode::enter(SystemManager *system_manager) {
     // JUST for the Nov 27th deadline flight:
 
     system_manager->SM_to_AM_queue = osMessageQueueNew(1U, 256U, NULL);
+    AM::AttitudeManager* am_pointer = &system_manager->attitude_manager;
     xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400U,
-                (void *)system_manager->attitude_manager, osPriorityNormal,
+                (void *)am_pointer, osPriorityNormal,
                 &system_manager->AM_handle);
     // Task will automatically be added to the FreeRTOS scheduler
 }

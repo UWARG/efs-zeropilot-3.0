@@ -7,7 +7,7 @@
 #include "task.h"
 
 void SMOperationTask(void *pvParameters);
-const static auto SM_PERIOD_OPERATION_MS = 5;
+const static auto SM_PERIOD_MS = 5;
 
 int main() {
     losInit();
@@ -32,6 +32,6 @@ void SMOperationTask(void *pvParameters) {
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
         SM_instance.execute();
-        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_OPERATION_MS);
+        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_MS);
     }
 }
