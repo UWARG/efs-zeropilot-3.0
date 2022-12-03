@@ -22,6 +22,10 @@
 
 namespace SM {
 
+/*
+Constants and Enums
+*/
+
 // Enumerates the current drone status
 enum Drone_Operation_Mode {
     BOOT,
@@ -47,7 +51,15 @@ uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
 // int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
 // int TM_PERIOD_OPERATION_MS = 5;
 
+/*
+Helper Functions
+*/
+
 AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message);
+
+/*
+System Manager and System State
+*/
 
 class SystemState;
 

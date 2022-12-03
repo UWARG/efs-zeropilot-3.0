@@ -101,6 +101,7 @@ void FlightMode::enter(SystemManager *system_manager) {
     // JUST for the Nov 27th deadline flight:
 
     system_manager->SM_to_AM_queue = osMessageQueueNew(1U, 256U, NULL);
+    system_manager->attitude_manager.setSmQueue(system_manager->SM_to_AM_queue);
     AM::AttitudeManager* am_pointer = &system_manager->attitude_manager;
     xTaskCreate(system_manager->AMOperationTask, "AM Thread", 400U,
                 (void *)am_pointer, osPriorityNormal,

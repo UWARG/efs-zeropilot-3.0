@@ -15,6 +15,10 @@
 
 namespace SM {
 
+/*
+Helper Functions
+*/
+
 AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message)
 {
     AM::AttitudeManagerInput am_message;
@@ -38,6 +42,10 @@ AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message)
     
     return am_message;
 }
+
+/*
+System Manager and System State Functions
+*/
 
 SystemManager::SystemManager()
     : back_left_motor{.channel = 0, .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)},
@@ -91,16 +99,6 @@ void SystemManager::AMOperationTask(void* pvParameters)
     }
 }
 
-void SystemState::enter(SystemManager *sys_man) 
-{
-    return;
-}
-
-void SystemState::exit(SystemManager *sys_man) 
-{
-    return;
-}
-
 // void SystemManager::TMOperationTask(void *pvParameters)
 // {
 //     TickType_t xNextWakeTime;
@@ -130,5 +128,15 @@ void SystemState::exit(SystemManager *sys_man)
 //         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
 //     }
 // }
+
+void SystemState::enter(SystemManager *sys_man) 
+{
+    return;
+}
+
+void SystemState::exit(SystemManager *sys_man) 
+{
+    return;
+}
 
 }  // namespace SM
