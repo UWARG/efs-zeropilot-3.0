@@ -15,6 +15,8 @@
 
 namespace SM {
 
+uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
+
 /*
 Helper Functions
 */
