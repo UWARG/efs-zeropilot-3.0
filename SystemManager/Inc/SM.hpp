@@ -47,53 +47,59 @@ int AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
 // int TM_PERIOD_SLOW_MS = 20; // 50Hz. All of these numbers should be decided.
 // int TM_PERIOD_OPERATION_MS = 5;
 
+AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message);
+
 class SystemState;
 
 class SystemManager {
-   public:
-    SystemManager();
-    void execute();
-    void setState(SystemState &newState);
-    Drone_Operation_Mode getMode();
+    public:
+        SystemManager();
+        void execute();
+        void setState(SystemState& newState);
+        Drone_Operation_Mode getMode();
+        
+        // Task Handles
+        TaskHandle_t AM_handle = NULL;
+        // TaskHandle_t PM_handle = NULL;
+        // TaskHandle_t TM_handle = NULL;
 
-    // Task Handles
-    TaskHandle_t AM_handle = NULL;
-    // TaskHandle_t PM_handle = NULL;
-    // TaskHandle_t TM_handle = NULL;
+        // Thread tasks here
+        static void AMOperationTask(void *pvParameters);
+        // static void PMOperationTask();
+        // static void TMOperationTask();
+        // static void TMSlowTask();
 
-    // Thread tasks here
-    static void AMOperationTask(void *pvParameters);
-    // static void PMOperationTask();
-    // static void TMOperationTask();
-    // static void TMSlowTask();
+        // Mail Queues here
+        // osMessageQId TM_to_SM_queue;
+        // osMessageQId SM_to_TM_queue;
+        // osMessageQId SM_to_PM_queue;
+        // osMessageQId PM_to_AM_queue;
+        osMessageQId SM_to_AM_queue;
+        // osMessageQId AM_to_SM_queue;
 
-    // Mail Queues here
-    // osMessageQId TM_to_SM_queue;
-    // osMessageQId SM_to_TM_queue;
-    // osMessageQId SM_to_PM_queue;
-    // osMessageQId PM_to_AM_queue;
-    osMessageQId SM_to_AM_queue;
-    // osMessageQId AM_to_SM_queue;
+        // TODO Bulk message from telemetry stored here
 
-    // TODO Bulk message from telemetry stored here
+        // TODO Message from RC here
+        LosLinkRx_t rc_data;
+        // TODO new_message flag here for RC or some other way to know if data is new
 
-    // TODO Message from RC here
-    LosLinkRx_t rc_data;
-    // TODO new_message flag here for RC or some other way to know if data is new
+        // Data from SF
+        // LosSFData sf_data;
 
-    // Data from SF
-    // LosSFData sf_data;
+        // Message sent to AM
+        // AM::AttitudeManagerInput to_am_data;
+        
+        // TODO Response from AM stored here to be merged and sent to Telemetry
 
-    // TODO Response from AM stored here to be merged and sent to Telemetry
+        // AM init, might work better in a config file later
+        AM::ActuatorConfig back_left_motor, front_right_motor, back_right_motor, front_left_motor;
+        AM::LevelQuadControl quad;
+        AM::AttitudeManager attitude_manager;
 
-    // AM init, might work better in a config file later
-    AM::ActuatorConfig back_left_motor, front_right_motor, back_right_motor, front_left_motor;
-    AM::LevelQuadControl quad;
-    AM::AttitudeManager attitude_manager;
+    private:
+        SystemState* currentState;
+        Drone_Operation_Mode operation_mode;
 
-   private:
-    SystemState *currentState;
-    Drone_Operation_Mode operation_mode;
 };
 
 class SystemState {
