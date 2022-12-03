@@ -9,10 +9,15 @@
 
 #include "SM_States.hpp"
 
+<<<<<<< HEAD
 #include "LOS_Actuators.hpp"
 #include "LOS_Link.hpp"
 #include "config.hpp"
+=======
+#include "cmath"
+>>>>>>> 2c8c9f3 (Debug fixes continue)
 #include "task.h"
+#include "LOS_Link.hpp"
 
 namespace SM {
 
@@ -117,10 +122,11 @@ void FlightMode::execute(SystemManager *system_manager) {
     }
 
     // Decode RC data and convert to AM message type
-    system_manager->to_am_data = RcToAmInput(system_manager->rc_data);
+    AM::AttitudeManagerInput to_am_data = RcToAmInput(system_manager->rc_data);
+    void* msg_pointer = &to_am_data;
 
     // Send to AM mail queue (JUST Nov 27th implementation)
-    osMessageQueuePut(system_manager->SM_to_AM_queue, &system_manager->to_am_data)
+    osMessageQueuePut(system_manager->SM_to_AM_queue, msg_pointer, osPriorityNormal, 0);
 
     // Get big packet message from TM and store it
     // TODO
@@ -173,39 +179,12 @@ void FlightMode::exit(SystemManager *system_manager) {
     // system_manager->PM_to_AM_queue = NULL;
 
     // Write 0 to LOS actuators
-    for (uint8_t channel; channel < MAX_PPM_CHANNELS; channel++) {
+    for (uint8_t channel; channel < NUM_ACTUATOR_CHANNELS; channel++) {
         Los_Actuators::getInstance().set(channel, 0);
     }
 }
 
-AttitudeManagerInput FlightMode::RcToAmInput(LosLinkRx_t rc_message) {
-    AttitudeManagerInput am_message;
-
-    // Get channel values from RC message
-    // map pitch/roll/yaw to +/- 30 degrees
-    // leave throttle between 0 and 100
-    float throttle = rc_message.rx_channels[SM::RC_THROTTLE_CHANNEL] / 20.0;
-    // So pulling down on stick goes up
-    float pitch = (rc_message.rx_channels[SM::RC_PITCH_CHANNEL] * 60.0 / 100.0) - 30.0;
-    // RHR with thumb pointed in direction of flight. CW looking forward = positive
-    float roll = (rc_message.rx_channels[SM::RC_ROLL_CHANNEL] * 60.0 / 100.0) - 30.0;
-    float yaw = (rc_message.rx_channels[SM::RC_YAW_CHANNEL] * 60.0 / 100.0) - 30.0;
-
-    // map RC values into waypoint, assuming 50 for pitch, roll, and yaw means no change desired.
-    // sets the maximum
-    am_message.x_dir = cos(pitch) * cos(roll);
-    // Positive right
-    am_message.y_dir = sin(roll);
-    // Positive down, (so pulling controller stick down moves drone up)
-    am_message.z_dir = sin(pitch);
-    // Note that the above is allready normalized
-    am_message.magnitude = throttle;
-    am_message.heading = yaw;
-
-    return am_message;
-}
-
-SystemState &FlightMode::getInstance() {
+SystemState& FlightMode::getInstance() {
     static FlightMode singleton;
     return singleton;
 }
@@ -246,7 +225,7 @@ void FatalFailureMode::enter(SystemManager *system_manager) {
     // system_manager->AM_to_SM_queue = NULL;
 
     // Write 0 to LOS actuators
-    for (uint8_t channel; channel < MAX_PPM_CHANNELS; channel++) {
+    for (uint8_t channel; channel < NUM_ACTUATOR_CHANNELS; channel++) {
         Los_Actuators::getInstance().set(channel, 0);
     }
 }
