@@ -43,8 +43,10 @@ set(ZP_SM_C_SOURCES "${ZP_SM}/Src/*.c")
 set(ZP_SM_CXX_SOURCES "${ZP_SM}/Src/*.cpp")
 
 set(ZP_AM ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager)
-set(ZP_AM_C_SOURCES "${ZP_AM}/Src/*.c")
-set(ZP_AM_CXX_SOURCES "${ZP_AM}/Src/*.cpp")
+set(ZP_AM_C_SOURCES "${ZP_AM}/Src/*.c"
+                    "${ZP_AM}ControlInterface/Src/*.c")
+set(ZP_AM_CXX_SOURCES "${ZP_AM}/Src/*.cpp"
+                      "${ZP_AM}ControlInterface/Src/*.cpp")
 
 set(HAL_DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers)
 set(HAL_DRIVERS_C_SOURCES "${HAL_DRIVERS_DIR}/${FAMILY_NAME}_HAL_Driver/Src/*.c")
