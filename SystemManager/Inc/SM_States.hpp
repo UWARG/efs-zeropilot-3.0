@@ -23,9 +23,11 @@
 
 namespace SM {
 
-class BootMode: public SystemState {
+class BootMode : public SystemState {
     public:
-        void execute(SystemManager *sys_man);
+        void enter(SystemManager *system_manager) {(void) system_manager;}
+        void execute(SystemManager *system_manager);
+        void exit(SystemManager *system_manager) {(void) system_manager;}
         static SystemState& getInstance();
     private:
         BootMode() {
@@ -34,9 +36,11 @@ class BootMode: public SystemState {
         BootMode& operator =(const BootMode &other);
 };
 
-class DisarmMode: public SystemState {
+class DisarmMode : public SystemState {
     public:
-        void execute(SystemManager *sys_man);
+        void enter(SystemManager *system_manager) {(void) system_manager;}
+        void execute(SystemManager *system_manager);
+        void exit(SystemManager *system_manager) {(void) system_manager;}
         static SystemState& getInstance();
     private:
         DisarmMode() {
@@ -45,10 +49,11 @@ class DisarmMode: public SystemState {
         DisarmMode& operator =(const DisarmMode &other);
 };
 
-class GroundOpMode: public SystemState {
+class GroundOpMode : public SystemState {
     public:
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) override;
+        void enter(SystemManager *system_manager) {(void) system_manager;}
+        void execute(SystemManager *system_manager);
+        void exit(SystemManager *system_manager) ;
         static SystemState& getInstance();
     private:
         GroundOpMode() {
@@ -57,11 +62,11 @@ class GroundOpMode: public SystemState {
         GroundOpMode& operator =(const GroundOpMode &other);
 };
 
-class FlightMode: public SystemState {
+class FlightMode : public SystemState {
     public:
-        void enter(SystemManager *sys_man) override;
-        void execute(SystemManager *sys_man);
-        void exit(SystemManager *sys_man) override;
+        void enter(SystemManager *system_manager);
+        void execute(SystemManager *system_manager);
+        void exit(SystemManager *system_manager);
         static SystemState& getInstance();
     private:
         FlightMode() {
@@ -73,10 +78,11 @@ class FlightMode: public SystemState {
         // static CommandsFromSM* generatePmPacket();
 };
 
-class FatalFailureMode: public SystemState {
+class FatalFailureMode : public SystemState {
     public:
-        void enter(SystemManager *sys_man) override;
-        void execute(SystemManager *sys_man);
+        void enter(SystemManager *system_manager) ;
+        void execute(SystemManager *system_manager);
+        void exit(SystemManager *system_manager) {(void) system_manager;}
         static SystemState& getInstance();
     private:
         FatalFailureMode() {
