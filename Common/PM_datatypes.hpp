@@ -1,6 +1,21 @@
 #ifndef PM_DATATYPES_HPP
 #define PM_DATATYPES_HPP
 
+
+struct LosSFData {
+    float roll, pitch, yaw; //rad
+    float rollRate, pitchRate, yawRate; //rad/s
+    float airspeed; //m/s
+    float altitude; //m
+    float rateOfClimb; //m/s
+    long double latitude; //Decimal degrees
+    float latitudeSpeed; //m/s
+    long double longitude; //Decimal degrees
+    float longitudeSpeed; //m/s
+    double track; // degrees
+    double heading; //degrees
+};
+
 struct PM_AM_Commands {
   // heading unit vector and magnitude
   float dist_x; 
@@ -37,20 +52,6 @@ struct LandingInitiationCommand {
 
 struct JetsonMovementRequest {
     bool request;
-};
-
-struct LosSFData_t {
-    float roll, pitch, yaw; //rad
-    float rollRate, pitchRate, yawRate; //rad/s
-    float airspeed; //m/s
-    float altitude; //m
-    float rateOfClimb; //m/s
-    long double latitude; //Decimal degrees
-    float latitudeSpeed; //m/s
-    long double longitude; //Decimal degrees
-    float longitudeSpeed; //m/s
-    double track; // degrees
-    double heading; //degrees
 };
 
 struct WaypointsCommand {
