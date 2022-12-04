@@ -46,7 +46,7 @@ AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message)
 }
 
 /*
-System Manager and System State Functions
+System Manager Functions
 */
 
 SystemManager::SystemManager()
@@ -130,15 +130,5 @@ void SystemManager::AMOperationTask(void* pvParameters)
 //         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
 //     }
 // }
-
-void SystemState::enter(SystemManager *sys_man) 
-{
-    return;
-}
-
-void SystemState::exit(SystemManager *sys_man) 
-{
-    return;
-}
 
 }  // namespace SM

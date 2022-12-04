@@ -12,16 +12,21 @@
 
 #include "SM.hpp"
 
+namespace SM {
+
 class SystemManager;
 
 class SystemState {
-public:
-    virtual void enter(SystemManager* systemMgr) = 0;
-    virtual void execute(SystemManager* systemMgr) = 0;
-    virtual void exit(SystemManager* systemMgr) = 0;
+    public:
+        virtual void enter(SystemManager* systemMgr) = 0;
+        virtual void execute(SystemManager* systemMgr) = 0;
+        virtual void exit(SystemManager* systemMgr) = 0;
 
-    bool operator==(const SystemState& rhs) const {return (this == &rhs);}
+        bool operator==(const SystemState& rhs) const {return (this == &rhs);}
 
-    virtual ~SystemState() {}
+        virtual ~SystemState() {}
 };
+
+} // namespace SM
+
 #endif //ZPSW3_SM_STATEMANAGER_HPP

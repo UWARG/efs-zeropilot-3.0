@@ -57,7 +57,7 @@ Helper Functions
 AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message);
 
 /*
-System Manager and System State
+System Manager
 */
 
 class SystemState;
@@ -111,14 +111,6 @@ class SystemManager {
         SystemState* currentState;
         Drone_Operation_Mode operation_mode;
 
-};
-
-class SystemState {
-   public:
-    virtual void enter(SystemManager *sys_man);
-    virtual void execute(SystemManager *sys_man);
-    virtual void exit(SystemManager *sys_man);
-    static SystemState &getInstance();
 };
 
 }  // namespace SM

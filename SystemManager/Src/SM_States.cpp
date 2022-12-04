@@ -35,7 +35,7 @@ void BootMode::execute(SystemManager *system_manager) {
     system_manager->setState(DisarmMode::getInstance());
 }
 
-SystemState &BootMode::getInstance() {
+SystemState& BootMode::getInstance() {
     static BootMode singleton;
     return singleton;
 }
@@ -56,7 +56,7 @@ void DisarmMode::execute(SystemManager *system_manager) {
     }
 }
 
-SystemState &DisarmMode::getInstance() {
+SystemState& DisarmMode::getInstance() {
     static DisarmMode singleton;
     return singleton;
 }
@@ -81,7 +81,7 @@ void GroundOpMode::exit(SystemManager *system_manager) {
     // system_manager->SM_to_AM_queue = NULL;
 }
 
-SystemState &GroundOpMode::getInstance() {
+SystemState& GroundOpMode::getInstance() {
     static GroundOpMode singleton;
     return singleton;
 }
@@ -183,7 +183,7 @@ void FlightMode::exit(SystemManager *system_manager) {
     }
 }
 
-SystemState& FlightMode::getInstance() {
+SystemState &FlightMode::getInstance() {
     static FlightMode singleton;
     return singleton;
 }
