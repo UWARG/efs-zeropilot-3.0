@@ -1,11 +1,11 @@
-#pragma once
 
 /* Related Confluence Pages
     https://uwarg-docs.atlassian.net/wiki/spaces/ZP/pages/1607630921/Landing+and+Takeoff
 */
 
-#include "PM_WaypointManager.hpp"
-#include "SensorFusion.hpp"
+#ifndef ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
+#define ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
+
 #include "PM_DataTypes.hpp"
 
 /********************************************************************
@@ -104,3 +104,5 @@ class LandingTakeoffManager{
         // TODO: Reset these constants to 0 in case landing is transitioned into multiple times in a flight
         // Note: a range constant value of 0 means a velocity of 0, so drone only moves once value set.
 };
+
+#endif

@@ -66,7 +66,7 @@ static CommandsForAM_t LandingTakeoffManager::createLandingWaypoint(const LosSFD
 double LandingTakeoffManager::getSpeedTarget(double currentAltitude, double rangeConstant)
 {
     double speedTarget;
-    speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / rangeConstant))
+    speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / rangeConstant)); 
     return speedTarget;
 }
 

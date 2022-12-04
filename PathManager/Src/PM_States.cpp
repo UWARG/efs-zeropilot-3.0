@@ -5,8 +5,8 @@
  **********************************************************************************************************************/
 
 CommandsFromSM CommsWithSystemManager::incomingData;
-SFOutput_t SensorFusion::sfOutputData;
-IMU_Data_t SensorFusion::imudata;
+//SFOutput_t SensorFusion::sfOutputData;
+//IMU_Data_t SensorFusion::imudata;
 CommandsForAM CommsWithAttitude::receivedData;
 
 
@@ -30,11 +30,11 @@ constexpr int LANDING_TIME_THRESHOLD {5};
 
 void CommsWithSystemManager::execute(pathManager* pathMgr)
 {
-    GetSMIncomingData(&incomingData);
+    incomingData = GetSMIncomingData();
 
     if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
     else if (incomingData.waypoint_type == TELEOP_MODE)
     {
@@ -73,7 +73,7 @@ static Telemetry_Waypoint_Data_t createTelemetryWaypoint(long double lon, long d
 void FlightModeSelector::execute(pathManager* pathMgr){
     if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
 
     // May need to go to a preflight stage later
@@ -117,10 +117,7 @@ void FlightModeSelector::execute(pathManager* pathMgr){
             pathMgr->setState(LandingStage::getInstance());
             break;
         case CRUISING:
-            pathMgr->setState(cruisingState::getInstance());
-            break;
-        case PREFLIGHT:
-            pathMgr->setState(PreflightStage::getInstance());
+            pathMgr->setState(CruisingStage::getInstance());
             break;
         case TAKEOFF:
             pathMgr->setState(TakeoffStage::getInstance());

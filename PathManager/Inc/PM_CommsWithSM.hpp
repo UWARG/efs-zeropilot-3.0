@@ -2,13 +2,13 @@
  * Getting data from SM 
  */
 
-#ifndef PM_COMMS_WITH_SM_HPP
-#define PM_COMMS_WITH_SM_HPP
+#ifndef ZPSW3_PM_COMMS_WITH_SM_HPP
+#define ZPSW3_PM_COMMS_WITH_SM_HPP
 
 #include "PM_DataTypes.hpp"
 
 /**
- * Initiate communication with telemetry.
+ * Initiate communication with SM.
  */
 void CommWithSMInit();
 
