@@ -8,7 +8,7 @@ extern "C"
 }
 const char MAIL_Q_SIZE = 1;
 
-osMailQDef(commandsMailQID, MAIL_Q_SIZE, CommandsFromSM);
+osMailQDef(commandsMailQID, MAIL_Q_SIZE, SM_PM_Commands);
 osMailQId commandsMailQID;
 
 void CommWithSMInit()
@@ -18,14 +18,14 @@ void CommWithSMInit()
 
 }
 
-bool GetSMCommands(CommandsFromSM *commands)
+bool GetSMCommands(SM_PM_Commands *commands)
 {
     osEvent event;
-    CommandsFromSM* commandsIn;
+    SM_PM_Commands* commandsIn;
     event = osMailGet(commandsMailQID, 0);
     if(event.status == osEventMail)
     {
-        commandsIn = static_cast<CommandsFromSM *>(event.value.p);
+        commandsIn = static_cast<SM_PM_Commands *>(event.value.p);
 
         //Keep the command and remove it from the queue
         *commands = *commandsIn;
