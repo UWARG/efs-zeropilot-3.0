@@ -54,7 +54,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits below a certain altitude
         */
-        static WaypointData createLandingWaypoint(const LosSFData & input);
+        static PM_AM_Commands createLandingWaypoint(const LosSFData & input);
 
         /******************
          * TAKEOFF FUNCTIONS
@@ -69,7 +69,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits at a certain altitude
         */
-        static WaypointData createTakeoffWaypoint(const LosSFData & input);
+        static PM_AM_Commands createTakeoffWaypoint(const LosSFData & input);
 
         /***********************************
         COMMON LANDING AND TAKEOFF FUNCTIONS

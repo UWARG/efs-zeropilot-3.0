@@ -27,12 +27,12 @@ class CommsWithAttitude : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-        static CommandsForAM* GetCommFromAttitude(void) { return &receivedData; }
+        static PM_AM_Commands* GetCommFromAttitude(void) { return &receivedData; }
     private:
         CommsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
         CommsWithAttitude(const CommsWithAttitude& other);
         CommsWithAttitude& operator =(const CommsWithAttitude& other);
-        static CommandsForAM receivedData;
+        static PM_AM_Commands receivedData;
 };
 
 class CommsWithSystemManager : public pathManagerState
@@ -73,14 +73,14 @@ class TakeoffStage : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-        static CommandsForAM_t* getTakeoffDataForAM() {return &takeoffDataForAM;} 
+        static PM_AM_Commands* getTakeoffDataForAM() {return &takeoffDataForAM;} 
     private:
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
         static LosSFData LOSData; 
-        static CommandsForAM_t takeoffDataForAM; 
+        static PM_AM_Commands takeoffDataForAM; 
         TakeoffStage() {}
         TakeoffStage(const TakeoffStage& other);
         TakeoffStage& operator =(const TakeoffStage& other);
@@ -120,14 +120,14 @@ class LandingStage : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-        static CommandsForAM_t* getLandingDataForAM() {return &landingDataForAM;} 
+        static PM_AM_Commands* getLandingDataForAM() {return &landingDataForAM;} 
     private:
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         static LosSFData LOSData; 
-        static CommandsForAM_t landingDataForAM;
+        static PM_AM_Commands landingDataForAM;
         LandingStage() {}
         LandingStage(const LandingStage& other);
         LandingStage& operator =(const LandingStage& other);
