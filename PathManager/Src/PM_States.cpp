@@ -4,10 +4,10 @@
  * Static Member Variable Declarations
  **********************************************************************************************************************/
 
-CommandsFromSM CommsWithSystemManager::incomingData;
+SM_PM_Commands CommsWithSystemManager::incomingData;
 //SFOutput_t SensorFusion::sfOutputData;
 //IMU_Data_t SensorFusion::imudata;
-CommandsForAM CommsWithAttitude::receivedData;
+PM_AM_Commands CommsWithAttitude::receivedData;
 
 
 // TAKEOFF STAGE VARIABLES 
@@ -159,7 +159,7 @@ void CruisingStage::execute(pathManager* pathMgr)
 
     if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
     else
     {
@@ -197,7 +197,7 @@ void LandingStage::execute(pathManager* pathMgr)
 
     if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
     else
     {
@@ -280,7 +280,7 @@ void TakeoffStage::execute(pathManager* pathMgr)
 
     if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
     else
     {
@@ -318,7 +318,7 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
     }
     */
     
-    CommandsForAM toSend {};
+    PM_AM_Commands toSend {};
     switch(pathMgr->flight_stage){
             case LANDING:
                 toSend = LandingStage::getLandingDataForAM();
@@ -343,7 +343,7 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
 
      if(pathMgr->isError)
     {
-        pathMgr->setState(fatalFailureMode::getInstance());
+        pathMgr->setState(FatalFailureMode::getInstance());
     }
     else
     {
@@ -357,14 +357,14 @@ pathManagerState& CommsWithAttitude::getInstance()
     return singleton;
 }
 
-void fatalFailureMode::execute(pathManager* pathMgr)
+void FatalFailureMode::execute(pathManager* pathMgr)
 {
-    pathMgr->setState(fatalFailureMode::getInstance());
+    pathMgr->setState(FatalFailureMode::getInstance());
 }
 
-pathManagerState& fatalFailureMode::getInstance()
+pathManagerState& FatalFailureMode::getInstance()
 {
-    static fatalFailureMode singleton;
+    static FatalFailureMode singleton;
     return singleton;
 }
 

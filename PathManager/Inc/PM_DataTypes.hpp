@@ -73,12 +73,12 @@ typedef struct CommandsForAM_t{
   float dist_z; 
   float magnitude; // Magnitude distance to waypoint target
   float heading; // heading at target waypoint
-  double speed_target; // Target velocity of drone approaching target
-} CommandsForAM;
+  double velocity_target; // Target velocity of drone approaching target
+} PM_AM_Commands;
 
 
 // Data given from CV/TM to PM during regular cruising 
-struct TelemWaypointData {    
+struct TelemWaypoint {    
   double longitude;     
   double lattiude;   
   double altitude; 
@@ -87,8 +87,8 @@ struct TelemWaypointData {
 
 typedef struct CommandsFromTM_t{
     uint8_t num_waypoints; // number of waypoints in the list 
-    TelemWaypointData waypoints[num_waypoints]; 
-} CommandsFromTM;
+    TelemWaypoint waypoints[num_waypoints]; 
+} WaypointsCommand;
 
 // Data given from CV/TM during search and landing 
 struct JetsonToZpMovementCommand {
@@ -119,14 +119,12 @@ typedef struct LosSFData_t {
 
 // Receiving LOS data, and CM/TM commands from SM 
 typedef struct CommandsFromSM_t{
-    WaypointType waypoint_type;
-    CommandsFromTM telemetry_commands;
+    WaypointsCommand telemetry_commands;
     JetsonToZpMovementCommand jetson_commands; 
     LandingInitiationCommand landing_initiation; 
     LosSFData sf_data;
-
-    // TODO: add RC data for teleop mode
-} CommandsFromSM;
+    LosSFData sf_data;
+} SM_PM_Commands;
 
 
 

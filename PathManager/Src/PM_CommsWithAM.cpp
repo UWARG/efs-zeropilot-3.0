@@ -17,7 +17,7 @@ extern "C"
 const char MAIL_Q_SIZE = 1;
 
 //Set up a mail queue for sending commands to the attitude manager
-osMailQDef(commandsMailQ, MAIL_Q_SIZE, CommandsForAM);
+osMailQDef(commandsMailQ, MAIL_Q_SIZE, PM_AM_Commands);
 osMailQId commandsMailQID;
 
 
@@ -27,18 +27,18 @@ void CommFromPMToAMInit()
     commandsMailQID = osMailCreate(osMailQ(commandsMailQ), NULL);
 }
 
-void SendFromPMToAM(CommandsForAM *commands)
+void SendFromPMToAM(PM_AM_Commands *commands)
 {
     //Remove previous command from mail queue if it exists
     osEvent event = osMailGet(commandsMailQID, 0);
     if(event.status == osEventMail)
     {
-        osMailFree(commandsMailQID, static_cast<CommandsForAM *>(event.value.p));
+        osMailFree(commandsMailQID, static_cast<PM_AM_Commands *>(event.value.p));
     }
 
     //Allocate mail slot
-    CommandsForAM *commandsOut;
-    commandsOut = static_cast<CommandsForAM *>(osMailAlloc(commandsMailQID, osWaitForever));
+    PM_AM_Commands *commandsOut;
+    commandsOut = static_cast<PM_AM_Commands *>(osMailAlloc(commandsMailQID, osWaitForever));
     
     //Fill mail slot with data
     *commandsOut = *commands;
