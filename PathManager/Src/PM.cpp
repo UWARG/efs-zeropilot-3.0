@@ -3,7 +3,7 @@
 
 pathManager::pathManager()
 {
-    currentState = &commsWithAttitude::getInstance();
+    currentState = &CommsWithAttitude::getInstance();
     status = PathMan::COMPLETED_CYCLE;
     flight_stage = DISARMED;
     isError = false;
@@ -14,9 +14,9 @@ void pathManager::setState(pathManagerState& newState)
     currentState->exit(this);
     currentState = &newState;
 
-    if (*currentState == commsWithAttitude::getInstance()) {
+    if (*currentState == CommsWithAttitude::getInstance()) {
         status = PathMan::COMPLETED_CYCLE;
-    } else if (*currentState == fatalFailureMode::getInstance()) {
+    } else if (*currentState == FatalFailureMode::getInstance()) {
         status = PathMan::FAILURE_MODE;
     } else {
         status = PathMan::IN_CYCLE;

@@ -53,7 +53,7 @@ struct WaypointManager_Data_Out{
     long double distanceToNextWaypoint; // Distance to the next waypoint (helps with airspeed PID)
     float distanceX, distanceY, distanceZ;
     float rotation; 
-    WaypointStatus errorCode;          // Contains error codes
+    //WaypointStatus errorCode;          // Contains error codes
     bool isDataNew;                     // Notifies PID modules if the data in this structure is new
     int desiredAirspeed;                // FUN FACT WE NEED THIS 
     uint32_t timeOfData;                // The time that the data in this structure was collected
@@ -65,16 +65,16 @@ struct WaypointManager_Data_Out{
 // TODO: Figure out what we are sending in teleop 
 
 typedef struct CommandsForAM_t{
-2  WaypointType waypoint_type;  
-3
-4  // heading unit vector and magnitude
-5  float dist_x; 
-6  float dist_y; 
-7  float dist_z; 
-8  float magnitude; // Magnitude distance to waypoint target
-9  float heading; // heading at target waypoint
-10  double speed_target; // Target velocity of drone approaching target
-11} CommandsForAM;
+  WaypointType waypoint_type;  
+
+  // heading unit vector and magnitude
+  float dist_x; 
+  float dist_y; 
+  float dist_z; 
+  float magnitude; // Magnitude distance to waypoint target
+  float heading; // heading at target waypoint
+  double speed_target; // Target velocity of drone approaching target
+} CommandsForAM;
 
 
 // Data given from CV/TM to PM during regular cruising 
@@ -118,7 +118,7 @@ typedef struct LosSFData_t {
 } LosSFData;
 
 // Receiving LOS data, and CM/TM commands from SM 
-typedef struct CommandsFromSM{
+typedef struct CommandsFromSM_t{
     WaypointType waypoint_type;
     CommandsFromTM telemetry_commands;
     JetsonToZpMovementCommand jetson_commands; 

@@ -6,14 +6,15 @@ extern "C"
 {
 #include "cmsis_os.h"
 }
-const char PATH_TELEM_MAIL_Q_SIZE = 1;
+const char MAIL_Q_SIZE = 1;
 
-osMailQDef(PIGOMailQ, PATH_TELEM_MAIL_Q_SIZE, fijo);
-osMailQId PIGOMailQ;
+osMailQDef(commandsMailQID, MAIL_Q_SIZE, CommandsFromSM);
+osMailQId commandsMailQID;
 
 void CommWithSMInit()
 {
-    PIGOMailQ = osMailCreate(osMailQ(PIGOMailQ), NULL);
+    commandsMailQID = osMailCreate(osMailQ(commandsMailQ), NULL);
+
 
 }
 
@@ -21,14 +22,14 @@ bool GetSMCommands(CommandsFromSM *commands)
 {
     osEvent event;
     CommandsFromSM* commandsIn;
-    event = osMailGet(PIGOMailQ, 0);
+    event = osMailGet(commandsMailQID, 0);
     if(event.status == osEventMail)
     {
         commandsIn = static_cast<CommandsFromSM *>(event.value.p);
 
         //Keep the command and remove it from the queue
         *commands = *commandsIn;
-        osMailFree(PIGOMailQ, commandsIn);
+        osMailFree(commandsMailQID, commandsIn);
         return true;
     }
     else

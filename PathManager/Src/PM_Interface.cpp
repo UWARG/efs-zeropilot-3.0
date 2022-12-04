@@ -2,7 +2,7 @@
 #include "PM.hpp"
 
 static pathManager pathMng;
-PathMan::_Path_Manager_Cycle_Status pathManStatus;
+PathMan::Path_Manager_Cycle_Status pathManStatus;
 
 
 bool PathManagerInterfaceExecute(void) {

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ZPSW3_PM_HPP
+#define ZPSW3_PM_HPP
+
 #include "PM_StateManager.hpp"
 #include "PM_DataTypes.hpp"
 #include "PM_LandingTakeoffManager.hpp"
@@ -23,7 +25,7 @@ class pathManager
         PathMan::Path_Manager_Cycle_Status getStatus() {return status;}
 
         //used to determine the stage of the landing sequence
-        LandingTakeoffManager vtolManager;
+        LandingTakeoffManager vtol_manager;
         FlightStage flight_stage;
         bool isError;
        
@@ -32,4 +34,5 @@ class pathManager
         PathMan::Path_Manager_Cycle_Status status;
 };
 
+#endif
 

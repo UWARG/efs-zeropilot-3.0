@@ -14,13 +14,16 @@ extern "C"
 #include "cmsis_os.h"
 }
 
+const char MAIL_Q_SIZE = 1;
+
 //Set up a mail queue for sending commands to the attitude manager
-osMailQDef(commandsMailQ, PATH_ATTITUDE_MAIL_Q_SIZE, CommandsForAM);
+osMailQDef(commandsMailQ, MAIL_Q_SIZE, CommandsForAM);
 osMailQId commandsMailQID;
 
 
 void CommFromPMToAMInit()
 {
+    /*TODO: THIS LINE NO WORK?*/
     commandsMailQID = osMailCreate(osMailQ(commandsMailQ), NULL);
 }
 
@@ -44,26 +47,4 @@ void SendFromPMToAM(CommandsForAM *commands)
     osStatus sendStatus = osMailPut(commandsMailQID, commandsOut);
 }
 
-
-bool GetFromPMToAM(CommandsFromAM *commands)
-{
-    //Try to get commands from mail queue
-    osEvent event;
-    CommandsFromAM * commandsIn;
-    event = osMailGet(commandsMailQID, 0);
-    if(event.status == osEventMail)
-    {
-        commandsIn = static_cast<CommandsFromAM *>(event.value.p);
-        
-        //Keep the command and remove it from the queue
-        *commands = *commandsIn;
-        osMailFree(commandsMailQID, commandsIn);
-        return true;
-    }
-    else
-    {
-        //Indicate that no new commands are available.
-        return false;
-    }
-}
 

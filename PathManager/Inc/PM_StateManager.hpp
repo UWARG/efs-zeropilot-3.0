@@ -1,10 +1,9 @@
 /**
  *  Path Manager State Machine Header
  */
-#pragma once
 
-#ifndef PATHMANAGERSTATEMANAGER_HPP
-#define PATHMANAGERSTATEMANAGER_HPP
+#ifndef ZPSW3_PM_STATE_MANAGER_HPP
+#define ZPSW3_PM_STATE_MANAGER_HPP
 
 #include "PM.hpp"
 
