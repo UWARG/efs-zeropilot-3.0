@@ -17,6 +17,6 @@ void CommWithSMInit();
  * @param[out]   commands   Pointer to struct to recieve commands.
  * @return True if commands were recieved.
  */
-bool GetSMCommands(CommandsFromSM *commands);
+bool GetSMCommands(SM_PM_Commands *commands);
 
 #endif
