@@ -11,44 +11,44 @@
 
 void GlobalFlag::writeFlag(bool new_value) {
     // Take spot in line for service
-    xSemaphoreTake(serviceQueue, TIMEOUT);
+    xSemaphoreTake(service_queue, TIMEOUT);
     // Once at front take the resource mutex
-    xSemaphoreTake(flagResourceMux, TIMEOUT);
+    xSemaphoreTake(flag_resource_mux, TIMEOUT);
     // Let next in line get served now that resource is held
-    xSemaphoreGive(serviceQueue);
+    xSemaphoreGive(service_queue);
     // Write to the flag
     flag = new_value;
     // Release resource mux
-    xSemaphoreGive(flagResourceMux);
+    xSemaphoreGive(flag_resource_mux);
 }
 
 bool GlobalFlag::readFlag() {
     // Take spot in line for service
-    xSemaphoreTake(serviceQueue, TIMEOUT);
+    xSemaphoreTake(service_queue, TIMEOUT);
     // Once at front of line take the reader count mutex
-    xSemaphoreTake(readerCountMux, TIMEOUT);
+    xSemaphoreTake(reader_count_mux, TIMEOUT);
     // Increment the number of readers accessing resource
-    readerCount++;
+    reader_count++;
     // If this is the first reader then take the resource mutex
-    if (readerCount == 1) {
-        xSemaphoreTake(flagResourceMux, TIMEOUT);
+    if (reader_count == 1) {
+        xSemaphoreTake(flag_resource_mux, TIMEOUT);
     }
     // Let the next call get service
-    xSemaphoreGive(serviceQueue);
+    xSemaphoreGive(service_queue);
     // Release the reader count mutex to the next reader
-    xSemaphoreGive(readerCountMux);
+    xSemaphoreGive(reader_count_mux);
     // Store the flag value
     bool return_value = flag;
     // Get the reader count mutex
-    xSemaphoreTake(readerCountMux, TIMEOUT);
+    xSemaphoreTake(reader_count_mux, TIMEOUT);
     // Decrement the number of readers
-    readerCount--;
+    reader_count--;
     // Check if all readers are finished to release resource
-    if (readerCount == 0) {
-        xSemaphoreGive(flagResourceMux);
+    if (reader_count == 0) {
+        xSemaphoreGive(flag_resource_mux);
     }
     // Release reader count mutex
-    xSemaphoreGive(readerCountMux);
+    xSemaphoreGive(reader_count_mux);
     // Return the stored value
     return return_value;
 }

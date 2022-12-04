@@ -27,10 +27,10 @@ class GlobalFlag {
 
     private:
         bool flag;
-        int readerCount = 0;
-        SemaphoreHandle_t flagResourceMux;
-        SemaphoreHandle_t readerCountMux;
-        SemaphoreHandle_t serviceQueue;
+        int reader_count = 0;
+        SemaphoreHandle_t flag_resource_mux;
+        SemaphoreHandle_t reader_count_mux;
+        SemaphoreHandle_t service_queue;
         // Constant of ticks until timeout
         static const TickType_t TIMEOUT;
 
