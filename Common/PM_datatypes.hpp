@@ -8,7 +8,7 @@ struct PM_AM_Commands {
   float dist_z; 
   float magnitude; // Magnitude distance to waypoint target
   float heading; // heading at target waypoint
-  double speed_target; // Target velocity of drone approaching target
+  double velocity_target; // Target velocity of drone approaching target
 }; 
 
 struct SM_PM_Commands {
