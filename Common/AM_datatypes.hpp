@@ -1,6 +1,8 @@
 #ifndef AM_COMMON_DATATYPES_HPP
 #define AM_COMMON_DATATYPES_HPP
 
+#include <stdint.h>
+
 struct AM_SM_Commands {
     bool ok;
 };

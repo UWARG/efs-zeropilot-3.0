@@ -3,6 +3,7 @@
 
 #include "PM_datatypes.hpp"
 #include "AM_datatypes.hpp"
+#include <stdint.h>
 
 struct SM_TM_Commands {
     GroundStationData gspc_data;

@@ -1,6 +1,7 @@
 #ifndef PM_COMMON_DATATYPES_HPP
 #define PM_COMMON_DATATYPES_HPP
 
+#include <stdint.h>
 
 struct LosSFData {
     float roll, pitch, yaw; //rad
