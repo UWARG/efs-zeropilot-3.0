@@ -1,5 +1,5 @@
-#ifndef PM_DATATYPES_HPP
-#define PM_DATATYPES_HPP
+#ifndef PM_COMMON_DATATYPES_HPP
+#define PM_COMMON_DATATYPES_HPP
 
 
 struct LosSFData {

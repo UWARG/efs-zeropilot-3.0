@@ -1,5 +1,5 @@
-#ifndef SM_DATATYPES_HPP
-#define SM_DATATYPES_HPP
+#ifndef SM_COMMON_DATATYPES_HPP
+#define SM_COMMON_DATATYPES_HPP
 
 #include "PM_datatypes.hpp"
 #include "AM_datatypes.hpp"

@@ -1,5 +1,5 @@
-#ifndef AM_DATATYPES_HPP
-#define AM_DATATYPES_HPP
+#ifndef AM_COMMON_DATATYPES_HPP
+#define AM_COMMON_DATATYPES_HPP
 
 struct AM_SM_Commands {
     bool ok;
