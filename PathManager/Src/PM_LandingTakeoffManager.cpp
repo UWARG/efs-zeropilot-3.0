@@ -1,5 +1,5 @@
 #include "PM_LandingTakeoffManager.hpp"
-
+#include <stdio.h>      /* printf */
 #include <math.h>
 //#include "MathConstants.hpp"
 
@@ -29,24 +29,24 @@ double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
     return groundHeight;
 }
 
-static PM_AM_Commands LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
+PM_AM_Commands LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
 {
     PM_AM_Commands desiredWaypoint;
 
     desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_z = 1;
-    desiredWaypoint.waypointType = TAKEOFF_WAYPOINT;
+    desiredWaypoint.waypoint_type = TAKEOFF_WAYPOINT;
 
     double currentAltitude = input.altitude;
 
-    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude);
+    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude, takeoffRangeConstant);
     desiredWaypoint.magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
 }
 
-static PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
+PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
 {
     PM_AM_Commands desiredWaypoint;
 
@@ -57,7 +57,7 @@ static PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFDa
 
     double currentAltitude = input.altitude;
 
-    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude);
+    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude, landingRangeConstant);
     desiredWaypoint.magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
@@ -66,12 +66,12 @@ static PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFDa
 double LandingTakeoffManager::getSpeedTarget(double currentAltitude, double rangeConstant)
 {
     double speedTarget;
-    speedTarget = MAX_SPEED * exp(-1.0 * (((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2))^2) / rangeConstant)); 
+    speedTarget = MAX_SPEED * exp(-1.0 * (pow((currentAltitude - groundHeight - (TAKEOFF_TARGET / 2)), 2) / rangeConstant)); 
     return speedTarget;
 }
 
 double LandingTakeoffManager::getRangeConstant(double midpointAltitude)
-{
-    return sqrt((midpointAltitude ^ 2) / (-2 * (log(LANDING_SPEED / MAX_SPEED))));
+{ 
+    return sqrt((pow(midpointAltitude, 2)) / (-2.0 * (log(LANDING_SPEED / MAX_SPEED))));
     // Note log here is log base e (ln)
 }
