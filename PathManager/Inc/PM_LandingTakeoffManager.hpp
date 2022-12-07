@@ -31,7 +31,7 @@ class LandingTakeoffManager{
 
             @return double - this structure holds the altitude point
         */
-        static double getTakeoffAltitudeTarget(double currentAltitude);
+        double getTakeoffAltitudeTarget(double currentAltitude);
 
         /*
             This function returns the ground height that was set during takeoff
@@ -40,7 +40,7 @@ class LandingTakeoffManager{
 
             @return double - this structure holds the altitude point
         */
-        static double getLandingAltitudeTarget(double currentAltitude);
+        double getLandingAltitudeTarget(double currentAltitude);
 
         /******************
          * LANDING FUNCTIONS
@@ -54,7 +54,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits below a certain altitude
         */
-        static PM_AM_Commands createLandingWaypoint(const LosSFData & input);
+        PM_AM_Commands createLandingWaypoint(const LosSFData & input);
 
         /******************
          * TAKEOFF FUNCTIONS
@@ -69,7 +69,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits at a certain altitude
         */
-        static PM_AM_Commands createTakeoffWaypoint(const LosSFData & input);
+        PM_AM_Commands createTakeoffWaypoint(const LosSFData & input);
 
         /***********************************
         COMMON LANDING AND TAKEOFF FUNCTIONS
