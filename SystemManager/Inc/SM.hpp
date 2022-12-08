@@ -16,7 +16,7 @@
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
 #include "AM.hpp"
-#include "AM_LevelQuadControl.hpp"
+#include "AM_FixedControl.hpp"
 #include "SM_StateManager.hpp"
 #include "interface_datatypes.hpp"
 
@@ -103,8 +103,8 @@ class SystemManager {
         // TODO Response from AM stored here to be merged and sent to Telemetry
 
         // AM init, might work better in a config file later
-        AM::ActuatorConfig back_left_motor, front_right_motor, back_right_motor, front_left_motor;
-        AM::LevelQuadControl quad;
+        AM::ActuatorConfig engine, left_aileron, right_aileron, rudder, elevator;
+        AM::FixedControl fixed_control;
         AM::AttitudeManager attitude_manager;
 
     private:
