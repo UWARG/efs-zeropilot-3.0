@@ -1,4 +1,4 @@
-script_path=$(dirname $0)
+script_path=$(dirname -- "$0")
 
 if [ $# = 0 ]; then 
     echo "no args passed, exiting"
