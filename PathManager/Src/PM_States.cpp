@@ -30,21 +30,9 @@ constexpr int LANDING_TIME_THRESHOLD {5};
 
 void CommsWithSystemManager::execute(pathManager* pathMgr)
 {
-    incomingData = GetSMIncomingData();
+    GetSMCommands(&incomingData);
 
-    if(pathMgr->isError)
-    {
-        pathMgr->setState(FatalFailureMode::getInstance());
-    }
-    else if (incomingData.waypoint_type == TELEOP_MODE)
-    {
-        pathMgr->flight_stage = TELEOP;
-        pathMgr->setState(CommsWithAttitude::getInstance()); 
-    }
-    else
-    {
-        pathMgr->setState(FlightModeSelector::getInstance());
-    }
+    
 }
 
 pathManagerState& CommsWithSystemManager::getInstance()
@@ -70,32 +58,19 @@ static Telemetry_Waypoint_Data_t createTelemetryWaypoint(long double lon, long d
 }
 
 #endif
+
 void FlightModeSelector::execute(pathManager* pathMgr){
     if(pathMgr->isError)
     {
         pathMgr->setState(FatalFailureMode::getInstance());
     }
 
-    // May need to go to a preflight stage later
-    /*if(CommsWithTelemetry::GetTelemetryIncomingData()->takeoffCommand && SensorFusion::GetSFOutput()->altitude < ON_GROUND_ALT)
-    {
-        pathMgr->flight_stage = PREFLIGHT;
 
-    }*/
-
-    // Prev code had a preflight stage for motor spin up...may be used later. 
-    //if (pathMgr->flight_stage == PREFLIGHT && PreflightStage::getPreFlightCompleteStatus){
-
-
-    // Checking if we are going from disarmed to armed to start takeoff stage. 
-    // TODO: Change and remove DISARMED state as SM will take care of this. 
-    if (CommsWithAttitude::GetCommFromAttitude()->armed && pathMgr->flight_stage == DISARMED){
-        pathMgr->flight_stage = TAKEOFF; 
-
-    }
+  
 
     // Check if altitude target has been reached for takeoff to start cruising stage. 
-    if(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude > LandingTakeoffManager::getTakeoffAltitudeTarget && pathMgr->flight_stage == TAKEOFF)
+    if(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude > pathMgr->vtol_manager.getTakeoffAltitudeTarget(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude) 
+        && pathMgr->flight_stage == TAKEOFF)
     {
         pathMgr->flight_stage = CRUISING;
 
@@ -108,7 +83,7 @@ void FlightModeSelector::execute(pathManager* pathMgr){
     }
 
     // Assuming SF can give elapsed time, check if below landing target for a certain amount of time to start landed stage. 
-    if (CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude < LandingTakeoffManager::getLandingAltitudeTarget && CommsWithSystemManager::GetSMIncomingData()->sf_data.deltaTime > LANDING_TIME_THRESHOLD){
+    if (CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude < pathMgr->vtol_manager.getLandingAltitudeTarget(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude) && CommsWithSystemManager::GetSMIncomingData()->sf_data.deltaTime > LANDING_TIME_THRESHOLD){
         pathMgr->flight_stage = LANDED; 
     }
  
@@ -183,17 +158,17 @@ void LandingStage::execute(pathManager* pathMgr)
 
 
    // Creating AM struct to send takeoff data using current SF data.
-    landingDataForAM = LandingTakeoffManager::createLandingWaypoint(LOSData);    
+    landingDataForAM = pathMgr->vtol_manager.createLandingWaypoint(LOSData);    
 
    /* waypointInput.latitude = input.sensorOutput->latitude;
     waypointInput.longitude = input.sensorOutput->longitude;
     waypointInput.altitude = input.sensorOutput->altitude;
     waypointInput.track = input.sensorOutput->track;*/
 
-    if(LandingStage::waypointStatus != WAYPOINT_SUCCESS)
-    {
-        pathMgr->isError = true;
-    }
+    // if(LandingStage::waypointStatus != WAYPOINT_SUCCESS)
+    // {
+    //     pathMgr->isError = true;
+    // }
 
     if(pathMgr->isError)
     {
@@ -270,13 +245,13 @@ void TakeoffStage::execute(pathManager* pathMgr)
         //waypointInput.track = input.sensorOutput->track;*/ 
 
     // Creating AM struct to send takeoff data using current SF data.
-    takeoffDataForAM = LandingTakeoffManager::createTakeoffWaypoint(LOSData);    
+    takeoffDataForAM = pathMgr->vtol_manager.createTakeoffWaypoint(LOSData);    
         
 
-    if(waypointStatus != WAYPOINT_SUCCESS)
-    {
-        pathMgr->isError = true;
-    }
+    // if(waypointStatus != WAYPOINT_SUCCESS)
+    // {
+    //     pathMgr->isError = true;
+    // }
 
     if(pathMgr->isError)
     {

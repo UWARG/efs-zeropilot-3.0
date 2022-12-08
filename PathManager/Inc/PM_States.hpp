@@ -42,13 +42,13 @@ class CommsWithSystemManager : public pathManagerState
         void execute(pathManager* pathMgr);
         void exit(pathManager* pathMgr) {(void) pathMgr;}
         static pathManagerState& getInstance();
-        static CommandsFromSM* GetSMIncomingData(void) {return &incomingData;}
+        static SM_PM_Commands* GetSMIncomingData(void) {return &incomingData;}
     private:
-        static CommandsFromSM incomingData; 
+        static SM_PM_Commands incomingData; 
         CommsWithSystemManager() { CommWithSMInit(); }
         CommsWithSystemManager(const CommsWithSystemManager& other);
         CommsWithSystemManager& operator =(const CommsWithSystemManager& other);
-        static CommandsFromSM incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
+        static SM_PM_Commands incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
 };
 
 
