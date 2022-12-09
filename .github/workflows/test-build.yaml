@@ -6,6 +6,7 @@ on:
 
 jobs: 
   Build_Check: 
+    runs-on: ubuntu-latest
     container: snaccoverflow/build-zp
     steps:
       - name: Run build
