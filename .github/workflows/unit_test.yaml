@@ -1,20 +1,20 @@
-name: Compile ZeroPilot
+name: Unit Tests
 on: 
   pull_request: 
     type: [synchronize]
 
 jobs:
-    compile:
-        name: Compile ZeroPilot
+    unit_tests:
+        name: Run Unit Tests
         runs-on: ubuntu-latest
         steps:
           - name: Check out the repo
             uses: actions/checkout@v2
             with:
               submodules: 'true'
-          - name: Run the build process with docker
+          - name: build and run unit tests with docker
             uses: addnab/docker-run-action@v3
             with:
-                image: snaccoverflow/build-zp:latest
+                image: snaccoverflow/test-zp:latest
                 options: -v ${{ github.workspace }}:/project
-                run: ./Tools/build.bash 
+                run: ./testing/test.bash build && ./testing/test.bash run 
