@@ -9,6 +9,6 @@ jobs:
       name: Unit Tests
       before_install: docker pull snaccoverflow/test-zp
       script: docker run -v $TRAVIS_BUILD_DIR:/project snaccoverflow/test-zp
-      name: Build Test
+    - name: Build Test
       before_install: docker pull snaccoverflow/build-zp
       script: docker run -v $TRAVIS_BUILD_DIR:/project snaccoverflow/build-zp
