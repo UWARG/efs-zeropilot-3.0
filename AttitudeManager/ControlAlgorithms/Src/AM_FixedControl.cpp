@@ -1,6 +1,6 @@
 #include "AM_FixedControl.hpp"
 #include "PID.hpp"
-#include "MathConstants.hpp"
+// #include "MathConstants.hpp"
 #include "CommonDataTypes.hpp"
 #include "LOS_Link.hpp"
 #include "LOS_Actuators.hpp"
@@ -9,7 +9,7 @@ namespace AM {
 
 std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
-   
+ 
    // Current attitude from SF
     SFOutput_t current_attitude {}; 
     
