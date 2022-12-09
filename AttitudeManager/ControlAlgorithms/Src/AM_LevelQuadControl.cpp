@@ -8,7 +8,7 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
     
     // Get current attitude from sensorfusion
-    SFOutput_t currentAttitude{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    SFOutput_t currentAttitude {};
 
     // convert instructions into level mode quad instructions
     float targetPitch = instructions.x_dir * max_pitch_deg;
