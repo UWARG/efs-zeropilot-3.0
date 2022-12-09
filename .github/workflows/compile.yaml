@@ -10,6 +10,8 @@ jobs:
         steps:
           - name: Check out the repo
             uses: actions/checkout@v2
+            with:
+              submodules: 'true'
           - name: Run the build process with Docker
             uses: addnab/docker-run-action@v3
             with:
