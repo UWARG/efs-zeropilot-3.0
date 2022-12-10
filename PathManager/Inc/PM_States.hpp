@@ -2,9 +2,9 @@
 #define ZPSW_PM_STATES_HPP
 
 #include "PM_StateManager.hpp"
-//#include "PM.hpp"
-#include "PM_WaypointManager.hpp"
+#include "PM.hpp"
 #include "PM_LandingTakeoffManager.hpp"
+#include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
 #include "PM_CommsWithAM.hpp"
 #include "PM_CommsWithSM.hpp"
@@ -106,7 +106,7 @@ class CruisingStage : public PathManagerState
         CruisingStage(const CruisingStage& other);
         CruisingStage& operator =(const CruisingStage& other);
 
-        WaypointManager cruisingStateManager;
+        //WaypointManager cruisingStateManager;
         static WaypointManager_Data_In _inputdata;
         static WaypointManager_Data_Out _outputdata;
        // static _CruisingState_Telemetry_Return _returnToGround;

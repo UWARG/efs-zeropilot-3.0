@@ -5,7 +5,7 @@
 
 #ifndef ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
 #define ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
-
+#include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
 
 /********************************************************************

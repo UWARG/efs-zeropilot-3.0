@@ -36,7 +36,7 @@ PM_AM_Commands LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & in
     desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_z = 1;
-    desiredWaypoint.waypoint_type = TAKEOFF_WAYPOINT;
+   // desiredWaypoint.waypoint_type = TAKEOFF_WAYPOINT;
 
     double currentAltitude = input.altitude;
 
@@ -53,7 +53,7 @@ PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFData & in
     desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_z = -1;
-    desiredWaypoint.waypoint_type = LANDING_WAYPOINT;
+    //desiredWaypoint.waypoint_type = LANDING_WAYPOINT;
 
     double currentAltitude = input.altitude;
 

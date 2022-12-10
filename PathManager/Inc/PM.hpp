@@ -5,6 +5,7 @@
 //#include "cmsis_os.h"
 
 #include "PM_StateManager.hpp"
+#include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
 #include "PM_LandingTakeoffManager.hpp"
 

@@ -5,6 +5,7 @@
 #ifndef ZPSW3_PM_COMMS_WITH_SM_HPP
 #define ZPSW3_PM_COMMS_WITH_SM_HPP
 
+#include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
 
 /**
