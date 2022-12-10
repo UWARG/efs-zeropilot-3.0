@@ -1,7 +1,7 @@
 #include "PM_Interface.h"
 #include "PM.hpp"
 
-static pathManager pathMng;
+static PathManager pathMng;
 PathMan::Path_Manager_Cycle_Status pathManStatus;
 
 

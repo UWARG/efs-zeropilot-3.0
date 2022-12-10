@@ -28,14 +28,14 @@ constexpr int LANDING_TIME_THRESHOLD {5};
  * Code
  **********************************************************************************************************************/
 
-void CommsWithSystemManager::execute(pathManager* pathMgr)
+void CommsWithSystemManager::execute(PathManager* pathMgr)
 {
     GetSMCommands(&incomingData);
 
     
 }
 
-pathManagerState& CommsWithSystemManager::getInstance()
+PathManagerState& CommsWithSystemManager::getInstance()
 {
     static CommsWithSystemManager singleton;
     return singleton;
@@ -59,7 +59,7 @@ static Telemetry_Waypoint_Data_t createTelemetryWaypoint(long double lon, long d
 
 #endif
 
-void FlightModeSelector::execute(pathManager* pathMgr){
+void FlightModeSelector::execute(PathManager* pathMgr){
     if(pathMgr->isError)
     {
         pathMgr->setState(FatalFailureMode::getInstance());
@@ -103,13 +103,13 @@ void FlightModeSelector::execute(pathManager* pathMgr){
     }
 }
 
-pathManagerState& FlightModeSelector::getInstance()
+PathManagerState& FlightModeSelector::getInstance()
 {
     static FlightModeSelector singleton; 
     return singleton; 
 }
 
-void CruisingStage::execute(pathManager* pathMgr)
+void CruisingStage::execute(PathManager* pathMgr)
 {
     /* TODO: All of this 
 
@@ -143,13 +143,13 @@ void CruisingStage::execute(pathManager* pathMgr)
     
 }
 
-pathManagerState& CruisingStage::getInstance()
+PathManagerState& CruisingStage::getInstance()
 {
     static CruisingStage singleton;
     return singleton;
 }
 
-void LandingStage::execute(pathManager* pathMgr)
+void LandingStage::execute(PathManager* pathMgr)
 {
     pathMgr->flight_stage = LANDING;
 
@@ -180,7 +180,7 @@ void LandingStage::execute(pathManager* pathMgr)
     }
 }
 
-pathManagerState& LandingStage::getInstance()
+PathManagerState& LandingStage::getInstance()
 {
     static LandingStage singleton;
     return singleton;
@@ -190,51 +190,8 @@ pathManagerState& LandingStage::getInstance()
 /****************************************************************************************************
 TAKEOFF STATE FUNCTIONS
 ****************************************************************************************************/
-/* Keeping here in case we need preflight state 
 
-//create a count to 1000 -> then proceed to takeoff. 
-void PreflightStage::execute(pathManager* pathMgr)
-{
-    //load in sensor fusion data and telemtry data into input structure
-    input.telemetryData = CommsWithTelemetry::GetTelemetryIncomingData();
-    input.sensorOutput = SensorFusion::GetSFOutput();
-
-    
-    // This is the part where we ~wait~ before going to takeoff...not sure if it will work 
-
-    if (cycleCount < 1000){
-        cycleCount++; 
-        preFlightComplete = false;
-    } else { 
-        preFlightComplete = true; 
-        cycleCount = 0; 
-    }
-
-
-    if(PreflightStage::waypointStatus != WAYPOINT_SUCCESS)
-    {
-        pathMgr->isError = true;
-    }
-
-    if(pathMgr->isError)
-    {
-        pathMgr->setState(fatalFailureMode::getInstance());
-    }
-    else
-    {
-        pathMgr->setState(CommsWithAttitude::getInstance());
-    }
-}
-
-pathManagerState& PreflightStage::getInstance()
-{
-    static PreflightStage singleton;
-    return singleton;
-}
-
-
-*/
-void TakeoffStage::execute(pathManager* pathMgr)
+void TakeoffStage::execute(PathManager* pathMgr)
 {
     //load in sensor fusion data and telemtry data into input structure
     LOSData = CommsWithSystemManager::GetSMIncomingData()->sf_data; 
@@ -263,13 +220,13 @@ void TakeoffStage::execute(pathManager* pathMgr)
     }
 }
 
-pathManagerState& TakeoffStage::getInstance()
+PathManagerState& TakeoffStage::getInstance()
 {
     static TakeoffStage singleton;
     return singleton;
 }
 
-void CommsWithAttitude::execute(pathManager* pathMgr)
+void CommsWithAttitude::execute(PathManager* pathMgr)
 {
 
     /*_WaypointManager_Data_Out * waypointOutput {}; 
@@ -293,27 +250,25 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
     }
     */
     
-    PM_AM_Commands toSend {};
+    // No I don't like this either 
+    PM_AM_Commands* outputData {};
+    PM_AM_Commands sendingData {};
+
     switch(pathMgr->flight_stage){
             case LANDING:
-                toSend = LandingStage::getLandingDataForAM();
+                outputData = LandingStage::getLandingDataForAM();
                 break;
             case CRUISING:
                // waypointOutput = cruisingState::GetOutputData();
                 break;
-            case PREFLIGHT:
-               // waypointOutput = PreflightStage::GetOutputData();
-                break;
             case TAKEOFF:
-                toSend = TakeoffStage::getTakeoffDataForAM(); 
-                break;
-            case TELEOP: 
-                //TODO: Figure out teleop stuff
+                outputData = TakeoffStage::getTakeoffDataForAM(); 
                 break; 
             default:
         }
+    sendingData = *outputData; 
 
-    SendFromPMToAM(&toSend); // Sends commands to attitude manager
+    SendFromPMToAM(&sendingData); // Sends commands to attitude manager
     
 
      if(pathMgr->isError)
@@ -326,18 +281,18 @@ void CommsWithAttitude::execute(pathManager* pathMgr)
     }
 }
 
-pathManagerState& CommsWithAttitude::getInstance()
+PathManagerState& CommsWithAttitude::getInstance()
 {
     static CommsWithAttitude singleton;
     return singleton;
 }
 
-void FatalFailureMode::execute(pathManager* pathMgr)
+void FatalFailureMode::execute(PathManager* pathMgr)
 {
     pathMgr->setState(FatalFailureMode::getInstance());
 }
 
-pathManagerState& FatalFailureMode::getInstance()
+PathManagerState& FatalFailureMode::getInstance()
 {
     static FatalFailureMode singleton;
     return singleton;

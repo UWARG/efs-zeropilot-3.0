@@ -7,18 +7,18 @@
 
 #include "PM.hpp"
 
-class pathManager;
+class PathManager;
 
-class pathManagerState
+class PathManagerState
 {
     public:
-        virtual void enter(pathManager* pathMgr) = 0;
-        virtual void execute(pathManager* pathMgr) = 0;
-        virtual void exit(pathManager* pathMgr) = 0;
+        virtual void enter(PathManager* pathMgr) = 0;
+        virtual void execute(PathManager* pathMgr) = 0;
+        virtual void exit(PathManager* pathMgr) = 0;
 
-        bool operator==(const pathManagerState& rhs) const {return (this == &rhs);} 
+        bool operator==(const PathManagerState& rhs) const {return (this == &rhs);} 
 
-        virtual ~pathManagerState() {}
+        virtual ~PathManagerState() {}
 
 };
 
