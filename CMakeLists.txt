@@ -12,6 +12,11 @@ set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/ControlAlgorithms/Inc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager/Inc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/Common/Inc
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core/Inc
@@ -32,6 +37,16 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_${PORTABLE_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/include
 )
+
+set(ZP_SM ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager)
+set(ZP_SM_C_SOURCES "${ZP_SM}/Src/*.c")
+set(ZP_SM_CXX_SOURCES "${ZP_SM}/Src/*.cpp")
+
+set(ZP_AM ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager)
+set(ZP_AM_C_SOURCES "${ZP_AM}/Src/*.c"
+                    "${ZP_AM}/ControlAlgorithms/Src/*.c")
+set(ZP_AM_CXX_SOURCES "${ZP_AM}/Src/*.cpp"
+                      "${ZP_AM}/ControlAlgorithms/Src/*.cpp")
 
 set(HAL_DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers)
 set(HAL_DRIVERS_C_SOURCES "${HAL_DRIVERS_DIR}/${FAMILY_NAME}_HAL_Driver/Src/*.c")
@@ -63,12 +78,16 @@ file(GLOB_RECURSE C_SOURCES ${HAL_DRIVERS_C_SOURCES}
                             ${INTERFACE_CXX_SOURCES}
                             ${DRIVERS_CXX_SOURCES}
                             ${CORE_C_SOURCES}
-                            ${FREE_RTOS_C_SOURCES})                            
-message("MESSAGE: ${C_SOURCES}")                         
-file(GLOB_RECURSE CXX_SOURCES ${HAL_CORE_CXX_SOURCES} 
+                            ${FREE_RTOS_C_SOURCES}
+                            ${ZP_SM_C_SOURCES}
+                            ${ZP_AM_C_SOURCES})
+message("MESSAGE: ${C_SOURCES}")
+file(GLOB_RECURSE CXX_SOURCES ${HAL_CORE_CXX_SOURCES}
                               ${INTERFACE_CXX_SOURCES}
                               ${DRIVERS_CXX_SOURCES}
-                              ${CORE_CXX_SOURCES})
+                              ${CORE_CXX_SOURCES}
+                              ${ZP_SM_CXX_SOURCES}
+                              ${ZP_AM_CXX_SOURCES})
 
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})

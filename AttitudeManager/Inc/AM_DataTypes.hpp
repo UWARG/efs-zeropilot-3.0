@@ -38,7 +38,7 @@ class ActuatorOutput {
 
 class AttitudeManagerInput {
    public:
-    const float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
+    float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
                 speed = 0;
 };  // TODO: What is the correct name?
 

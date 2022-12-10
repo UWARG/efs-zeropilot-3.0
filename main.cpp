@@ -1,38 +1,37 @@
 #include "main.h"
+
 #include "FreeRTOS.h"
+#include "LOS_Actuators.hpp"
+#include "SM.hpp"
 #include "cmsis_os2.h"
 #include "task.h"
-#include "LOS_Actuators.hpp"
 
-void StartBlinkyTest(void * argument);
+void SMOperationTask(void *pvParameters);
+const static auto SM_PERIOD_MS = 5;
 
-int main()
-{
+int main() {
     losInit();
 
-    osThreadAttr_t blinkyTest = {
-        .name = "start_blinky",
-        .stack_size = 128,
-        .priority = osPriorityNormal
-    };
+    TaskHandle_t SM_handle = NULL;
 
-    osThreadNew (StartBlinkyTest, NULL, &blinkyTest);
+    xTaskCreate(SMOperationTask, "SM Thread", 400U, NULL, osPriorityNormal, &SM_handle);
 
     losKernelStart();
 
-    //should not get here bec losInit() starts the scheduler
-    while(1){}
+    // should not get here bec losInit() starts the scheduler
+    while (1) {
+    }
 
     return 0;
 }
 
+void SMOperationTask(void *pvParameters) {
+    SM::SystemManager SM_instance;
 
-void StartBlinkyTest(void * argument)
-{
-    for(;;)
-    {
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250);
-        osDelay(1);
+    TickType_t xNextWakeTime;
+    xNextWakeTime = xTaskGetTickCount();
+    while (true) {
+        SM_instance.execute();
+        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_MS);
     }
 }

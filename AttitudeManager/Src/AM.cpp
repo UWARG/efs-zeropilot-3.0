@@ -2,21 +2,22 @@
 // Created by Anthony Luo on 2022-10-12.
 //
 #include "AM.hpp"
-#include "LOS_Actuators.hpp"
-#include <cstdlib>
+
 #include <array>
+#include <cstdlib>
+
+#include "LOS_Actuators.hpp"
 
 namespace AM {
 
-void AttitudeManager::runControlLoopIteration(
-    const AttitudeManagerInput &instructions) {
+void AttitudeManager::runControlLoopIteration(const AttitudeManagerInput &instructions) {
     // Process Instructions
 
     // Run Control Algorithms
     std::vector<ActuatorOutput> controller_output;
     if (current_controller_index == desired_controller_index) {
-        controller_output = controller_interfaces[current_controller_index]
-                                ->runControlsAlgorithm(instructions);
+        controller_output =
+            controller_interfaces[current_controller_index]->runControlsAlgorithm(instructions);
     } else {
         // Handle transition between flight modes
         controller_output = runTransitionMixingIteration(
@@ -26,18 +27,25 @@ void AttitudeManager::runControlLoopIteration(
 
     // Write actuator outputs
     for (auto output : controller_output) {
-        LOS_Actuators::getInstance().set(output.channel, output.percent);
+        Los_Actuators::getInstance().set(output.channel, output.percent);
     }
 }
 
 void AttitudeManager::setDesiredControlAlgorithm(uint8_t id) {
     // Only change desired controller if we aren't trying to transition already
-    if (id < controller_interfaces.size() &&
-        desired_controller_index == current_controller_index) {
+    if (id < controller_interfaces.size() && desired_controller_index == current_controller_index) {
         desired_controller_index = id;
 
-        transition_start_airspeed = abs(current.airspeed); 
+        transition_start_airspeed = abs(current.airspeed);
     }
+}
+
+void AttitudeManager::setSmQueue(osMessageQId queueId) {
+    SM_to_AM_queue = queueId;
+}
+    
+osMessageQId AttitudeManager::getSmQueue() {
+    return SM_to_AM_queue;
 }
 
 std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
@@ -50,13 +58,13 @@ std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
         desired_controller->runControlsAlgorithm(instructions);
 
     // Determine how much of each mix to apply
-    current_airspeed = abs(current.airspeed); 
-    const float transition_percent =
-        (transition_start_airspeed - current_airspeed) / (transition_start_airspeed - desired_airspeed);
+    current_airspeed = abs(current.airspeed);
+    const float transition_percent = (transition_start_airspeed - current_airspeed) /
+                                     (transition_start_airspeed - desired_airspeed);
     const float inv_transition_percent = 1 - transition_percent;
 
-    if (((desired_airspeed - 2) <= current_airspeed && 
-          current_airspeed <= (desired_airspeed + 2))) {
+    if (((desired_airspeed - 2) <= current_airspeed &&
+         current_airspeed <= (desired_airspeed + 2))) {
         // Update the active controller
         current_controller_index = desired_controller_index;
     }
@@ -64,9 +72,8 @@ std::vector<ActuatorOutput> AttitudeManager::runTransitionMixingIteration(
     // Mix the outputs
     std::vector<ActuatorOutput> mixed_output = {};
     for (auto current_actuator : current_output) {
-        ActuatorOutput value = {
-            current_actuator.channel,
-            current_actuator.percent * inv_transition_percent};
+        ActuatorOutput value = {current_actuator.channel,
+                                current_actuator.percent * inv_transition_percent};
 
         for (auto desired_actuator : desired_output) {
             if (current_actuator.channel == desired_actuator.channel) {
