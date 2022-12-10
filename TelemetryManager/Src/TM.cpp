@@ -23,7 +23,6 @@ TM_Status TelemetryManager::ExecuteRx() {
 
 
     // check the type variable
-
     uint8_t type = jetsonBuf[3];
 
     switch(type) {
@@ -70,4 +69,11 @@ TM_Status TelemetryManager::ExecuteRx() {
     // decode based on the type variable 
 
     
+}
+
+TM_Status TelemetryManager::ExecuteRxJetson() {
+    // pull data from LOS and update the queue
+
+    // loop through the bytes in the queue and assemble messages
+
 }
