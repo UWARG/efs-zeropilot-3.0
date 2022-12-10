@@ -14,7 +14,6 @@ TM_Status TelemetryManager::ExecuteTx() {
 }
 
 TM_Status TelemetryManager::ExecuteRx() {
-
     // copy data into local buffer from jetson and RFD LOS buffers 
 
     // this is temp
