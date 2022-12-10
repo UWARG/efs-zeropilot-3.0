@@ -2,7 +2,7 @@
 
 namespace AM {
 
-std::vector<ActuatorOutput> ManualFixedControl::runControlsAlgorithm(
+std::vector<ActuatorOutput> FixedManualControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
     // Compute target values, measured as percent of maximum surface deflection
     float yaw = instructions.heading / 360 * 100;
@@ -26,7 +26,7 @@ std::vector<ActuatorOutput> ManualFixedControl::runControlsAlgorithm(
                                        {configs[Elevator].channel, elevator}};
 }
 
-float ManualFixedControl::mixOutputs(StateMix actuator, float bank, float pitch, float yaw,
+float FixedManualControl::mixOutputs(StateMix actuator, float bank, float pitch, float yaw,
                                      float throttle) const {
     return constrain<float>(actuator.pitch * pitch + actuator.roll * bank + actuator.yaw * yaw +
                                 actuator.velocity_x * throttle,

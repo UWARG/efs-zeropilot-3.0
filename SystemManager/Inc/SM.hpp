@@ -16,7 +16,7 @@
 // #include "LOS_Link.hpp"
 // #include "LOS_Actuators.hpp"
 #include "AM.hpp"
-#include "AM_FixedControl.hpp"
+#include "AM_FixedManualControl.hpp"
 #include "SM_StateManager.hpp"
 #include "interface_datatypes.hpp"
 
@@ -63,54 +63,53 @@ System Manager
 class SystemState;
 
 class SystemManager {
-    public:
-        SystemManager();
-        void execute();
-        void setState(SystemState& newState);
-        Drone_Operation_Mode getMode();
-        
-        // Task Handles
-        TaskHandle_t AM_handle = NULL;
-        // TaskHandle_t PM_handle = NULL;
-        // TaskHandle_t TM_handle = NULL;
+   public:
+    SystemManager();
+    void execute();
+    void setState(SystemState& newState);
+    Drone_Operation_Mode getMode();
 
-        // Thread tasks here
-        static void AMOperationTask(void *pvParameters);
-        // static void PMOperationTask();
-        // static void TMOperationTask();
-        // static void TMSlowTask();
+    // Task Handles
+    TaskHandle_t AM_handle = NULL;
+    // TaskHandle_t PM_handle = NULL;
+    // TaskHandle_t TM_handle = NULL;
 
-        // Mail Queues here
-        // osMessageQId TM_to_SM_queue;
-        // osMessageQId SM_to_TM_queue;
-        // osMessageQId SM_to_PM_queue;
-        // osMessageQId PM_to_AM_queue;
-        osMessageQId SM_to_AM_queue;
-        // osMessageQId AM_to_SM_queue;
+    // Thread tasks here
+    static void AMOperationTask(void* pvParameters);
+    // static void PMOperationTask();
+    // static void TMOperationTask();
+    // static void TMSlowTask();
 
-        // TODO Bulk message from telemetry stored here
+    // Mail Queues here
+    // osMessageQId TM_to_SM_queue;
+    // osMessageQId SM_to_TM_queue;
+    // osMessageQId SM_to_PM_queue;
+    // osMessageQId PM_to_AM_queue;
+    osMessageQId SM_to_AM_queue;
+    // osMessageQId AM_to_SM_queue;
 
-        // TODO Message from RC here
-        LosLinkRx_t rc_data;
-        // TODO new_message flag here for RC or some other way to know if data is new
+    // TODO Bulk message from telemetry stored here
 
-        // Data from SF
-        // LosSFData sf_data;
+    // TODO Message from RC here
+    LosLinkRx_t rc_data;
+    // TODO new_message flag here for RC or some other way to know if data is new
 
-        // Message sent to AM
-        // AM::AttitudeManagerInput to_am_data;
-        
-        // TODO Response from AM stored here to be merged and sent to Telemetry
+    // Data from SF
+    // LosSFData sf_data;
 
-        // AM init, might work better in a config file later
-        AM::ActuatorConfig engine, left_aileron, right_aileron, rudder, elevator;
-        AM::FixedControl fixed_control;
-        AM::AttitudeManager attitude_manager;
+    // Message sent to AM
+    // AM::AttitudeManagerInput to_am_data;
 
-    private:
-        SystemState* currentState;
-        Drone_Operation_Mode operation_mode;
+    // TODO Response from AM stored here to be merged and sent to Telemetry
 
+    // AM init, might work better in a config file later
+    AM::ActuatorConfig engine, left_aileron, right_aileron, rudder, elevator;
+    AM::FixedManualControl fixed_control;
+    AM::AttitudeManager attitude_manager;
+
+   private:
+    SystemState* currentState;
+    Drone_Operation_Mode operation_mode;
 };
 
 }  // namespace SM

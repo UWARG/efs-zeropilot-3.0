@@ -14,12 +14,12 @@
 
 namespace AM {
 
-class ManualFixedControl : public FixedControl {
+class FixedManualControl : public FixedControl {
    public:
-    ManualFixedControl(ActuatorConfig &engine, ActuatorConfig &leftAileron,
-                       ActuatorConfig &rightAileron, ActuatorConfig &rudder,
+    FixedManualControl(ActuatorConfig &engine, ActuatorConfig &left_aileron,
+                       ActuatorConfig &right_aileron, ActuatorConfig &rudder,
                        ActuatorConfig &elevator)
-        : FixedControl(engine, leftAileron, rightAileron, rudder, elevator){};
+        : FixedControl(engine, left_aileron, right_aileron, rudder, elevator){};
 
     std::vector<ActuatorOutput> runControlsAlgorithm(
         const AttitudeManagerInput &instructions) override;
