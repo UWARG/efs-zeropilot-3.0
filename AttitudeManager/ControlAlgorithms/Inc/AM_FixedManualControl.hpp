@@ -19,17 +19,13 @@ class ManualFixedControl : public FixedControl {
     ManualFixedControl(ActuatorConfig &engine, ActuatorConfig &leftAileron,
                        ActuatorConfig &rightAileron, ActuatorConfig &rudder,
                        ActuatorConfig &elevator)
-        : FixedControl(engine, leftAileron, rightAileron, rudder, elevator) {};
+        : FixedControl(engine, leftAileron, rightAileron, rudder, elevator){};
 
     std::vector<ActuatorOutput> runControlsAlgorithm(
         const AttitudeManagerInput &instructions) override;
 
    private:
-    float ManualFixedControl::mixOutputs(StateMix actuator,
-                                         float bank,
-                                         float pitch,
-                                         float yaw,
-                                         float throttle) const;
+    float mixOutputs(StateMix actuator, float bank, float pitch, float yaw, float throttle) const;
 };
 }  // namespace AM
 
