@@ -1,7 +1,7 @@
 #include "PM.hpp"
 #include "PM_States.hpp"
 
-pathManager::pathManager()
+PathManager::PathManager()
 {
     currentState = &CommsWithAttitude::getInstance();
     status = PathMan::COMPLETED_CYCLE;
@@ -9,7 +9,7 @@ pathManager::pathManager()
     isError = false;
 }
 
-void pathManager::setState(pathManagerState& newState)
+void PathManager::setState(PathManagerState& newState)
 {
     currentState->exit(this);
     currentState = &newState;
@@ -25,7 +25,7 @@ void pathManager::setState(pathManagerState& newState)
     currentState->enter(this);
 }
 
-void pathManager::execute()
+void PathManager::execute()
 {
     currentState->execute(this);
 }

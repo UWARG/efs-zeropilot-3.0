@@ -20,13 +20,13 @@
  **********************************************************************************************************************/
 
 
-class CommsWithAttitude : public pathManagerState
+class CommsWithAttitude : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
         static PM_AM_Commands* GetCommFromAttitude(void) { return &receivedData; }
     private:
         CommsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
@@ -35,30 +35,30 @@ class CommsWithAttitude : public pathManagerState
         static PM_AM_Commands receivedData;
 };
 
-class CommsWithSystemManager : public pathManagerState
+class CommsWithSystemManager : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
         static SM_PM_Commands* GetSMIncomingData(void) {return &incomingData;}
     private:
         static SM_PM_Commands incomingData; 
         CommsWithSystemManager() { CommWithSMInit(); }
         CommsWithSystemManager(const CommsWithSystemManager& other);
         CommsWithSystemManager& operator =(const CommsWithSystemManager& other);
-        static SM_PM_Commands incomingData; // Stores the commands sent by telemetry for easy access by other states in the pathmanager
+        static SM_PM_Commands incomingData; // Stores the commands sent by telemetry for easy access by other states in the Pathmanager
 };
 
 
-class FlightModeSelector : public pathManagerState
+class FlightModeSelector : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
     private:
         FlightModeSelector() {}
         FlightModeSelector(const FlightModeSelector& other);
@@ -66,13 +66,13 @@ class FlightModeSelector : public pathManagerState
 
 };
 
-class TakeoffStage : public pathManagerState
+class TakeoffStage : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
         static PM_AM_Commands* getTakeoffDataForAM() {return &takeoffDataForAM;} 
     private:
         static WaypointData * currentLocation;
@@ -87,13 +87,13 @@ class TakeoffStage : public pathManagerState
 };
 
 
-class CruisingStage : public pathManagerState
+class CruisingStage : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
         static WaypointManager_Data_Out* GetOutputData(void) {return &_outputdata;}
        // static _CruisingState_Telemetry_Return* GetErrorCodes(void) {return &_returnToGround;}
 
@@ -113,13 +113,13 @@ class CruisingStage : public pathManagerState
      
 }; 
 
-class LandingStage : public pathManagerState
+class LandingStage : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
         static PM_AM_Commands* getLandingDataForAM() {return &landingDataForAM;} 
     private:
         //static WaypointManager_Data_In waypointInput;
@@ -137,13 +137,13 @@ class LandingStage : public pathManagerState
 
 
 
-class FatalFailureMode : public pathManagerState
+class FatalFailureMode : public PathManagerState
 {
     public:
-        void enter(pathManager* pathMgr) {(void) pathMgr;}
-        void execute(pathManager* pathMgr);
-        void exit(pathManager* pathMgr) {(void) pathMgr;}
-        static pathManagerState& getInstance();
+        void enter(PathManager* pathMgr) {(void) pathMgr;}
+        void execute(PathManager* pathMgr);
+        void exit(PathManager* pathMgr) {(void) pathMgr;}
+        static PathManagerState& getInstance();
     private:
         FatalFailureMode() {}
         FatalFailureMode(const FatalFailureMode& other);

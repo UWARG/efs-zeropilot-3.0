@@ -1,11 +1,14 @@
 #ifndef ZPSW3_PM_HPP
 #define ZPSW3_PM_HPP
 
+#include <stdint.h>
+//#include "cmsis_os.h"
+
 #include "PM_StateManager.hpp"
 #include "PM_DataTypes.hpp"
 #include "PM_LandingTakeoffManager.hpp"
 
-class pathManagerState;
+class PathManagerState;
 
 namespace PathMan
 {
@@ -15,22 +18,27 @@ enum Path_Manager_Cycle_Status {COMPLETED_CYCLE = 0, IN_CYCLE, FAILURE_MODE};
 
 }
 
-class pathManager
+class PathManager
 {
     public:
-        pathManager();
-        inline pathManagerState* getCurrentState() const {return currentState;}
+        PathManager();
+        inline PathManagerState* getCurrentState() const {return currentState;}
         void execute();
-        void setState(pathManagerState& newState);
+        void setState(PathManagerState& newState);
         PathMan::Path_Manager_Cycle_Status getStatus() {return status;}
 
         //used to determine the stage of the landing sequence
         LandingTakeoffManager vtol_manager;
         FlightStage flight_stage;
         bool isError;
+
+        // Message Q
+        osMessageQId SM_to_PM_queue;
+        osMessageQId PM_to_AM_queue;
+
        
     private:
-        pathManagerState* currentState;
+        PathManagerState* currentState;
         PathMan::Path_Manager_Cycle_Status status;
 };
 
