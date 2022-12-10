@@ -18,9 +18,9 @@ class SystemManager;
 
 class SystemState {
     public:
-        virtual void enter(SystemManager* systemMgr) = 0;
+        void enter(SystemManager* system_manager) { (void) system_manager; }
         virtual void execute(SystemManager* systemMgr) = 0;
-        virtual void exit(SystemManager* systemMgr) = 0;
+        void exit(SystemManager* system_manager) { (void) system_manager; }
 
         bool operator==(const SystemState& rhs) const {return (this == &rhs);}
 
