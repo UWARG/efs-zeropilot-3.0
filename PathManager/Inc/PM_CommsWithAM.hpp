@@ -1,13 +1,8 @@
-/**
- * Communicates with the attitude manager to send commands and receive useful data.
- * All functions here should be called by the path manager.
- * Author: Anthony Bertnyk
- */
 
 #ifndef PM_COMM_WITH_AM_HPP
 #define PM_COMM_WITH_AM_HPP
 
-//#include "AttitudePathInterface.hpp"
+#include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
 
 
