@@ -29,6 +29,7 @@ class TelemetryManager {
         TM_Status ExecuteTx();
 
         TM_Status ExecuteRx();
+        TM_Status ExecuteRxJetson() {
 
         
 

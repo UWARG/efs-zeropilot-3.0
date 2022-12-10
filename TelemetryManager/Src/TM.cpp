@@ -5,7 +5,7 @@ TelemetryManager::TelemetryManager() {
 
 }
 
-TelemetryManager::Init() {
+void TelemetryManager::Init() {
     
 }
 
