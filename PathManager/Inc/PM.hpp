@@ -29,14 +29,22 @@ class PathManager
         FlightStage flight_stage;
         bool isError;
 
-        // Message Q
-       // osMessageQId SM_to_PM_queue;
-       // osMessageQId PM_to_AM_queue;
+        void setSmQueue(osMessageQId queueId);
+        osMessageQId getSmQueue();
+
+        void setAmQueue(osMessageQId queueId);
+        osMessageQId getAmQueue();
+
+
 
        
     private:
         PathManagerState* currentState;
         Path_Manager_Cycle_Status status;
+
+         // Message Q
+        osMessageQId SM_to_PM_queue;
+        osMessageQId PM_to_AM_queue;
 };
 
 }

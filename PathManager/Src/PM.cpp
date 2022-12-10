@@ -32,4 +32,20 @@ void PathManager::execute()
     currentState->execute(this);
 }
 
+void PathManager::setSmQueue(osMessageQId queueId) {
+    SM_to_PM_queue = queueId;
+}
+
+osMessageQId PathManager::getSmQueue() {
+    return SM_to_PM_queue;
+}
+
+void PathManager::setAmQueue(osMessageQId queueId) {
+    PM_to_AM_queue = queueId;
+}
+
+osMessageQId PathManager::getAmQueue() {
+    return PM_to_AM_queue;
+}
+
 }
