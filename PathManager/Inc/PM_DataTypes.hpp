@@ -8,6 +8,7 @@
 * Enums
 ********************************************************************/
 
+
 // Used by PM to determine the stage of flight
 enum FlightStage{PREFLIGHT = 0, TAKEOFF, CRUISING, LANDING, LANDED, DISARMED, TELEOP}; 
 

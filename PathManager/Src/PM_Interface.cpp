@@ -1,8 +1,9 @@
 #include "PM_Interface.h"
 #include "PM.hpp"
 
+namespace PM {
 static PathManager pathMng;
-PathMan::Path_Manager_Cycle_Status pathManStatus;
+Path_Manager_Cycle_Status pathManStatus;
 
 
 bool PathManagerInterfaceExecute(void) {
@@ -11,12 +12,13 @@ bool PathManagerInterfaceExecute(void) {
             pathMng.execute();
             pathManStatus = pathMng.getStatus();
 
-            if (pathManStatus == PathMan::FAILURE_MODE)
+            if (pathManStatus == FAILURE_MODE)
             {
                 // Something is quite wrong, need to switch over to safety
                 return false;
             }
 
-    } while(pathManStatus != PathMan::COMPLETED_CYCLE);
+    } while(pathManStatus != COMPLETED_CYCLE);
     return true;
+}
 }

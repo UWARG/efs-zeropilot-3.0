@@ -7,6 +7,7 @@
 
 #include "PM.hpp"
 
+namespace PM {
 class PathManager;
 
 class PathManagerState
@@ -21,6 +22,7 @@ class PathManagerState
         virtual ~PathManagerState() {}
 
 };
+}
 
 #endif
 
