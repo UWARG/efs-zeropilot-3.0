@@ -4,6 +4,7 @@
  * Static Member Variable Declarations
  **********************************************************************************************************************/
 
+namespace PM {
 SM_PM_Commands CommsWithSystemManager::incomingData;
 //SFOutput_t SensorFusion::sfOutputData;
 //IMU_Data_t SensorFusion::imudata;
@@ -298,4 +299,5 @@ PathManagerState& FatalFailureMode::getInstance()
     return singleton;
 }
 
+}
 

@@ -18,7 +18,7 @@
 /***********************************************************************************************************************
  * Code
  **********************************************************************************************************************/
-
+namespace PM {
 
 class CommsWithAttitude : public PathManagerState
 {
@@ -149,5 +149,6 @@ class FatalFailureMode : public PathManagerState
         FatalFailureMode(const FatalFailureMode& other);
         FatalFailureMode& operator =(const FatalFailureMode& other);
 };
+}
 #endif
 
