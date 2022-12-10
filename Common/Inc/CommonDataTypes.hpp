@@ -18,6 +18,6 @@ typedef struct {
     float longitudeSpeed; //m/s
     double track; // degrees
     double heading; //degrees
-} SFOutput_t;
+} LosSFData;
 
 #endif  // ZPSW3_COMMON_DATATYPES_HPP
