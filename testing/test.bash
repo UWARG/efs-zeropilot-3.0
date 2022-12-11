@@ -8,7 +8,7 @@ fi
 if [ $1 = "clean" ]; then  
     if [ -d "$script_path/build" ]; then
         echo "removing testing build folder ..."
-        rm -r $script_path/build
+        rm -rf $script_path/build
     else
         echo "no build folder, exiting ..."
         exit
