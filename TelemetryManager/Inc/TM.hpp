@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CRC32.hpp"
-
+#include "Circular_Queue.hpp"
 
 // for now, dont differentiate between different types of failure.
 enum TM_Status {SUCCESS = 0, FAILURE};
@@ -29,9 +29,11 @@ class TelemetryManager {
         TM_Status ExecuteTx();
 
         TM_Status ExecuteRx();
-        TM_Status ExecuteRxJetson() {
+        TM_Status ExecuteRxJetson();
+        TM_Status ExecuteRxRFD();
 
-        
+    private:
+        CircularBuffer tmBuffer; 
 
 };
 

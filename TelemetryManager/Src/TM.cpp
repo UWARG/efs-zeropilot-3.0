@@ -1,5 +1,6 @@
 #include "TM.hpp"
-
+#include "LOS_Comms.hpp"
+#incliude "Circular_Queue.hpp"
 
 TelemetryManager::TelemetryManager() {
 
@@ -19,7 +20,6 @@ TM_Status TelemetryManager::ExecuteRx() {
     // this is temp
     uint8_t rfdBuf[150];
     uint8_t jetsonBuf[150];
-
 
     // check the type variable
     uint8_t type = jetsonBuf[3];
@@ -66,12 +66,19 @@ TM_Status TelemetryManager::ExecuteRx() {
     }
 
     // decode based on the type variable 
-
     
+}
+
+void getData(uint8_t* writePtr, uint16_t size) {
+    LosCommsRx_t commsParams;
+    commsParams.ring_buffer = writePtr;
+    commsParams.size = size;
+    Los_Comms::getInstance().getData(&commsParams);
 }
 
 TM_Status TelemetryManager::ExecuteRxJetson() {
     // pull data from LOS and update the queue
+    getData(&tmBuffer.buffer, )
 
     // loop through the bytes in the queue and assemble messages
 

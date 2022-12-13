@@ -3,12 +3,13 @@
 
 #include "stdint.h"
 
-const int SIZE_QUEUE = 150;
+const int SIZE_BUFFER = 150;
 
-uint8_t queue[SIZE_QUEUE] = { };
+struct CircularBuffer {
+    uint8_t buffer[SIZE_BUFFER] = { };
 
-uint8_t* readPtr = &queue[0];
-uint8_t* writePtr = &queue[0];
-
+    int readPtr = 0;
+    int writePtr = 0;
+};
 
 #endif
