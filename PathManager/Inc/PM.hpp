@@ -2,10 +2,11 @@
 #define ZPSW3_PM_HPP
 
 #include <stdint.h>
-//#include "cmsis_os.h"
+#include "cmsis_os.h"
 
 #include "PM_StateManager.hpp"
 #include "Common\Inc\PM_datatypes.hpp"
+#include "AttitudeManager\Inc\AM_DataTypes.hpp"
 #include "PM_DataTypes.hpp"
 #include "PM_LandingTakeoffManager.hpp"
 
@@ -30,11 +31,21 @@ class PathManager
         FlightStage flight_stage;
         bool isError;
 
-        void setSmQueue(osMessageQId queueId);
-        osMessageQId getSmQueue();
+        void storeSmPmQueue(osMessageQId queueId);
+        osMessageQId getSmPmQueue();
 
-        void setAmQueue(osMessageQId queueId);
-        osMessageQId getAmQueue();
+        void storePmAmQueue(osMessageQId queueId);
+        osMessageQId getPmAmQueue();
+
+       // void storeUsePmFlag();
+
+        //GlobalFlag getUsePmFlag(); 
+
+        void setSmStruct(const SM_PM_Commands &from_sm_data); 
+
+        AM::AttitudeManagerInput getAmStruct(); 
+        void setAmStruct(const AM::AttitudeManagerInput &am_instructions); 
+
 
 
 
@@ -46,6 +57,9 @@ class PathManager
          // Message Q
         osMessageQId SM_to_PM_queue;
         osMessageQId PM_to_AM_queue;
+
+        SM_PM_Commands sm_instructions; 
+        AM::AttitudeManagerInput am_data; 
 };
 
 }

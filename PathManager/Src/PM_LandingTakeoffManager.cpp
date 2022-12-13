@@ -29,10 +29,11 @@ double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
     return groundHeight;
 }
 
-PM_AM_Commands LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
+AM::AttitudeManagerInput LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
 {
-    PM_AM_Commands desiredWaypoint;
+    AM::AttitudeManagerInput desiredWaypoint;
 
+    //TODO: update AM::AttitudeManagerInput to have these member names 
     desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_z = 1;
@@ -46,9 +47,9 @@ PM_AM_Commands LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & in
     return desiredWaypoint;
 }
 
-PM_AM_Commands LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
+AM::AttitudeManagerInput LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
 {
-    PM_AM_Commands desiredWaypoint;
+    AM::AttitudeManagerInput desiredWaypoint;
 
     desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
     desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP

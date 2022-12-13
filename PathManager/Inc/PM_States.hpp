@@ -4,10 +4,10 @@
 #include "PM_StateManager.hpp"
 #include "PM.hpp"
 #include "PM_LandingTakeoffManager.hpp"
+#include "AttitudeManager\Inc\AM_DataTypes.hpp"
 #include "Common\Inc\PM_datatypes.hpp"
 #include "PM_DataTypes.hpp"
-#include "PM_CommsWithAM.hpp"
-#include "PM_CommsWithSM.hpp"
+
 
 
 /***********************************************************************************************************************
@@ -27,12 +27,12 @@ class CommsWithAttitude : public PathManagerState
         void execute(PathManager* pathMgr);
         void exit(PathManager* pathMgr) {(void) pathMgr;}
         static PathManagerState& getInstance();
-        static PM_AM_Commands* GetCommFromAttitude(void) { return &receivedData; }
+        static AM::AttitudeManagerInput* GetCommFromAttitude(void) { return &receivedData; }
     private:
-        CommsWithAttitude() { CommFromPMToAMInit(); } // Initializes module
+        CommsWithAttitude() {  } // Initializes module
         CommsWithAttitude(const CommsWithAttitude& other);
         CommsWithAttitude& operator =(const CommsWithAttitude& other);
-        static PM_AM_Commands receivedData;
+        static AM::AttitudeManagerInput receivedData;
 };
 
 class CommsWithSystemManager : public PathManagerState
@@ -45,7 +45,7 @@ class CommsWithSystemManager : public PathManagerState
         static SM_PM_Commands* GetSMIncomingData(void) {return &incomingData;}
     private:
         static SM_PM_Commands incomingData; 
-        CommsWithSystemManager() { CommWithSMInit(); }
+        CommsWithSystemManager() {  }
         CommsWithSystemManager(const CommsWithSystemManager& other);
         CommsWithSystemManager& operator =(const CommsWithSystemManager& other);
         static SM_PM_Commands incomingData; // Stores the commands sent by telemetry for easy access by other states in the Pathmanager
@@ -73,14 +73,14 @@ class TakeoffStage : public PathManagerState
         void execute(PathManager* pathMgr);
         void exit(PathManager* pathMgr) {(void) pathMgr;}
         static PathManagerState& getInstance();
-        static PM_AM_Commands* getTakeoffDataForAM() {return &takeoffDataForAM;} 
+        static AM::AttitudeManagerInput* getTakeoffDataForAM() {return &takeoffDataForAM;} 
     private:
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
         static LosSFData LOSData; 
-        static PM_AM_Commands takeoffDataForAM; 
+        static AM::AttitudeManagerInput takeoffDataForAM; 
         TakeoffStage() {}
         TakeoffStage(const TakeoffStage& other);
         TakeoffStage& operator =(const TakeoffStage& other);
@@ -120,14 +120,14 @@ class LandingStage : public PathManagerState
         void execute(PathManager* pathMgr);
         void exit(PathManager* pathMgr) {(void) pathMgr;}
         static PathManagerState& getInstance();
-        static PM_AM_Commands* getLandingDataForAM() {return &landingDataForAM;} 
+        static AM::AttitudeManagerInput* getLandingDataForAM() {return &landingDataForAM;} 
     private:
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
         static LosSFData LOSData; 
-        static PM_AM_Commands landingDataForAM;
+        static AM::AttitudeManagerInput landingDataForAM;
         LandingStage() {}
         LandingStage(const LandingStage& other);
         LandingStage& operator =(const LandingStage& other);
