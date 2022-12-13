@@ -16,6 +16,7 @@
 namespace SM {
 
 uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
+uint32_t PM_PERIOD_MS = 5; // took a gander 
 
 /*
 Helper Functions
@@ -122,14 +123,51 @@ void SystemManager::AMOperationTask(void* pvParameters)
 //     }
 // }
 
-// void SystemManager::PMOperationTask(void *pvParameters)
-// {
-//     TickType_t xNextWakeTime;
-//     xNextWakeTime = xTaskGetTickCount();
-//     while (true) {
-//         PM_instance.execute();
-//         vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS);
-//     }
-// }
+void SystemManager::PMOperationTask(void *pvParameters)
+{
+    PM::PathManager* path_manager = (PM::PathManager*)pvParameters;
+
+    const SM_PM_Commands* pm_instructions;
+
+    TickType_t xNextWakeTime;
+    xNextWakeTime = xTaskGetTickCount();
+    while (true) {
+         // Read MessageQ from SM
+        uint8_t* msg_priority = 0;
+        void* message_pointer = NULL;
+        // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
+        osMessageQueueGet(path_manager->getSmPmQueue(), message_pointer, msg_priority, 3);
+        pm_instructions = (SM_PM_Commands*)message_pointer;
+
+        // Clear MessageQ from SM
+        osMessageQueueReset(path_manager->getSmPmQueue());
+
+        //if (path_manager->getUsePmFlag().readFlag()) {
+
+        path_manager->setSmStruct(*pm_instructions); 
+
+        // Run PM control loop
+        path_manager->execute();
+
+         // Decode RC data and convert to AM message type
+        AM::AttitudeManagerInput to_am_data = path_manager->getAmStruct();
+        void* msg_pointer = &to_am_data;
+
+        // Send to AM mail queue (JUST Nov 27th implementation)
+        osMessageQueuePut(path_manager->getPmAmQueue(), msg_pointer, osPriorityNormal, 0);   
+
+       // } else {
+
+       // // Clear MessageQ from SM
+       // osMessageQueueReset(path_manager->getPmAmQueue());
+
+      // }
+       
+        // Delay to operate at set frequency
+        vTaskDelayUntil(&xNextWakeTime, SM::PM_PERIOD_MS); 
+
+       
+    }
+}
 
 }  // namespace SM

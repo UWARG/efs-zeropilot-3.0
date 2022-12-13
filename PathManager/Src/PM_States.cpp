@@ -8,18 +8,18 @@ namespace PM {
 SM_PM_Commands CommsWithSystemManager::incomingData;
 //SFOutput_t SensorFusion::sfOutputData;
 //IMU_Data_t SensorFusion::imudata;
-PM_AM_Commands CommsWithAttitude::receivedData;
+AM::AttitudeManagerInput CommsWithAttitude::receivedData;
 
 
 // TAKEOFF STAGE VARIABLES 
 WaypointData * TakeoffStage::currentLocation;    
 WaypointData * TakeoffStage::targetWaypoint;
-CommandsForAM_t TakeoffStage::takeoffDataForAM; 
+AM::AttitudeManagerInput TakeoffStage::takeoffDataForAM; 
 
 // LANDING STAGE VARIABLES 
 WaypointData * LandingStage::currentLocation;
 WaypointData * LandingStage::targetWaypoint;
-CommandsForAM_t LandingStage::landingDataForAM;
+AM::AttitudeManagerInput LandingStage::landingDataForAM;
 
 
 constexpr int LANDING_TIME_THRESHOLD {5};
@@ -230,7 +230,10 @@ PathManagerState& TakeoffStage::getInstance()
 void CommsWithAttitude::execute(PathManager* pathMgr)
 {
 
-    /*_WaypointManager_Data_Out * waypointOutput {}; 
+
+    /*
+    for after Dec 12
+    _WaypointManager_Data_Out * waypointOutput {}; 
     
     //deciding which stage we get output data from 
     switch(pathMgr->flight_stage){
@@ -251,10 +254,7 @@ void CommsWithAttitude::execute(PathManager* pathMgr)
     }
     */
     
-    // No I don't like this either 
-    PM_AM_Commands* outputData {};
-    PM_AM_Commands sendingData {};
-
+    AM::AttitudeManagerInput* outputData {};
     switch(pathMgr->flight_stage){
             case LANDING:
                 outputData = LandingStage::getLandingDataForAM();
@@ -267,11 +267,9 @@ void CommsWithAttitude::execute(PathManager* pathMgr)
                 break; 
             default:
         }
-    sendingData = *outputData; 
+    pathMgr->setAmStruct(*outputData); 
 
-    SendFromPMToAM(&sendingData); // Sends commands to attitude manager
     
-
      if(pathMgr->isError)
     {
         pathMgr->setState(FatalFailureMode::getInstance());

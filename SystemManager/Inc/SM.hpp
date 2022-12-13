@@ -19,6 +19,7 @@
 #include "AM_FixedControl.hpp"
 #include "SM_StateManager.hpp"
 #include "interface_datatypes.hpp"
+#include "Common\Inc\PM_datatypes.hpp"
 
 namespace SM {
 

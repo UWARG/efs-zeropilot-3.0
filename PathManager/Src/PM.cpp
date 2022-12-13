@@ -32,20 +32,38 @@ void PathManager::execute()
     currentState->execute(this);
 }
 
-void PathManager::setSmQueue(osMessageQId queueId) {
+void PathManager::storeSmPmQueue(osMessageQId queueId) {
     SM_to_PM_queue = queueId;
 }
 
-osMessageQId PathManager::getSmQueue() {
+osMessageQId PathManager::getSmPmQueue() {
     return SM_to_PM_queue;
 }
 
-void PathManager::setAmQueue(osMessageQId queueId) {
+void PathManager::storePmAmQueue(osMessageQId queueId) {
     PM_to_AM_queue = queueId;
 }
 
-osMessageQId PathManager::getAmQueue() {
+osMessageQId PathManager::getPmAmQueue() {
     return PM_to_AM_queue;
 }
+
+void PathManager::setSmStruct(const SM_PM_Commands &from_sm_data) {
+    sm_instructions = from_sm_data;
+}
+
+void PathManager::setAmStruct(const AM::AttitudeManagerInput &am_instructions){
+    am_data = am_instructions; 
+}
+
+AM::AttitudeManagerInput PathManager::getAmStruct() {
+    return am_data; 
+
+}
+
+
+/*void PathManager::storeUsePmFlag() {
+    
+}*/
 
 }
