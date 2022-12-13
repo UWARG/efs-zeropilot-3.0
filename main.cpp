@@ -21,7 +21,7 @@ extern UART_HandleTypeDef huart5;
 int main()
 {
     losInit();
-    //
+    
      osThreadAttr_t blinkyTest = {
          .name = "start_blinky",
          .stack_size = 512,
@@ -67,7 +67,6 @@ void StartBlinkyTest(void * argument)
     {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 //        HAL_Delay(250);
-        HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
         osDelay(100);
     }
 }
