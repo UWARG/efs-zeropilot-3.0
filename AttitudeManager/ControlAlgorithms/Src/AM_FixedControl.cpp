@@ -10,7 +10,7 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
  
    // Current attitude from SF
-    LosSFData current_attitude {}; 
+    LOS::LosSFData current_attitude {}; 
     
     // Compute target values
     float target_heading = instructions.heading;

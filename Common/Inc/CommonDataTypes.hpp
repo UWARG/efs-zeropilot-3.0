@@ -5,8 +5,11 @@
 #ifndef ZPSW3_COMMON_DATATYPES_HPP
 #define ZPSW3_COMMON_DATATYPES_HPP
 
+#include <stdint.h>
+
+namespace LOS {
 // Struct copied from old code
-typedef struct {
+struct LosSFData {
     float roll, pitch, yaw; //rad
     float rollRate, pitchRate, yawRate; //rad/s
     float airspeed; //m/s
@@ -18,6 +21,137 @@ typedef struct {
     float longitudeSpeed; //m/s
     double track; // degrees
     double heading; //degrees
-} LosSFData;
+};
+
+};
+
+namespace PM {
+
+struct JetsonToZpMovementCommand {
+  float x;
+  float y;
+  float z;
+  float heading;
+};
+
+struct LandingInitiationCommand {
+    bool start_landing; 
+};
+
+struct JetsonMovementRequest {
+    bool request;
+};
+
+struct TelemWaypoint {
+    uint8_t waypoint_id;
+    double longitude;
+    double latitude;
+    double altitude;
+};
+
+struct WaypointsCommand {
+    uint8_t num_waypoints; // number of valid waypoints in the list 
+    TelemWaypoint waypoints[5]; 
+};
+
+
+struct PM_AM_Commands {
+  // heading unit vector and magnitude
+  float dist_x; 
+  float dist_y; 
+  float dist_z; 
+  float magnitude; // Magnitude distance to waypoint target
+  float heading; // heading at target waypoint
+  double velocity_target; // Target velocity of drone approaching target
+}; 
+
+struct SM_PM_Commands {
+    WaypointsCommand telemetry_commands;
+    JetsonToZpMovementCommand jetson_commands; 
+    LandingInitiationCommand landing_initiation; 
+    LOS::LosSFData sf_data;
+};
+
+struct PM_SM_Commands {
+    JetsonMovementRequest jetson_movement_req;
+};
+
+}
+
+namespace AM {
+
+struct AM_SM_Commands {
+    bool ok;
+};
+
+struct SM_AM_Commands {
+    uint8_t motor_outputs[12];
+};
+
+struct PIDValues {
+    double P;
+    double I;
+    double D;
+    double A;
+};
+
+struct PIDControllerValues {
+    PIDValues axes[6];
+};
+
+struct GroundStationPIDSetCommand {
+    uint8_t controller;
+    uint8_t axis;
+    PIDValues values;
+};
+
+struct GroundStationPIDSetResponse {
+    uint8_t controller_number;
+    PIDControllerValues controller;
+};
+
+class ActuatorConfig {
+   public:
+    uint8_t channel = UINT8_MAX;
+    StateMix stateMix;
+};
+
+class AttitudeManagerInput {
+   public:
+    float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
+                speed = 0;
+};  // TODO: What is the correct name?
+
+}
+
+namespace SM {
+
+
+struct GroundStationDisarm {
+    bool arm;
+};
+
+struct GroundStationData {
+    uint8_t motor_outputs[12];
+    LOS::LosSFData sf_data;
+    uint8_t battery_voltages[13];
+    uint8_t controller_values[16];
+};
+
+struct SM_TM_Commands {
+    GroundStationData gspc_data;
+    PM::JetsonMovementRequest jetson_movement_req;
+    AM::GroundStationPIDSetResponse gspc_pid_set_resp;
+};
+
+struct TM_SM_Commands {
+    GroundStationDisarm ground_station_disarm;
+    PM::WaypointsCommand waypoint_commands;
+    PM::JetsonToZpMovementCommand jetson_commands; 
+    PM::LandingInitiationCommand landing_initiation; 
+    AM::GroundStationPIDSetCommand gspc_pid_set_command;
+};
+}
+
 
 #endif  // ZPSW3_COMMON_DATATYPES_HPP

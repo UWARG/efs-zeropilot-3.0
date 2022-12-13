@@ -10,6 +10,7 @@
 #define ZPSW3_AM_CONTROL_INTERFACE_HPP
 
 #include "AM_DataTypes.hpp"
+#include "CommonDataTypes.hpp"
 
 namespace AM {
 
