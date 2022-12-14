@@ -11,10 +11,10 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     LOS::LosSFData currentAttitude {};
 
     // convert instructions into level mode quad instructions
-    float targetPitch = instructions.x_dir * max_pitch_deg;
-    float targetRoll = instructions.y_dir * max_roll_deg;
+    float targetPitch = instructions.dist_x * max_pitch_deg;
+    float targetRoll = instructions.dist_y * max_roll_deg;
     float targetYaw = currentAttitude.yaw + instructions.heading;
-    float targetAltitude = instructions.z_dir;
+    float targetAltitude = instructions.dist_z;
 
     // get PID result
     float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch,
