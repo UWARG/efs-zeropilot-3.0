@@ -23,7 +23,7 @@ struct LosSFData {
     double heading; //degrees
 };
 
-};
+} // Namespace LOS
 
 namespace PM {
 
@@ -54,7 +54,6 @@ struct WaypointsCommand {
     TelemWaypoint waypoints[5]; 
 };
 
-
 struct PM_AM_Commands {
   // heading unit vector and magnitude
   float dist_x; 
@@ -76,7 +75,7 @@ struct PM_SM_Commands {
     JetsonMovementRequest jetson_movement_req;
 };
 
-}
+} // Namespace PM
 
 namespace AM {
 
@@ -124,10 +123,9 @@ struct AttitudeManagerInput {
     double velocity_target = 0;
 };  // TODO: What is the correct name?
 
-}
+} // Namespace AM
 
 namespace SM {
-
 
 struct GroundStationDisarm {
     bool arm;
@@ -153,7 +151,7 @@ struct TM_SM_Commands {
     PM::LandingInitiationCommand landing_initiation; 
     AM::GroundStationPIDSetCommand gspc_pid_set_command;
 };
-}
+} // Namepsace SM
 
 
 #endif  // ZPSW3_COMMON_DATATYPES_HPP
