@@ -110,16 +110,18 @@ struct GroundStationPIDSetResponse {
     PIDControllerValues controller;
 };
 
-class ActuatorConfig {
-   public:
+struct ActuatorConfig {
     uint8_t channel = UINT8_MAX;
     StateMix stateMix;
 };
 
-class AttitudeManagerInput {
-   public:
-    float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
-                speed = 0;
+struct AttitudeManagerInput {
+    float dist_x; 
+    float dist_y; 
+    float dist_z; 
+    float magnitude = 0;
+    float heading = 0;
+    double velocity_target = 0;
 };  // TODO: What is the correct name?
 
 }

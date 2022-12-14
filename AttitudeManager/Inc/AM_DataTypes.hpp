@@ -25,8 +25,7 @@ class StateMix {
 };
 
 
-class ActuatorOutput {
-   public:
+struct ActuatorOutput {
     uint8_t channel;
     float percent;
 };
