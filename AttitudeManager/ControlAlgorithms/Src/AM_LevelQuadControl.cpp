@@ -27,13 +27,13 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
 
     // mix the PID's.
     float frontRightOutput =
-        mixPIDs(configs[FrontRight].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[FrontRight].state_mix, roll, pitch, yaw, velocity_z);
     float frontLeftOutput =
-        mixPIDs(configs[FrontLeft].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[FrontLeft].state_mix, roll, pitch, yaw, velocity_z);
     float backLeftOutput =
-        mixPIDs(configs[BackLeft].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[BackLeft].state_mix, roll, pitch, yaw, velocity_z);
     float backRightOutput =
-        mixPIDs(configs[BackRight].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[BackRight].state_mix, roll, pitch, yaw, velocity_z);
 
     // return output
     return std::vector<ActuatorOutput>{

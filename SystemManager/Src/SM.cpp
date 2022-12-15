@@ -50,11 +50,11 @@ System Manager Functions
 */
 
 SystemManager::SystemManager()
-    : engine{.channel = 0, .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)},
-      left_aileron{.channel = 1, .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)},
-      right_aileron{.channel = 2, .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)},
-      rudder{.channel = 3, .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)},
-      elevator{.channel = 4, .stateMix = AM::StateMix(0, 0, 1, -1, 1, -1)},
+    : engine{.channel = 0, .state_mix = AM::StateMix(0, 0, 1, 1, 1, -1)},
+      left_aileron{.channel = 1, .state_mix = AM::StateMix(0, 0, 1, -1, -1, -1)},
+      right_aileron{.channel = 2, .state_mix = AM::StateMix(0, 0, 1, 1, -1, 1)},
+      rudder{.channel = 3, .state_mix = AM::StateMix(0, 0, 1, -1, 1, 1)},
+      elevator{.channel = 4, .state_mix = AM::StateMix(0, 0, 1, -1, 1, -1)},
       fixed_control(engine, left_aileron, right_aileron, rudder, elevator),
       attitude_manager(&fixed_control) {
     currentState = &BootMode::getInstance();

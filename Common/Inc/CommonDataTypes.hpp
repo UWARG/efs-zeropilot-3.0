@@ -111,7 +111,7 @@ struct GroundStationPIDSetResponse {
 
 struct ActuatorConfig {
     uint8_t channel = UINT8_MAX;
-    StateMix stateMix;
+    StateMix state_mix;
 };
 
 struct AttitudeManagerInput {
