@@ -14,7 +14,7 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     float targetPitch = instructions.dist_forward * max_pitch_deg;
     float targetRoll = instructions.dist_right * max_roll_deg;
     float targetYaw = currentAttitude.yaw + instructions.heading;
-    float targetAltitude = instructions.dist_z;
+    float targetAltitude = instructions.dist_up;
 
     // get PID result
     float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch,
