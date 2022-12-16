@@ -120,15 +120,15 @@ struct AttitudeManagerInput {
     float dist_z; 
     float magnitude = 0;
     float heading = 0;
-    double velocity_target = 0;
+    double speed = 0;
 };  // TODO: What is the correct name?
 
 } // Namespace AM
 
 namespace SM {
 
-struct GroundStationDisarm {
-    bool arm;
+struct GroundStationDisarmCommand {
+    bool set_armed;
 };
 
 struct GroundStationData {
@@ -145,7 +145,7 @@ struct SM_TM_Commands {
 };
 
 struct TM_SM_Commands {
-    GroundStationDisarm ground_station_disarm;
+    GroundStationDisarmCommand ground_station_disarm_command;
     PM::WaypointsCommand waypoint_commands;
     PM::JetsonToZpMovementCommand jetson_commands; 
     PM::LandingInitiationCommand landing_initiation; 
