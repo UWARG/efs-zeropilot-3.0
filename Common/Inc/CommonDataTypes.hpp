@@ -28,9 +28,9 @@ struct LosSFData {
 namespace PM {
 
 struct JetsonToZpMovementCommand {
-  float x;
-  float y;
-  float z;
+  float dist_x;
+  float dist_y;
+  float dist_z;
   float heading;
 };
 
