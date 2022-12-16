@@ -35,7 +35,7 @@ AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message)
 
     // map RC values into waypoint, assuming 50 for pitch, roll, and yaw means no change desired.
     // sets the maximum 
-    am_message.forward = cos(pitch) * cos(roll);
+    am_message.dist_forward = cos(pitch) * cos(roll);
     am_message.dist_right = sin(roll); // Positive right
     am_message.dist_up = sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
     // Note that the above is allready normalized
