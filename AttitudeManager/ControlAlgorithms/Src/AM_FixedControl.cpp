@@ -15,8 +15,8 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     // Compute target values
     float target_heading = instructions.heading;
     float target_throttle = instructions.speed; 
-    float target_pitch = instructions.dist_x * MAX_PITCH_ANGLE;
-    float target_bank = instructions.dist_y * MAX_BANK_ANGLE;  
+    float target_pitch = instructions.dist_forward * MAX_PITCH_ANGLE;
+    float target_bank = instructions.dist_right * MAX_BANK_ANGLE;  
 
 
     float bank = pid_bank.execute(target_bank, current_attitude.roll, current_attitude.rollRate);

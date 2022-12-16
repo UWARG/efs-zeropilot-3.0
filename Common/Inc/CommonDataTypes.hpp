@@ -28,9 +28,9 @@ struct LosSFData {
 namespace PM {
 
 struct JetsonToZpMovementCommand {
-  float dist_x;
-  float dist_y;
-  float dist_z;
+  float dist_forward;
+  float dist_forward;
+  float dist_forward;
   float heading;
 };
 
@@ -56,9 +56,9 @@ struct WaypointsCommand {
 
 struct PM_AM_Commands {
   // heading unit vector and magnitude
-  float dist_x; 
-  float dist_y; 
-  float dist_z; 
+  float dist_forward; 
+  float dist_right; 
+  float dist_up; 
   float magnitude; // Magnitude distance to waypoint target
   float heading; // heading at target waypoint
   double velocity_target; // Target velocity of drone approaching target
@@ -115,9 +115,9 @@ struct ActuatorConfig {
 };
 
 struct AttitudeManagerInput {
-    float dist_x; 
-    float dist_y; 
-    float dist_z; 
+    float dist_forward; 
+    float dist_right; 
+    float dist_up; 
     float magnitude = 0;
     float heading = 0;
     double speed = 0;
