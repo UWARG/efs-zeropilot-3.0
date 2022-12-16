@@ -29,8 +29,8 @@ namespace PM {
 
 struct JetsonToZpMovementCommand {
   float dist_forward;
-  float dist_forward;
-  float dist_forward;
+  float dist_right;
+  float dist_up;
   float heading;
 };
 
