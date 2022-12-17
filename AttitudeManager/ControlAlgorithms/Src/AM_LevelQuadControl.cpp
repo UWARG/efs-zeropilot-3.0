@@ -8,13 +8,13 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
     
     // Get current attitude from sensorfusion
-    LosSFData currentAttitude {};
+    LOS::LosSFData currentAttitude {};
 
     // convert instructions into level mode quad instructions
-    float targetPitch = instructions.x_dir * max_pitch_deg;
-    float targetRoll = instructions.y_dir * max_roll_deg;
+    float targetPitch = instructions.dist_forward * max_pitch_deg;
+    float targetRoll = instructions.dist_right * max_roll_deg;
     float targetYaw = currentAttitude.yaw + instructions.heading;
-    float targetAltitude = instructions.z_dir;
+    float targetAltitude = instructions.dist_up;
 
     // get PID result
     float pitch = pid_pitch.execute(targetPitch, currentAttitude.pitch,
@@ -27,13 +27,13 @@ std::vector<ActuatorOutput> LevelQuadControl::runControlsAlgorithm(
 
     // mix the PID's.
     float frontRightOutput =
-        mixPIDs(configs[FrontRight].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[FrontRight].state_mix, roll, pitch, yaw, velocity_z);
     float frontLeftOutput =
-        mixPIDs(configs[FrontLeft].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[FrontLeft].state_mix, roll, pitch, yaw, velocity_z);
     float backLeftOutput =
-        mixPIDs(configs[BackLeft].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[BackLeft].state_mix, roll, pitch, yaw, velocity_z);
     float backRightOutput =
-        mixPIDs(configs[BackRight].stateMix, roll, pitch, yaw, velocity_z);
+        mixPIDs(configs[BackRight].state_mix, roll, pitch, yaw, velocity_z);
 
     // return output
     return std::vector<ActuatorOutput>{

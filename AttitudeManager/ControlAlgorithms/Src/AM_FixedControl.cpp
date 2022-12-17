@@ -10,13 +10,13 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
     const AttitudeManagerInput &instructions) {
  
    // Current attitude from SF
-    LosSFData current_attitude {}; 
+    LOS::LosSFData current_attitude {}; 
     
     // Compute target values
     float target_heading = instructions.heading;
     float target_throttle = instructions.speed; 
-    float target_pitch = instructions.x_dir * MAX_PITCH_ANGLE;
-    float target_bank = instructions.y_dir * MAX_BANK_ANGLE;  
+    float target_pitch = instructions.dist_forward * MAX_PITCH_ANGLE;
+    float target_bank = instructions.dist_right * MAX_BANK_ANGLE;  
 
 
     float bank = pid_bank.execute(target_bank, current_attitude.roll, current_attitude.rollRate);
@@ -29,15 +29,15 @@ std::vector<ActuatorOutput> FixedControl::runControlsAlgorithm(
 
     // mix the PID's 
     float engine_output = 
-        mixPIDs(configs[Engine].stateMix, bank, pitch, yaw, throttle);
+        mixPIDs(configs[Engine].state_mix, bank, pitch, yaw, throttle);
     float left_aileron_output = 
-        mixPIDs(configs[LeftAileron].stateMix, bank, pitch, yaw, throttle);
+        mixPIDs(configs[LeftAileron].state_mix, bank, pitch, yaw, throttle);
     float right_aileron_output = 
-        mixPIDs(configs[RightAileron].stateMix, bank, pitch, yaw, throttle);
+        mixPIDs(configs[RightAileron].state_mix, bank, pitch, yaw, throttle);
     float rudder = 
-        mixPIDs(configs[Rudder].stateMix, bank, pitch, yaw, throttle);
+        mixPIDs(configs[Rudder].state_mix, bank, pitch, yaw, throttle);
     float elevator = 
-        mixPIDs(configs[Elevator].stateMix, bank, pitch, yaw, throttle);
+        mixPIDs(configs[Elevator].state_mix, bank, pitch, yaw, throttle);
     
 
     return std::vector<ActuatorOutput> {

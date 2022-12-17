@@ -35,9 +35,9 @@ AM::AttitudeManagerInput RcToAmInput(LosLinkRx_t rc_message)
 
     // map RC values into waypoint, assuming 50 for pitch, roll, and yaw means no change desired.
     // sets the maximum 
-    am_message.x_dir = cos(pitch) * cos(roll);
-    am_message.y_dir = sin(roll); // Positive right
-    am_message.z_dir = sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
+    am_message.dist_forward = cos(pitch) * cos(roll);
+    am_message.dist_right = sin(roll); // Positive right
+    am_message.dist_up = sin(pitch); // Positive down, (so pulling controller stick down moves drone up)
     // Note that the above is allready normalized
     am_message.magnitude = throttle;
     am_message.heading = yaw;
@@ -50,11 +50,11 @@ System Manager Functions
 */
 
 SystemManager::SystemManager()
-    : engine{.channel = 0, .stateMix = AM::StateMix(0, 0, 1, 1, 1, -1)},
-      left_aileron{.channel = 1, .stateMix = AM::StateMix(0, 0, 1, -1, -1, -1)},
-      right_aileron{.channel = 2, .stateMix = AM::StateMix(0, 0, 1, 1, -1, 1)},
-      rudder{.channel = 3, .stateMix = AM::StateMix(0, 0, 1, -1, 1, 1)},
-      elevator{.channel = 4, .stateMix = AM::StateMix(0, 0, 1, -1, 1, -1)},
+    : engine{.channel = 0, .state_mix = AM::StateMix(0, 0, 1, 1, 1, -1)},
+      left_aileron{.channel = 1, .state_mix = AM::StateMix(0, 0, 1, -1, -1, -1)},
+      right_aileron{.channel = 2, .state_mix = AM::StateMix(0, 0, 1, 1, -1, 1)},
+      rudder{.channel = 3, .state_mix = AM::StateMix(0, 0, 1, -1, 1, 1)},
+      elevator{.channel = 4, .state_mix = AM::StateMix(0, 0, 1, -1, 1, -1)},
       fixed_control(engine, left_aileron, right_aileron, rudder, elevator),
       attitude_manager(&fixed_control) {
     currentState = &BootMode::getInstance();

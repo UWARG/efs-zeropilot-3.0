@@ -24,23 +24,12 @@ class StateMix {
           yaw(constrain<float, 1, -1>(yaw)) {}
 };
 
-class ActuatorConfig {
-   public:
-    uint8_t channel = UINT8_MAX;
-    StateMix stateMix;
-};
 
-class ActuatorOutput {
-   public:
+struct ActuatorOutput {
     uint8_t channel;
     float percent;
 };
 
-class AttitudeManagerInput {
-   public:
-    float x_dir = 0, y_dir = 0, z_dir = 0, magnitude = 0, heading = 0,
-                speed = 0;
-};  // TODO: What is the correct name?
 
 }  // namespace AM
 
