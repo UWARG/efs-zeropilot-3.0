@@ -17,6 +17,7 @@ namespace SM {
 
 uint32_t AM_PERIOD_MS = 5;  // Current operation speed of 200 Hz.
 uint32_t PM_PERIOD_MS = 5; // took a gander 
+uint32_t PM_PERIOD_MS = 5; // took a gander 
 
 /*
 Helper Functions
