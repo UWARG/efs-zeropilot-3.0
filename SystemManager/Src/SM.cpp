@@ -127,7 +127,7 @@ void SystemManager::PMOperationTask(void *pvParameters)
 {
     PM::PathManager* path_manager = (PM::PathManager*)pvParameters;
 
-    const SM_PM_Commands* pm_instructions;
+    const PM::SM_PM_Commands* pm_instructions;
 
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
@@ -137,7 +137,7 @@ void SystemManager::PMOperationTask(void *pvParameters)
         void* message_pointer = NULL;
         // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
         osMessageQueueGet(path_manager->getSmPmQueue(), message_pointer, msg_priority, 3);
-        pm_instructions = (SM_PM_Commands*)message_pointer;
+        pm_instructions = (PM::SM_PM_Commands*)message_pointer;
 
         // Clear MessageQ from SM
         osMessageQueueReset(path_manager->getSmPmQueue());

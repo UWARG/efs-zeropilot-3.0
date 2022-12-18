@@ -6,7 +6,7 @@
 #ifndef ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
 #define ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
 #include "AttitudeManager\Inc\AM_DataTypes.hpp"
-#include "Common\Inc\PM_datatypes.hpp"
+#include "CommonDataTypes.hpp"
 #include "PM_DataTypes.hpp"
 
 /********************************************************************
@@ -55,7 +55,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits below a certain altitude
         */
-        AM::AttitudeManagerInput createLandingWaypoint(const LosSFData & input);
+        AM::AttitudeManagerInput createLandingWaypoint(const LOS::LosSFData & input);
 
         /******************
          * TAKEOFF FUNCTIONS
@@ -70,7 +70,7 @@ class LandingTakeoffManager{
 
             @return WaypointData - this structure holds the climb point, which the plane will follow until it exits at a certain altitude
         */
-        AM::AttitudeManagerInput createTakeoffWaypoint(const LosSFData & input);
+        AM::AttitudeManagerInput createTakeoffWaypoint(const LOS::LosSFData & input);
 
         /***********************************
         COMMON LANDING AND TAKEOFF FUNCTIONS

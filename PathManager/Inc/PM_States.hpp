@@ -4,8 +4,7 @@
 #include "PM_StateManager.hpp"
 #include "PM.hpp"
 #include "PM_LandingTakeoffManager.hpp"
-#include "AttitudeManager\Inc\AM_DataTypes.hpp"
-#include "Common\Inc\PM_datatypes.hpp"
+#include "CommonDataTypes.hpp"
 #include "PM_DataTypes.hpp"
 
 
@@ -79,7 +78,7 @@ class TakeoffStage : public PathManagerState
         static WaypointData * targetWaypoint;
         //static WaypointManager_Data_In waypointInput;
         //static WaypointManager_Data_Out waypointOutput;
-        static LosSFData LOSData; 
+        static LOS::LosSFData LOSData; 
         static AM::AttitudeManagerInput takeoffDataForAM; 
         TakeoffStage() {}
         TakeoffStage(const TakeoffStage& other);
@@ -126,7 +125,7 @@ class LandingStage : public PathManagerState
         //static WaypointManager_Data_Out waypointOutput;
         static WaypointData * currentLocation;
         static WaypointData * targetWaypoint;
-        static LosSFData LOSData; 
+        static LOS::LosSFData LOSData; 
         static AM::AttitudeManagerInput landingDataForAM;
         LandingStage() {}
         LandingStage(const LandingStage& other);

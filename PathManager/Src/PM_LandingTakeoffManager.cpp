@@ -29,36 +29,36 @@ double LandingTakeoffManager::getLandingAltitudeTarget(double currentAltitude)
     return groundHeight;
 }
 
-AM::AttitudeManagerInput LandingTakeoffManager::createTakeoffWaypoint(const LosSFData & input)
+AM::AttitudeManagerInput LandingTakeoffManager::createTakeoffWaypoint(const LOS::LosSFData & input)
 {
     AM::AttitudeManagerInput desiredWaypoint;
 
     //TODO: update AM::AttitudeManagerInput to have these member names 
-    desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
-    desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
-    desiredWaypoint.dist_z = 1;
+    desiredWaypoint.dist_forward = 0; // No Horizontal movement for MVP
+    desiredWaypoint.dist_right = 0; // No Horizontal movement for MVP
+    desiredWaypoint.dist_up = 1;
    // desiredWaypoint.waypoint_type = TAKEOFF_WAYPOINT;
 
     double currentAltitude = input.altitude;
 
-    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude, takeoffRangeConstant);
+    desiredWaypoint.speed = getSpeedTarget(currentAltitude, takeoffRangeConstant);
     desiredWaypoint.magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
 }
 
-AM::AttitudeManagerInput LandingTakeoffManager::createLandingWaypoint(const LosSFData & input)
+AM::AttitudeManagerInput LandingTakeoffManager::createLandingWaypoint(const LOS::LosSFData & input)
 {
     AM::AttitudeManagerInput desiredWaypoint;
 
-    desiredWaypoint.dist_x = 0; // No Horizontal movement for MVP
-    desiredWaypoint.dist_y = 0; // No Horizontal movement for MVP
-    desiredWaypoint.dist_z = -1;
+    desiredWaypoint.dist_forward = 0; // No Horizontal movement for MVP
+    desiredWaypoint.dist_right = 0; // No Horizontal movement for MVP
+    desiredWaypoint.dist_up = -1;
     //desiredWaypoint.waypoint_type = LANDING_WAYPOINT;
 
     double currentAltitude = input.altitude;
 
-    desiredWaypoint.velocity_target = getSpeedTarget(currentAltitude, landingRangeConstant);
+    desiredWaypoint.speed = getSpeedTarget(currentAltitude, landingRangeConstant);
     desiredWaypoint.magnitude = 0; // Use velocity controller
 
     return desiredWaypoint;
