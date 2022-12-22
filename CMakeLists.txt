@@ -12,9 +12,6 @@ set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
 
 add_subdirectory(${LAMINAR_OS_DIR})
 
-get_target_property(LAMINAR_OS_INCLUDE_PATHS LaminarOS LOS_INCLUDES)
-message("laminar os includes: ${LAMINAR_OS_INCLUDE_PATHS}")
-
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
@@ -24,7 +21,7 @@ include_directories(
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Common/Inc
 
-    ${LAMINAR_OS_INCLUDE_PATHS}
+    ${LOS_INCLUDES}
 )
 
 set(ZP_SM ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager)
