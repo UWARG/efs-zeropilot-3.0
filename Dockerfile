@@ -20,4 +20,4 @@ ENV PATH "/deps/gcc-arm-none-eabi-9-2019-q4-major/bin:$PATH"
 # mount project folder as a volume to this folder
 WORKDIR /project
 
-CMD ["./Tools/build.bash", "-c"]
+ENTRYPOINT ["./Tools/build.bash", "-c"]
