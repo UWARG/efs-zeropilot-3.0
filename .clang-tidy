@@ -1,0 +1,1 @@
+Checks: '-*,misc-misra-c*,misc-misra-cpp*,cert-*.cpp'
