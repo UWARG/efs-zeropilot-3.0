@@ -5,7 +5,6 @@
 
 #ifndef ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
 #define ZPSW3_LANDING_TAKEOFF_MANAGER_HPP
-#include "AttitudeManager\Inc\AM_DataTypes.hpp"
 #include "CommonDataTypes.hpp"
 #include "PM_DataTypes.hpp"
 
