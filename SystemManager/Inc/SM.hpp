@@ -17,8 +17,11 @@
 // #include "LOS_Actuators.hpp"
 #include "AM.hpp"
 #include "AM_FixedControl.hpp"
+#include "PM.hpp"
 #include "SM_StateManager.hpp"
 #include "interface_datatypes.hpp"
+#include "CommonDataTypes.hpp"
+
 
 namespace SM {
 
