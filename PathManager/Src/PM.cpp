@@ -5,7 +5,7 @@ namespace PM {
 
 PathManager::PathManager()
 {
-    currentState = &CommsWithAttitude::getInstance();
+    currentState = &CommsWithSystemManager::getInstance();
     status = COMPLETED_CYCLE;
     flight_stage = DISARMED;
     isError = false;
@@ -32,6 +32,7 @@ void PathManager::execute()
     currentState->execute(this);
 }
 
+/* Getters and Setters for Queue Ids */
 void PathManager::storeSmPmQueue(osMessageQId queueId) {
     SM_to_PM_queue = queueId;
 }
@@ -48,8 +49,13 @@ osMessageQId PathManager::getPmAmQueue() {
     return PM_to_AM_queue;
 }
 
+/* Getters and Setters for SM and AM Structs */
 void PathManager::setSmStruct(const SM_PM_Commands &from_sm_data) {
     sm_instructions = from_sm_data;
+}
+
+SM_PM_Commands PathManager::getSmStruct(){
+    return sm_instructions; 
 }
 
 void PathManager::setAmStruct(const AM::AttitudeManagerInput &am_instructions){

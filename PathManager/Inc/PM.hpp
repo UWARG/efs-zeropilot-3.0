@@ -41,6 +41,7 @@ namespace PM
             //GlobalFlag getUsePmFlag(); 
 
             void setSmStruct(const SM_PM_Commands &from_sm_data); 
+            SM_PM_Commands getSmStruct(); 
 
             AM::AttitudeManagerInput getAmStruct(); 
             void setAmStruct(const AM::AttitudeManagerInput &am_instructions); 

@@ -79,7 +79,7 @@ class SystemManager {
 
         // Thread tasks here
         static void AMOperationTask(void *pvParameters);
-        // static void PMOperationTask();
+        static void PMOperationTask(void *pvParameters);
         // static void TMOperationTask();
         // static void TMSlowTask();
 

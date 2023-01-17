@@ -42,8 +42,8 @@ class CommsWithSystemManager : public PathManagerState
         void exit(PathManager* pathMgr) {(void) pathMgr;}
         static PathManagerState& getInstance();
         static SM_PM_Commands* GetSMIncomingData(void) {return &incomingData;}
+        //void setSMIncomingData()
     private:
-        static SM_PM_Commands incomingData; 
         CommsWithSystemManager() {  }
         CommsWithSystemManager(const CommsWithSystemManager& other);
         CommsWithSystemManager& operator =(const CommsWithSystemManager& other);
