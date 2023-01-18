@@ -12,7 +12,6 @@
 # Otherwise it is available at:
 # https://raw.githubusercontent.com/UWARG/ZeroPilot-SW/devel/LICENSE.md
 #
-
 # Enable exit tracing and variable protection
 set -o errtrace
 set -o nounset
