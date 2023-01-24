@@ -81,18 +81,23 @@ void SystemManager::AMOperationTask(void* pvParameters)
     AM::AttitudeManager* attitude_manager = (AM::AttitudeManager*)pvParameters;
 
     const AM::AttitudeManagerInput* am_instructions;
+    osStatus_t sm_am_queue_status;
+
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
         // Read MessageQ from SM
         uint8_t* msg_priority = 0;
-        void* message_pointer = NULL;
+
         // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
-        osMessageQueueGet(attitude_manager->getSmQueue(), message_pointer, msg_priority, 3);
-        am_instructions = (AM::AttitudeManagerInput*)message_pointer;
+        sm_am_queue_status = osMessageQueueGet(attitude_manager->getSmQueue(), &am_instructions, msg_priority, 3);
 
         // Clear MessageQ from SM
         osMessageQueueReset(attitude_manager->getSmQueue());
+
+        // if (sm_am_queue_status != osOK) {
+        //     // Set a flag for the message to AM once AM has use of it
+        // }
 
         // Run AM control loop
         attitude_manager->runControlLoopIteration(*am_instructions);
