@@ -6,6 +6,7 @@
 #define ZPSW3_COMMON_DATATYPES_HPP
 
 #include <stdint.h>
+#include "AM_DataTypes.hpp"
 
 namespace LOS {
 // Struct copied from old code

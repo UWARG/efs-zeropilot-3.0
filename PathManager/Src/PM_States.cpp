@@ -31,7 +31,10 @@ constexpr int LANDING_TIME_THRESHOLD {5};
 
 void CommsWithSystemManager::execute(PathManager* pathMgr)
 {
-    GetSMCommands(&incomingData);
+    //GetSMIncomingData();
+    /*
+
+    */
 
     
 }
@@ -70,22 +73,17 @@ void FlightModeSelector::execute(PathManager* pathMgr){
   
 
     // Check if altitude target has been reached for takeoff to start cruising stage. 
-    if(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude > pathMgr->vtol_manager.getTakeoffAltitudeTarget(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude) 
+    if(pathMgr->getSmStruct().sf_data.altitude > pathMgr->vtol_manager.getTakeoffAltitudeTarget(pathMgr->getSmStruct().sf_data.altitude) 
         && pathMgr->flight_stage == TAKEOFF)
     {
         pathMgr->flight_stage = CRUISING;
 
     }
 
-     if(CommsWithSystemManager::GetSMIncomingData()->landing_initiation.start_landing)
+     if(pathMgr->getSmStruct().landing_initiation.start_landing)
     {
         pathMgr->flight_stage = LANDING;
     
-    }
-
-    // Assuming SF can give elapsed time, check if below landing target for a certain amount of time to start landed stage. 
-    if (CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude < pathMgr->vtol_manager.getLandingAltitudeTarget(CommsWithSystemManager::GetSMIncomingData()->sf_data.altitude) && CommsWithSystemManager::GetSMIncomingData()->sf_data.deltaTime > LANDING_TIME_THRESHOLD){
-        pathMgr->flight_stage = LANDED; 
     }
  
     switch(pathMgr->flight_stage){
@@ -155,7 +153,7 @@ void LandingStage::execute(PathManager* pathMgr)
     pathMgr->flight_stage = LANDING;
 
     //load in sensor fusion data and telemtry data into input structure
-    LOSData = CommsWithSystemManager::GetSMIncomingData()->sf_data; 
+    LOSData = pathMgr->getSmStruct().sf_data; 
 
 
    // Creating AM struct to send takeoff data using current SF data.
@@ -195,7 +193,7 @@ TAKEOFF STATE FUNCTIONS
 void TakeoffStage::execute(PathManager* pathMgr)
 {
     //load in sensor fusion data and telemtry data into input structure
-    LOSData = CommsWithSystemManager::GetSMIncomingData()->sf_data; 
+    LOSData = pathMgr->getSmStruct().sf_data; 
 
        /** waypointInput.latitude = input.sensorOutput->latitude;
         waypointInput.longitude = input.sensorOutput->longitude;
@@ -266,6 +264,7 @@ void CommsWithAttitude::execute(PathManager* pathMgr)
                 outputData = TakeoffStage::getTakeoffDataForAM(); 
                 break; 
             default:
+                break; 
         }
     pathMgr->setAmStruct(*outputData); 
 
