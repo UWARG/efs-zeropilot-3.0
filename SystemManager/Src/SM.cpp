@@ -128,16 +128,20 @@ void SystemManager::PMOperationTask(void *pvParameters)
     PM::PathManager* path_manager = (PM::PathManager*)pvParameters;
 
     const PM::SM_PM_Commands* pm_instructions;
+    osStatus sm_pm_queue_status; 
 
     TickType_t xNextWakeTime;
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
          // Read MessageQ from SM
         uint8_t* msg_priority = 0;
-        void* message_pointer = NULL;
         // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
-        osMessageQueueGet(path_manager->getSmPmQueue(), message_pointer, msg_priority, 3);
-        pm_instructions = (PM::SM_PM_Commands*)message_pointer;
+        sm_pm_queue_status = osMessageQueueGet(path_manager->getSmPmQueue(), &pm_instructions, msg_priority, 3);
+
+        // if (sm_pm_queue_status != osOK){
+        //     // do something 
+        // }
+
 
         // Clear MessageQ from SM
         osMessageQueueReset(path_manager->getSmPmQueue());
@@ -152,6 +156,9 @@ void SystemManager::PMOperationTask(void *pvParameters)
          // Decode RC data and convert to AM message type
         AM::AttitudeManagerInput to_am_data = path_manager->getAmStruct();
         void* msg_pointer = &to_am_data;
+
+        osMessageQueueReset(path_manager->getPmAmQueue());
+
 
         // Send to AM mail queue (JUST Nov 27th implementation)
         osMessageQueuePut(path_manager->getPmAmQueue(), msg_pointer, osPriorityNormal, 0);   
