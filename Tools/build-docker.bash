@@ -12,4 +12,14 @@ fi
 
 absolute_path="$( cd -- "$(dirname -- "$0")"; pwd )"
 
-docker run -v $absolute_path/../:/project snaccoverflow/$1-zp:latest
+if [ $1 = 'build' ]; then
+    BOARD=""
+    if [ $# =  2 ]; then
+        BOARD=$2
+    else
+        BOARD="nucleol552zeq"
+    fi
+    docker run --rm -it -v $absolute_path/../:/project snaccoverflow/build-zp:latest -p $BOARD
+else
+        docker run --rm -it -v $absolute_path/../:/project snaccoverflow/test-zp:latest
+fi

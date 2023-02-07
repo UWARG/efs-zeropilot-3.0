@@ -21,8 +21,15 @@ include_directories(
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Common/Inc
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TelemetryManager/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/WargCommon/cpp/TelemMessages
+
     ${LOS_INCLUDES}
 )
+
+set(ZP_TM ${CMAKE_CURRENT_SOURCE_DIR}/TelemetryManager)
+set(ZP_TM_C_SOURCES "${ZP_TM}/Src/*.c")
+set(ZP_TM_CXX_SOURCES "${ZP_TM}/Src/*.cpp")
 
 set(ZP_SM ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager)
 set(ZP_SM_C_SOURCES "${ZP_SM}/Src/*.c")
