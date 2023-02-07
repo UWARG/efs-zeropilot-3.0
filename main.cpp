@@ -6,15 +6,20 @@
 #include "cmsis_os2.h"
 #include "task.h"
 
-void SMOperationTask(void *pvParameters);
+#include "usart.h"
+#include <cstdarg>
+
+void myprintf(const char *fmt, ...);
+void MAVLinkTest_Heartbeat(void *params);
 const static auto SM_PERIOD_MS = 5;
+
 
 int main() {
     losInit();
 
     TaskHandle_t SM_handle = NULL;
 
-    xTaskCreate(SMOperationTask, "SM Thread", 400U, NULL, osPriorityNormal, &SM_handle);
+    xTaskCreate(MAVLinkTest_Heartbeat, "MAVLink Test (Heartbeat) Thread", 400U, NULL, osPriorityNormal, NULL);
 
     losKernelStart();
 
@@ -25,13 +30,39 @@ int main() {
     return 0;
 }
 
-void SMOperationTask(void *pvParameters) {
-    SM::SystemManager SM_instance;
+void myprintf(const char *fmt, ...) {
+  static char buffer[256];
+  va_list args;
+  va_start(args, fmt);
+  vsnprintf(buffer, sizeof(buffer), fmt, args);
+  va_end(args);
 
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
-    while (true) {
-        SM_instance.execute();
-        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_MS);
-    }
+  int len = strlen(buffer);
+  HAL_UART_Transmit(&hlpuart1, (uint8_t*)buffer, len, -1);
 }
+
+void MAVLinkTest_Heartbeat(void *params) {
+	MAVLink_Message_t mavlink_message = {};
+	uint8_t retval = 0;
+
+	for (uint8_t i = 1; i <= 3; ++i) {
+		myprintf("Round #%d\r\n", i);
+
+		mavlink->sendHeartbeat();
+		myprintf("Sent heartbeat\r\n");
+
+		HAL_Delay(1000);
+
+		retval = mavlink->receiveMessage(mavlink_message);
+
+		if (retval && mavlink_message.message_id == MAVLINK_MSG_ID_HEARTBEAT) {
+			myprintf("Received heartbeat:\r\n");
+			myprintf("    type = %d\r\n", mavlink_message.heartbeat.type);
+			myprintf("    system status = %d\r\n", mavlink_message.heartbeat.system_status);
+			myprintf("    base mode = %d\r\n", mavlink_message.heartbeat.base_mode);
+		} else {
+			myprintf("Failed to receive heartbeat!\r\n");
+		}
+	}
+}
+
