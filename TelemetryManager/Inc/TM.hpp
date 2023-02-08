@@ -19,21 +19,29 @@ enum Msg_Type {
     GSPC_PID_SET_RESPONSE
 };
 
+const int SIZE_TELEM_BUFFER = 200;
+const int SIZE_COMMS_BUFFER = 100;
+
 class TelemetryManager {
 
     public:
+
         TelemetryManager();
 
-        void Init();
-
-        TM_Status ExecuteTx();
-
-        TM_Status ExecuteRx();
-        TM_Status ExecuteRxJetson();
-        TM_Status ExecuteRxRFD();
+        void recieveData();
 
     private:
-        CircularBuffer tmBuffer; 
+
+        uint8_t telemBuffer[SIZE_TELEM_BUFFER]; 
+        int telemReadPtr = 0;
+        int telemWritePtr = 0;
+
+        uint8_t commsBuffer[SIZE_COMMS_BUFFER];
+        int commsReadPtr = 0;
+        int commsWritePtr = 0;
+
+        void updateCommsBuffer();
+        void updateTelemBuffer();
 
 };
 
