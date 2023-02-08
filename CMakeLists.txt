@@ -42,10 +42,12 @@ set(ZP_AM_CXX_SOURCES "${ZP_AM}/Src/*.cpp"
                       "${ZP_AM}/ControlAlgorithms/Src/*.cpp")
 
 file(GLOB_RECURSE C_SOURCES ${ZP_SM_C_SOURCES}
-                            ${ZP_AM_C_SOURCES})
+                            ${ZP_AM_C_SOURCES}
+                            ${ZP_TM_C_SOURCES})
 message("MESSAGE: ${C_SOURCES}")
 file(GLOB_RECURSE CXX_SOURCES ${ZP_SM_CXX_SOURCES}
-                              ${ZP_AM_CXX_SOURCES})
+                              ${ZP_AM_CXX_SOURCES}
+                              ${ZP_TM_CXX_SOURCES})
 
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})

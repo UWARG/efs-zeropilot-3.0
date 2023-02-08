@@ -1,10 +1,9 @@
 #pragma once
 
 #include "CRC32.hpp"
-#include "Circular_Queue.hpp"
 
 // for now, dont differentiate between different types of failure.
-enum TM_Status {SUCCESS = 0, FAILURE};
+//enum TM_Status {SUCCESS = 0, FAILURE};
 
 // Please ensure this is up to date with Message Formats Doc
 enum Msg_Type {
@@ -28,7 +27,8 @@ class TelemetryManager {
 
         TelemetryManager();
 
-        void recieveData();
+        void receiveData();
+        void init();
 
     private:
 
