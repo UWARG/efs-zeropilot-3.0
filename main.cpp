@@ -42,7 +42,7 @@ void myprintf(const char *fmt, ...) {
 }
 
 void MAVLinkTest_Heartbeat(void *params) {
-	MAVLink_Message_t mavlink_message = {};
+	MAVLinkMessage_t mavlink_message = {};
 	uint8_t retval = 0;
 
 	for (uint8_t i = 1; i <= 3; ++i) {
@@ -55,7 +55,7 @@ void MAVLinkTest_Heartbeat(void *params) {
 
 		retval = mavlink->receiveMessage(mavlink_message);
 
-		if (retval && mavlink_message.message_id == MAVLINK_MSG_ID_HEARTBEAT) {
+		if (retval && mavlink_message.type == MAVLinkMessageType::HEARTBEAT) {
 			myprintf("Received heartbeat:\r\n");
 			myprintf("    type = %d\r\n", mavlink_message.heartbeat.type);
 			myprintf("    system status = %d\r\n", mavlink_message.heartbeat.system_status);
