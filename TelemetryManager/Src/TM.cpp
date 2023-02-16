@@ -17,6 +17,7 @@ void TelemetryManager::updateTelemBuffer() {
 
 void TelemetryManager::receiveData() {
     updateCommsBuffer();
+    updateTelemBuffer();
 }
 
 void TelemetryManager::init() {

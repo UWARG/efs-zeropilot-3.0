@@ -6,5 +6,6 @@ void TelemetryManagerInterfaceInit(void) {
 }
 
 bool TelemetryManagerInterfaceExecute(void) {
+    return false;
 
 }
