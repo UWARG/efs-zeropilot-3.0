@@ -40,6 +40,22 @@ int main() {
 
     TaskHandle_t SM_handle = NULL;
 
+    // Semaphore test
+    SemaphoreHandle_t sem_1 = xSemaphoreCreateBinary();
+    xSemaphoreGive(sem_1);
+    // We just gave the semaphore so we should be able to take it immediately
+    if (xSemaphoreTake(sem_1, timeout) == pdFAIL) {
+        myprintf("We couldn't take the semaphore??!!\r\n");
+        return -1;
+    }
+    // Now that we've taken the semaphore, we shouldn't be able to take it again
+    if (xSemaphoreTake(sem_1, timeout) != pdFAIL) {
+        myprintf("We can take the semaphore??!!\r\n");
+        return -1;
+    }
+    myprintf("Semaphore test passed.\r\n");
+
+
     // Uncomment whichever test you want to run.
     
     // xTaskCreate(MAVLinkTest_Heartbeat, "MAVLink Heartbeat Test", 400U, NULL, osPriorityNormal, NULL);
