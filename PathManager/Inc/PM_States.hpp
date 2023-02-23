@@ -109,7 +109,9 @@ class CruisingStage : public PathManagerState
         static WaypointManager_Data_In _inputdata;
         static WaypointManager_Data_Out _outputdata;
        // static _CruisingState_Telemetry_Return _returnToGround;
-     
+        static LOS::LosSFData LOSData;
+        static PM::WaypointsCommand Waypoints;
+
 }; 
 
 class LandingStage : public PathManagerState

@@ -20,6 +20,12 @@ enum WaypointType {PATH_FOLLOW = 0, ORBIT_FOLLOW, HOVER_WAYPOINT, TAKEOFF_WAYPOI
 enum ModifyFlightPathCommand { NO_FLIGHT_PATH_EDIT = 0, INITIALIZE_FLIGHT_PATH, APPEND, INSERT, UPDATE, DELETE, NUKE }; // Used by cruisingState
 enum GetNextDirectionsCommand { REGULAR_PATH_FOLLOWING = 0, TOGGLE_HOLDING, TOGGLE_HEAD_HOME }; // Used by cruisingState
 
+// Used in the waypointBufferStatus array to signal which elements are free
+enum WaypointBufferStatus {FREE = 0, FULL};
+
+// Stores error codes for the waypoint manager
+enum WaypointStatus {WAYPOINT_SUCCESS = 0, UNDEFINED_FAILURE, CURRENT_INDEX_INVALID, UNDEFINED_PARAMETER, INVALID_PARAMETERS, TOO_MANY_WAYPOINTS};
+
 
 /********************************************************************
 * Important Structs
@@ -54,7 +60,7 @@ struct WaypointManager_Data_Out{
     long double distanceToNextWaypoint; // Distance to the next waypoint (helps with airspeed PID)
     float distanceX, distanceY, distanceZ;
     float rotation; 
-    //WaypointStatus errorCode;          // Contains error codes
+    WaypointStatus errorCode;          // Contains error codes
     bool isDataNew;                     // Notifies PID modules if the data in this structure is new
     int desiredAirspeed;                // FUN FACT WE NEED THIS 
     uint32_t timeOfData;                // The time that the data in this structure was collected

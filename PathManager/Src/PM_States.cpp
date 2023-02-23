@@ -131,14 +131,25 @@ void CruisingStage::execute(PathManager* pathMgr)
 
     */
 
-    if(pathMgr->isError)
-    {
-        pathMgr->setState(FatalFailureMode::getInstance());
-    }
-    else
-    {
-         pathMgr->setState(CommsWithAttitude::getInstance()); 
-    }
+    // if (Waypoints = pathMgr->getSmStruct().telemetry_commands.num_waypoints > 0)
+    // {
+    //     // edit flight path ... return nothing?
+    // }
+
+    // // get direction and create AM struct
+    // // map current postion from los to waypointmanager_data_in
+    LOSData = pathMgr->getSmStruct().sf_data;
+    // // _inputdata = los ...
+    // // _outputdata = ...
+
+    // if(pathMgr->isError)
+    // {
+    //     pathMgr->setState(FatalFailureMode::getInstance());
+    // }
+    // else
+    // {
+    //      pathMgr->setState(CommsWithAttitude::getInstance()); 
+    // }
     
 }
 
