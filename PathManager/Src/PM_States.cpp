@@ -14,11 +14,13 @@ AM::AttitudeManagerInput CommsWithAttitude::receivedData;
 // TAKEOFF STAGE VARIABLES 
 WaypointData * TakeoffStage::currentLocation;    
 WaypointData * TakeoffStage::targetWaypoint;
+LOS::LosSFData TakeoffStage::LOSData; 
 AM::AttitudeManagerInput TakeoffStage::takeoffDataForAM; 
 
 // LANDING STAGE VARIABLES 
 WaypointData * LandingStage::currentLocation;
 WaypointData * LandingStage::targetWaypoint;
+LOS::LosSFData LandingStage::LOSData; 
 AM::AttitudeManagerInput LandingStage::landingDataForAM;
 
 
@@ -29,15 +31,6 @@ constexpr int LANDING_TIME_THRESHOLD {5};
  * Code
  **********************************************************************************************************************/
 
-void CommsWithSystemManager::execute(PathManager* pathMgr)
-{
-    //GetSMIncomingData();
-    /*
-
-    */
-
-    
-}
 
 PathManagerState& CommsWithSystemManager::getInstance()
 {
@@ -228,7 +221,6 @@ PathManagerState& TakeoffStage::getInstance()
 void CommsWithAttitude::execute(PathManager* pathMgr)
 {
 
-
     /*
     for after Dec 12
     _WaypointManager_Data_Out * waypointOutput {}; 
@@ -272,10 +264,6 @@ void CommsWithAttitude::execute(PathManager* pathMgr)
      if(pathMgr->isError)
     {
         pathMgr->setState(FatalFailureMode::getInstance());
-    }
-    else
-    {
-        pathMgr->setState(CommsWithSystemManager::getInstance());
     }
 }
 

@@ -138,17 +138,17 @@ void SystemManager::PMOperationTask(void *pvParameters)
         // Arbitrary 3ms timeout as no message is no problem, gives AM time to run
         sm_pm_queue_status = osMessageQueueGet(path_manager->getSmPmQueue(), &pm_instructions, msg_priority, 3);
 
-        // if (sm_pm_queue_status != osOK){
-        //     // do something 
-        // }
-
+          if (sm_pm_queue_status  == osOK){
+            path_manager->setSmStruct(*pm_instructions); 
+        } // else {
+            // do something
+       // }
 
         // Clear MessageQ from SM
         osMessageQueueReset(path_manager->getSmPmQueue());
 
         //if (path_manager->getUsePmFlag().readFlag()) {
-
-        path_manager->setSmStruct(*pm_instructions); 
+      
 
         // Run PM control loop
         path_manager->execute();
@@ -159,8 +159,6 @@ void SystemManager::PMOperationTask(void *pvParameters)
 
         osMessageQueueReset(path_manager->getPmAmQueue());
 
-
-        // Send to AM mail queue (JUST Nov 27th implementation)
         osMessageQueuePut(path_manager->getPmAmQueue(), msg_pointer, osPriorityNormal, 0);   
 
        // } else {

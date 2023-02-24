@@ -5,8 +5,8 @@ namespace PM {
 
 PathManager::PathManager()
 {
-    currentState = &CommsWithSystemManager::getInstance();
-    status = COMPLETED_CYCLE;
+    currentState = &FlightModeSelector::getInstance();
+    status = IN_CYCLE;
     flight_stage = DISARMED;
     isError = false;
 }

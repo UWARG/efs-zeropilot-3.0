@@ -61,9 +61,5 @@ struct WaypointManager_Data_Out{
     WaypointType waypoint_type;       // Output type (determines which parameters are defined)
 };
 
-
-
-
-
 #endif
 
