@@ -6,7 +6,7 @@
 #include "TM.hpp"
 #include "cmsis_os2.h"
 #include "task.h"
-#include "LOS_Comms.hpp"
+// #include "LOS_Comms.hpp"
 #include "usart.h"
 
 
@@ -61,7 +61,7 @@ void SMOperationTask(void *pvParameters) {
     xNextWakeTime = xTaskGetTickCount();
     while (true) {
        // SM_instance.execute();
-      // tm.receiveData();
+       tm.receiveData();
        vTaskDelayUntil(&xNextWakeTime, SM_PERIOD_MS);
      //   vTaskDelay(10);
     }

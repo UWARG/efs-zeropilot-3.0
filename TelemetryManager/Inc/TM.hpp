@@ -32,16 +32,18 @@ class TelemetryManager {
 
     private:
 
-        uint8_t telemBuffer[SIZE_TELEM_BUFFER]; 
+        uint8_t telemBuffer[SIZE_TELEM_BUFFER] = { 0 }; 
         int telemReadPtr = 0;
         int telemWritePtr = 0;
 
-        uint8_t commsBuffer[SIZE_COMMS_BUFFER];
+        uint8_t commsBuffer[SIZE_COMMS_BUFFER] = { 0 };
         int commsReadPtr = 0;
         int commsWritePtr = 0;
 
         void updateCommsBuffer();
         void updateTelemBuffer();
+        uint8_t peekCommsBuffer(uint8_t& res, int dist);
+        uint8_t peekTelemBuffer(uint8_t& res, int dist);
 
 };
 

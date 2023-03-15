@@ -28,8 +28,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Common/${FOLDER_NAME}/Inc
 
     ## Any new driver folders Inc dirs must be added here ##
-    # ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
-    # ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Generic_Comms_Device/Inc
 
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
