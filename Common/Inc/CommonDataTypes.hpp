@@ -109,10 +109,10 @@ struct GroundStationPIDSetResponse {
     PIDControllerValues controller;
 };
 
-struct ActuatorConfig {
-    uint8_t channel = UINT8_MAX;
-    StateMix state_mix;
-};
+// struct ActuatorConfig {
+//     uint8_t channel = UINT8_MAX;
+//     StateMix state_mix;
+// };
 
 struct AttitudeManagerInput {
     float dist_forward; 

@@ -29,14 +29,19 @@ include_directories(${PROJECT_SOURCE_DIR}/../Common/Inc)
 # TM tests
 set(TM_LOC ${PROJECT_SOURCE_DIR}/../TelemetryManager)
 
-include_directories(${TM_LOC}/Inc)
+include_directories(
+  ${PROJECT_SOURCE_DIR/../LaminarOS/LOS_Core/Inc}
+  ${TM_LOC}/Inc
+  ${PROJECT_SOURCE_DIR/../WargCommon/cpp/TelemMessages}
+  )
 
 file(GLOB TM_CODE
     ${TM_LOC}/tests/*.cpp # include all test cpp files
 
     # add any dependencies to the above tests here
-    # ${TM_LOC}/Inc/CRC32.hpp
-    # ${TM_LOC}/Src/CRC32.cpp
+    # ${TM_LOC}/Inc/*.hpp
+    ${PROJECT_SOURCE_DIR/../LaminarOS/LOS_Core/Src/CircularBuffer.cpp}
+    ${TM_LOC}/Src/*.cpp
 )
 
 # AM tests

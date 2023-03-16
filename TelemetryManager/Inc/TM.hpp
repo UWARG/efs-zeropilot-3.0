@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CRC32.hpp"
+#include "CircularBuffer.hpp"
+#include "CommonDataTypes.hpp"
 
 // for now, dont differentiate between different types of failure.
 //enum TM_Status {SUCCESS = 0, FAILURE};
@@ -30,20 +32,18 @@ class TelemetryManager {
         void receiveData();
         void init();
 
-    private:
+    // private:
 
-        uint8_t telemBuffer[SIZE_TELEM_BUFFER] = { 0 }; 
-        int telemReadPtr = 0;
-        int telemWritePtr = 0;
+        uint8_t commsArr[SIZE_COMMS_BUFFER] = { 0 };
+        uint8_t telemArr[SIZE_TELEM_BUFFER] = { 0 }; 
 
-        uint8_t commsBuffer[SIZE_COMMS_BUFFER] = { 0 };
-        int commsReadPtr = 0;
-        int commsWritePtr = 0;
+        CircularBuffer commsBuffer{commsArr, SIZE_COMMS_BUFFER};
+        CircularBuffer telemBuffer{telemArr, SIZE_TELEM_BUFFER};
+
 
         void updateCommsBuffer();
         void updateTelemBuffer();
-        uint8_t peekCommsBuffer(uint8_t& res, int dist);
-        uint8_t peekTelemBuffer(uint8_t& res, int dist);
+        void parseBuffer(CircularBuffer& buf, SM::TM_SM_Commands& commands);
 
 };
 
