@@ -1,4 +1,4 @@
 [submodule "LaminarOS"]
 	path = LaminarOS
 	url = https://github.com/UWARG/LaminarOS
-	branch = LOS_Link
+	branch = ppm-test
