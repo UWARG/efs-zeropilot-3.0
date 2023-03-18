@@ -138,13 +138,16 @@ struct GroundStationData {
     uint8_t controller_values[16];
 };
 
+// TODO add something to allow a trigger for jetson odom
 struct SM_TM_Commands {
+    uint8_t select;
     GroundStationData gspc_data;
     PM::JetsonMovementRequest jetson_movement_req;
     AM::GroundStationPIDSetResponse gspc_pid_set_resp;
 };
 
 struct TM_SM_Commands {
+    uint8_t select;
     GroundStationDisarmCommand ground_station_disarm_command;
     PM::WaypointsCommand waypoint_commands;
     PM::JetsonToZpMovementCommand jetson_commands; 

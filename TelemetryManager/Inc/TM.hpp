@@ -30,6 +30,7 @@ class TelemetryManager {
         TelemetryManager();
 
         void receiveData();
+        uint8_t sendData(SM::SM_TM_Commands commands);
         void init();
 
     // private:
