@@ -9,9 +9,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(ATTITUDE_MANAGER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager")
 set(LAMINAR_OS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS")
 
-
-add_subdirectory(${LAMINAR_OS_DIR})
-
 include_directories(
     ## ZP Software Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/AttitudeManager/Inc
@@ -21,7 +18,24 @@ include_directories(
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Common/Inc
 
-    ${LOS_INCLUDES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core/Inc
+
+    # Include the config header folder
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface/Common/${FOLDER_NAME}/Inc
+
+    ## Any new driver folders Inc dirs must be added here ##
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Device/ST/${FAMILY_NAME}/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_${PORTABLE_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source/include
 )
 
 set(ZP_SM ${CMAKE_CURRENT_SOURCE_DIR}/SystemManager)
@@ -34,18 +48,51 @@ set(ZP_AM_C_SOURCES "${ZP_AM}/Src/*.c"
 set(ZP_AM_CXX_SOURCES "${ZP_AM}/Src/*.cpp"
                       "${ZP_AM}/ControlAlgorithms/Src/*.cpp")
 
-file(GLOB_RECURSE C_SOURCES ${ZP_SM_C_SOURCES}
+set(HAL_DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers)
+set(HAL_DRIVERS_C_SOURCES "${HAL_DRIVERS_DIR}/${FAMILY_NAME}_HAL_Driver/Src/*.c")
+
+set(FREE_RTOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FreeRTOS/Source)
+set(FREE_RTOS_C_SOURCES "${FREE_RTOS_DIR}/*.c"
+                        "${FREE_RTOS_DIR}/CMSIS_RTOS_V2/*.c"
+                        "${FREE_RTOS_DIR}/portable/GCC/ARM_${PORTABLE_NAME}/*.c"
+                        "${FREE_RTOS_DIR}/portable/MemMang/*.c")
+
+set(HAL_CORE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core)
+set(HAL_CORE_C_SOURCES "${HAL_CORE}/Src/*.c")
+set(HAL_CORE_CXX_SOURCES "${HAL_CORE}/Src/*.cpp")
+
+set(INTERFACE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Interface)
+set(INTERFACE_C_SOURCES "${INTERFACE_DIR}/Src/*.c" "${INTERFACE_DIR}/Common/${FOLDER_NAME}/Src/*.c")
+set(INTERFACE_CXX_SOURCES "${INTERFACE_DIR}/Src/*.cpp" "${INTERFACE_DIR}/Common/${FOLDER_NAME}/Src/*.cpp")
+
+set(DRIVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver)
+set(DRIVERS_C_SOURCES "${DRIVERS_DIR}/*/Src/*.c")
+set(DRIVERS_CXX_SOURCES "${DRIVERS_DIR}/*/Src/*.cpp")
+
+set(CORE_Dir ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Core)
+set(CORE_C_SOURCES "${CORE_Dir}/Src/*.c")
+set(CORE_CXX_SOURCES "${CORE_Dir}/Src/*.cpp")
+
+file(GLOB_RECURSE C_SOURCES ${HAL_DRIVERS_C_SOURCES}
+                            ${HAL_CORE_C_SOURCES}
+                            ${INTERFACE_CXX_SOURCES}
+                            ${DRIVERS_CXX_SOURCES}
+                            ${CORE_C_SOURCES}
+                            ${FREE_RTOS_C_SOURCES}
+                            ${ZP_SM_C_SOURCES}
                             ${ZP_AM_C_SOURCES})
 message("MESSAGE: ${C_SOURCES}")
-file(GLOB_RECURSE CXX_SOURCES ${ZP_SM_CXX_SOURCES}
+file(GLOB_RECURSE CXX_SOURCES ${HAL_CORE_CXX_SOURCES}
+                              ${INTERFACE_CXX_SOURCES}
+                              ${DRIVERS_CXX_SOURCES}
+                              ${CORE_CXX_SOURCES}
+                              ${ZP_SM_CXX_SOURCES}
                               ${ZP_AM_CXX_SOURCES})
 
 set(STARTUP_ASM_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${STARTUP_ASM})
 set(LINKER_SCRIPT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/${LINKER_SCRIPT})
 
 add_executable(${ELF_NAME} main.cpp ${C_SOURCES} ${CXX_SOURCES} ${STARTUP_ASM_FILE})
-
-target_link_libraries(${ELF_NAME} LaminarOS)
 
 # Add project-specific linker flags (.ld script, .map file)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T${LINKER_SCRIPT_FILE} -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map,--cref")
