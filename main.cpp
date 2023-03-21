@@ -29,10 +29,10 @@ int main() {
 
 void PPM_Test() {
     LosLinkTx_t losTxData = {};
-    losTxData.tx_channels[0] = 0.0f;
-    losTxData.tx_channels[1] = 0.25f;
-    losTxData.tx_channels[2] = 0.75f;
-    losTxData.tx_channels[3] = 1.0f;
+    losTxData.tx_channels[0] = 0;
+    losTxData.tx_channels[1] = 25;
+    losTxData.tx_channels[2] = 75;
+    losTxData.tx_channels[3] = 100;
     Los_Link* los_link = &Los_Link::getInstance();
     los_link->sendTx(0, losTxData);
 }
