@@ -16,9 +16,12 @@ int main() {
 
     PPM_Test();
 
+
+
     // should not get here bec losInit() starts the scheduler
     while (1) {
-        HAL_Delay(100);
+
+     HAL_Delay(100);
     }
 
     return 0;
