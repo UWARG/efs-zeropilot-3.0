@@ -5,24 +5,33 @@
 #include "SM.hpp"
 #include "cmsis_os2.h"
 #include "task.h"
+#include "LOS_Link.hpp"
 
 void SMOperationTask(void *pvParameters);
+void PPM_Test();
 const static auto SM_PERIOD_MS = 5;
 
 int main() {
     losInit();
 
-    TaskHandle_t SM_handle = NULL;
-
-    xTaskCreate(SMOperationTask, "SM Thread", 400U, NULL, osPriorityNormal, &SM_handle);
-
-    losKernelStart();
+    PPM_Test();
 
     // should not get here bec losInit() starts the scheduler
     while (1) {
+        HAL_Delay(100);
     }
 
     return 0;
+}
+
+void PPM_Test() {
+    LosLinkTx_t losTxData = {};
+    losTxData.tx_channels[0] = 0.0f;
+    losTxData.tx_channels[1] = 0.25f;
+    losTxData.tx_channels[2] = 0.75f;
+    losTxData.tx_channels[3] = 1.0f;
+    Los_Link* los_link = &Los_Link::getInstance();
+    los_link->sendTx(0, losTxData);
 }
 
 void SMOperationTask(void *pvParameters) {
