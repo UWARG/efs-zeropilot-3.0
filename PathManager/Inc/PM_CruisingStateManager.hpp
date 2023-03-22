@@ -19,11 +19,10 @@ namespace PM {
              * Function performs any requested modifications on the flight path including appending, inserting, deleting, updating, initializing, and nuking
              *
              * @param telemetryData        --> contains the most recent commands from telemetry
-             * @param idArray              --> an array of integers that is used to keep track of the ids of the waypoints in the flight path
              *
              * @return error code indicating success of operation WaypointStatus
              */
-            WaypointStatus editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, int * idArray);
+            WaypointStatus editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, bool reset = true);
 
             /**
              * Function retrieves the next desired path for the aircraft
@@ -76,13 +75,15 @@ namespace PM {
 
 
             /* FLIGHT PATH */
-            WaypointData* initialize_waypoint();                                                                                                       // Creates a blank waypoint
-            WaypointData* initialize_waypoint(long double longitude, long double latitude, int altitude, WaypointType waypointType);                   // Initialize a regular waypoint
-            WaypointData* initialize_waypoint(long double longitude, long double latitude, int altitude, WaypointType waypointType, float turnRadius); // Initialize a "hold" waypoint
+            WaypointData* initialize_waypoint();
 
-            WaypointData* initialize_waypoint(const TelemWaypoint& waypointData, WaypointType waypointType);                                            // Initialize a regular waypoint
-            WaypointData* initialize_waypoint(const TelemWaypoint& waypointData, WaypointType waypointType, float turnRadius);                         // Initialize a "hold" waypoint
+            WaypointData* initialize_waypoint(int id, long double longitude, long double latitude, int altitude/*, WaypointType waypointType*/);
 
+            WaypointData* initialize_waypoint(const TelemWaypoint& waypointData /*, WaypointType waypointType*/);
+
+            // WaypointData* initialize_waypoint(long double longitude, long double latitude, int altitude, float turnRadius);
+
+            // WaypointData* initialize_waypoint(const TelemWaypoint& waypointData, WaypointType waypointType, float turnRadius);
 
             WaypointStatus initialize_flight_plan(WaypointData ** waypoints, uint8_t num);                // Initialize flight plan (waypointBuffer)
             WaypointStatus clear_flight_plan();                                                           // Clear flight plan (waypointBuffer)

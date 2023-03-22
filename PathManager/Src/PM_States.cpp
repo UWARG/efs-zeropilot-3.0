@@ -139,17 +139,24 @@ void CruisingStage::execute(PathManager* pathMgr)
     // // get direction and create AM struct
     // // map current postion from los to waypointmanager_data_in
     LOSData = pathMgr->getSmStruct().sf_data;
-    // // _inputdata = los ...
-    // // _outputdata = ...
+    Waypoints= pathMgr->getSmStruct().telemetry_commands;
 
-    // if(pathMgr->isError)
-    // {
-    //     pathMgr->setState(FatalFailureMode::getInstance());
-    // }
-    // else
-    // {
-    //      pathMgr->setState(CommsWithAttitude::getInstance()); 
-    // }
+    _inputdata.altitude = LOSData.altitude;
+    _inputdata.latitude = LOSData.latitude;
+    _inputdata.longitude = LOSData.longitude;
+    _inputdata.track = LOSData.track;
+
+    pathMgr->waypoint_manager.editFlightPath(Waypoints, _inputdata);
+    pathMgr->waypoint_manager.pathFollow(_inputdata, _outputdata);
+
+    if(pathMgr->isError)
+    {
+        pathMgr->setState(FatalFailureMode::getInstance());
+    }
+    else
+    {
+        pathMgr->setState(CommsWithAttitude::getInstance()); 
+    }
     
 }
 
@@ -168,7 +175,7 @@ void LandingStage::execute(PathManager* pathMgr)
 
 
    // Creating AM struct to send takeoff data using current SF data.
-    landingDataForAM = pathMgr->vtol_manager.createLandingWaypoint(LOSData);    
+    landingDataForAM = pathMgr->vtol_manager.createLandingWaypoint(LOSData);
 
    /* waypointInput.latitude = input.sensorOutput->latitude;
     waypointInput.longitude = input.sensorOutput->longitude;

@@ -7,7 +7,7 @@ namespace PM {
     {
         // Initializes important array and id navigation constants
         currentIndex = -1;
-        nextAssignedId = 1;
+        nextAssignedId = 0;
         numWaypoints = 0;
         // nextFilledIndex = 0;
 
@@ -60,44 +60,65 @@ namespace PM {
         return get_next_directions(input, output);
     }
 
-    WaypointStatus CruisingStateManager::editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, int * idArray)
+    WaypointStatus CruisingStateManager::editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, bool reset)
     {
-        // if initialize
-            // if (newFlightPlan)
-            // {
-            //     // wipe old data
-            // }
-            // create waypoints -> first waypoint is current location
-            // initialize flight plan
+        if (telemetryData->num_waypoints == 0)
+        {
+            return INVALID_PARAMETERS;
+        }
         
-        // else if append
+        // initialize
+        WaypointData * Waypoints[MAX_PATH_BUFFER_SIZE];
+        for (int i=0; i<telemetryData->num_waypoints; ++i)
+        {
+            Waypoints[i] = initialize_waypoint(telemetryData->waypoints[i]);
+        }
 
-            // append to flght plan
+        if (reset)
+        {
+            clear_flight_plan();
+            initialize_flight_plan(Waypoints, telemetryData->num_waypoints);
+        }
+        else
+        {
+            for (int i=0; i<telemetryData->num_waypoints; ++i)
+            {
+                append_waypoint(Waypoints[i]);
+            }
+        }
     }
 
-    WaypointData* initialize_waypoint()
+    WaypointData* CruisingStateManager::initialize_waypoint()
     {
-        
+        WaypointData *data = new WaypointData();
+        data->waypointId = nextAssignedId++;
+        data->next = nullptr;
+        data->previous = nullptr;
+        data->altitude = 0;
+        data->latitude = 0;
+        data->longitude = 0;
+        data->velocity_target = 0;
+        data->waypoint_type = PATH_FOLLOW;
+        return data;
     }
 
-    WaypointData* initialize_waypoint(long double longitude, long double latitude, int altitude, WaypointType waypointType)
+    WaypointData* CruisingStateManager::initialize_waypoint(int id, long double longitude, long double latitude, int altitude/*, WaypointType waypointType*/)
     {
-
+        WaypointData *data = new WaypointData();
+        data->waypointId = id;
+        data->next = nullptr;
+        data->previous = nullptr;
+        data->altitude = altitude;
+        data->latitude = latitude;
+        data->longitude = longitude;
+        data->velocity_target = 0;
+        data->waypoint_type = PATH_FOLLOW;
+        return data;
     }
 
-    WaypointData* initialize_waypoint(long double longitude, long double latitude, int altitude, WaypointType waypointType, float turnRadius)
+    WaypointData* CruisingStateManager::initialize_waypoint(const TelemWaypoint& waypointData /*, WaypointType waypointType*/)
     {
-
-    }
-
-    WaypointData* initialize_waypoint(const TelemWaypoint& waypointData, WaypointType waypointType)
-    {
-
-    }
-
-    WaypointData* initialize_waypoint(const TelemWaypoint& waypointData, WaypointType waypointType, float turnRadius)
-    {
-
+        return initialize_waypoint(waypointData.waypoint_id, waypointData.longitude, waypointData.latitude, waypointData.altitude);
     }
 
     WaypointStatus CruisingStateManager::initialize_flight_plan(WaypointData ** waypoints, uint8_t numberOfWaypoints)
