@@ -24,11 +24,11 @@ int main() {
         // Receive
         losRxData = los_link->getRx(0);
         // Copy receive data to send data
-        // for (uint8_t i = 0; i < 4; ++i) {
-        //     losTxData.tx_channels[i] = losRxData.rx_channels[i];
-        // }
+        for (uint8_t i = 0; i < 4; ++i) {
+            losTxData.tx_channels[i] = losRxData.rx_channels[i];
+        }
         // Send
-        // los_link->sendTx(0, losTxData);
+        los_link->sendTx(0, losTxData);
         // Blink test
         blink_value = (losRxData.rx_channels[0] > 0.50f) ? GPIO_PIN_SET : GPIO_PIN_RESET;
         HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, blink_value);
