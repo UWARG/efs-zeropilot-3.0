@@ -16,12 +16,24 @@ int main() {
 
     PPM_Test();
 
-
-
-    // should not get here bec losInit() starts the scheduler
+    Los_Link* los_link = &Los_Link::getInstance();
+    LosLinkTx_t losTxData = {};
+    LosLinkRx_t losRxData = {};
+    GPIO_PinState blink_value = GPIO_PIN_RESET;
     while (1) {
-
-     HAL_Delay(100);
+        // Receive
+        losRxData = los_link->getRx(0);
+        // Copy receive data to send data
+        // for (uint8_t i = 0; i < 4; ++i) {
+        //     losTxData.tx_channels[i] = losRxData.rx_channels[i];
+        // }
+        // Send
+        // los_link->sendTx(0, losTxData);
+        // Blink test
+        blink_value = (losRxData.rx_channels[0] > 0.50f) ? GPIO_PIN_SET : GPIO_PIN_RESET;
+        HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, blink_value);
+        // Small delay
+        HAL_Delay(50);
     }
 
     return 0;
