@@ -24,7 +24,7 @@ int main() {
         // Receive
         losRxData = los_link->getRx(0);
         // Copy receive data to send data
-        for (uint8_t i = 0; i < 4; ++i) {
+        for (uint8_t i = 0; i < 8; ++i) {
             losTxData.tx_channels[i] = losRxData.rx_channels[i];
         }
         // Send
