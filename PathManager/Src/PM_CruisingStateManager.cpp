@@ -9,13 +9,10 @@ namespace PM {
         currentIndex = -1;
         nextAssignedId = 0;
         numWaypoints = 0;
-        // nextFilledIndex = 0;
 
         // Sets relative long and lat
         relativeLongitude = 0;
         relativeLatitude = 0;
-
-        // homeBase = nullptr; // Sets the pointer to null
 
         // Sets boolean variables
         inHold = false;
@@ -38,10 +35,6 @@ namespace PM {
         turnDesiredAltitude = 0;
         turnDirection = 0; // 1 for CW, 2 for CCW
         turnRadius = 0.0;
-
-        // for(int i = 0; i < MAX_PATH_BUFFER_SIZE; i++) {
-        //     waypointBufferStatus[i] = FREE;
-        // }
 
         // Sets empty elements to null to prevent segmentation faults
         for(int i = 0; i < MAX_PATH_BUFFER_SIZE; i++) {
@@ -140,7 +133,6 @@ namespace PM {
         // Initializes the waypointBuffer array
         for (int i = 0; i < numWaypoints; i++) {
             waypointBuffer[i] = waypoints[i]; // Sets the element in the waypointBuffer
-            // waypointBufferStatus[i] = FULL;
         }
 
         // Links waypoints together
