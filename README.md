@@ -6,6 +6,7 @@ Current supported builds (build from ZeroPilot-SW-3 directory):
     `./Tools/build.bash -p nucleof401re`
 
     `./Tools/build.bash -p nucleol552zeq`
+read michael botros
 
     `./Tools/build.bash -p nucleog474re`
 
