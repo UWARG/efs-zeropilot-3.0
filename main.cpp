@@ -11,6 +11,7 @@ const static auto SM_PERIOD_MS = 5;
 
 int main() {
     losInit();
+    NewFunction();
 
     TaskHandle_t SM_handle = NULL;
 
@@ -20,6 +21,7 @@ int main() {
 
     // should not get here bec losInit() starts the scheduler
     while (1) {
+	    Michael Botros
     }
 
     return 0;
