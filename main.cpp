@@ -6,11 +6,14 @@
 #include "LOS_Actuators.hpp"
 #include "SM.hpp"
 #include "cmsis_os2.h"
+#include "config.hpp"
 #include "task.h"
 #include "usart.h"
 
 void GPIOTask(void *pvParameters);
 void UARTTask(void *pvParameters);
+void SDMMCTask(void *pvParameters);
+void PWMTask(void *pvParameters);
 
 void SMOperationTask(void *pvParameters);
 const static auto SM_PERIOD_MS = 5;
@@ -26,6 +29,12 @@ int main() {
 
     TaskHandle_t hUART = NULL;
     xTaskCreate(UARTTask, "UART", 500U, NULL, osPriorityNormal, &hUART);
+
+    TaskHandle_t hSDMMC = NULL;
+    xTaskCreate(SDMMCTask, "SDMMC", 100U, NULL, osPriorityNormal, &hSDMMC);
+
+    TaskHandle_t hPWM = NULL;
+    xTaskCreate(PWMTask, "PWM", 200U, NULL, osPriorityNormal, &hPWM);
 
     losKernelStart();
 
@@ -48,8 +57,8 @@ void SMOperationTask(void *pvParameters) {
 }
 
 void GPIOTask(void *pvParameters) {
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 2;
 
     while (true) {
         HAL_GPIO_TogglePin(GPIO_1_GPIO_Port, GPIO_1_Pin);
@@ -63,13 +72,13 @@ void GPIOTask(void *pvParameters) {
         HAL_GPIO_TogglePin(GPIO_9_GPIO_Port, GPIO_9_Pin);
         HAL_GPIO_TogglePin(GPIO_10_GPIO_Port, GPIO_10_Pin);
 
-        vTaskDelayUntil(&xNextWakeTime, 500);
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
 }
 
 void UARTTask(void *pvParameters) {
-    TickType_t xNextWakeTime;
-    xNextWakeTime = xTaskGetTickCount();
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 10;
 
     uint8_t LPUART1_Buffer[64] = {0};
     uint8_t USART1_Buffer[64] = {0};
@@ -99,6 +108,32 @@ void UARTTask(void *pvParameters) {
         memset(USART3_Buffer, 0, sizeof(USART3_Buffer));
         memset(UART4_Buffer, 0, sizeof(UART4_Buffer));
 
-        vTaskDelayUntil(&xNextWakeTime, 100);
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
+    }
+}
+
+void SDMMCTask(void *pvParameters) {
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 10;
+
+    while (true) {
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
+    }
+}
+
+void PWMTask(void *pvParameters) {
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 20;
+
+    Los_Actuators actuators = Los_Actuators::getInstance();
+
+    int x = 0;
+    while (true) {
+        for (int i = 0; i < NUM_ACTUATOR_CHANNELS; i++) {
+            actuators.set(i, x);
+        }
+        x++;
+        x %= 100;
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
 }
