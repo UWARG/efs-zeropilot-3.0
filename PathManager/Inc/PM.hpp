@@ -32,6 +32,7 @@ namespace PM
             bool isError;
 
             CruisingStateManager waypoint_manager;
+            bool new_waypoints
 
             void storeSmPmQueue(osMessageQId queueId);
             osMessageQId getSmPmQueue();

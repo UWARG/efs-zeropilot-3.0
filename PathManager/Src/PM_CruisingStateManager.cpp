@@ -60,7 +60,7 @@ namespace PM {
             return INVALID_PARAMETERS;
         }
         
-        // initialize
+        // initialize waypoints
         WaypointData * Waypoints[MAX_PATH_BUFFER_SIZE];
         for (int i=0; i<telemetryData->num_waypoints; ++i)
         {
@@ -79,6 +79,10 @@ namespace PM {
                 append_waypoint(Waypoints[i]);
             }
         }
+    }
+
+    WaypointData ** CruisingStateManager::get_waypoint_buffer() {
+        return waypointBuffer;
     }
 
     WaypointData* CruisingStateManager::initialize_waypoint()

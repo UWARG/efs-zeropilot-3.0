@@ -69,11 +69,6 @@ namespace PM::Waypoint {
             calcTrack = fmod(calcTrack, 360.0) + 360.0;
         }
         
-        // // Sets the return values
-        // desiredTrack = calcTrack;
-        // distanceToNextWaypoint = 0.0;
-        // outputType = ORBIT_FOLLOW;
-        // desiredAltitude = turnDesiredAltitude;
         return calcTrack;
     }
 
@@ -104,15 +99,6 @@ namespace PM::Waypoint {
             calcTrack = fmod(calcTrack, 360.0) + 360.0;
         }
         
-        // // Sets the return values 
-        // DataOut->desiredTrack = calcTrack;
-        // DataOut->outputType = PATH_FOLLOW;
-        // DataOut->desiredAltitude = targetWaypoint[2];
-
-        // if (!inHold) {
-        //     turnRadius = 0;
-        //     turnDirection = 0;
-        // }
         return calcTrack;
     }
 

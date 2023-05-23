@@ -22,7 +22,7 @@ namespace PM {
              *
              * @return error code indicating success of operation WaypointStatus
              */
-            WaypointStatus editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, bool reset = true);
+            WaypointStatus editFlightPath(WaypointsCommand * telemetryData, const WaypointManager_Data_In &inputData, bool reset);
 
             /**
              * Function retrieves the next desired path for the aircraft
@@ -33,6 +33,9 @@ namespace PM {
              * @return error code indicating success of operation WaypointStatus
              */
             WaypointStatus pathFollow(const WaypointManager_Data_In& input, WaypointManager_Data_Out*  output);
+
+
+            WaypointData ** get_waypoint_buffer();
 
         private:
             //Stores waypoints

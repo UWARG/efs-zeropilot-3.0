@@ -146,7 +146,12 @@ void CruisingStage::execute(PathManager* pathMgr)
     _inputdata.longitude = LOSData.longitude;
     _inputdata.track = LOSData.track;
 
-    pathMgr->waypoint_manager.editFlightPath(Waypoints, _inputdata);
+    if (Waypoints.num_waypoints != 0) {
+        pathMgr->waypoint_manager.editFlightPath(Waypoints, _inputdata, pathMgr->new_waypoints);
+        pathMgr->new_waypoints = false;
+    } else {
+        pathMgr->new_waypoints = true;
+    }
     pathMgr->waypoint_manager.pathFollow(_inputdata, _outputdata);
 
     if(pathMgr->isError)
@@ -157,7 +162,6 @@ void CruisingStage::execute(PathManager* pathMgr)
     {
         pathMgr->setState(CommsWithAttitude::getInstance()); 
     }
-    
 }
 
 PathManagerState& CruisingStage::getInstance()
