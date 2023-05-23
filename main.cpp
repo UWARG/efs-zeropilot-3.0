@@ -11,6 +11,7 @@
 #include "usart.h"
 
 void GPIOTask(void *pvParameters);
+void LEDTask(void *pvParameters);
 void UARTTask(void *pvParameters);
 void SDMMCTask(void *pvParameters);
 void PWMTask(void *pvParameters);
@@ -26,6 +27,9 @@ int main() {
 
     TaskHandle_t hGPIO = NULL;
     xTaskCreate(GPIOTask, "GPIO", 50U, NULL, osPriorityNormal, &hGPIO);
+
+    TaskHandle_t hLED = NULL;
+    xTaskCreate(LEDTask, "LED", 50U, NULL, osPriorityNormal, &hLED);
 
     TaskHandle_t hUART = NULL;
     xTaskCreate(UARTTask, "UART", 500U, NULL, osPriorityNormal, &hUART);
@@ -60,6 +64,15 @@ void GPIOTask(void *pvParameters) {
     TickType_t xNextWakeTime = xTaskGetTickCount();
     uint16_t frequency = 2;
 
+    GPIO_PinState Interlock_A = HAL_GPIO_ReadPin(GPIO_Interlock_A_GPIO_Port, GPIO_Interlock_A_Pin);
+    GPIO_PinState Interlock_B = HAL_GPIO_ReadPin(GPIO_Interlock_B_GPIO_Port, GPIO_Interlock_B_Pin);
+    GPIO_PinState Interlock_C = HAL_GPIO_ReadPin(GPIO_Interlock_C_GPIO_Port, GPIO_Interlock_C_Pin);
+    GPIO_PinState Interlock_D = HAL_GPIO_ReadPin(GPIO_Interlock_D_GPIO_Port, GPIO_Interlock_D_Pin);
+
+    if (!Interlock_A || !Interlock_B || !Interlock_C || !Interlock_D)
+        while (true) {
+        }
+
     while (true) {
         HAL_GPIO_TogglePin(GPIO_1_GPIO_Port, GPIO_1_Pin);
         HAL_GPIO_TogglePin(GPIO_2_GPIO_Port, GPIO_2_Pin);
@@ -71,6 +84,23 @@ void GPIOTask(void *pvParameters) {
         HAL_GPIO_TogglePin(GPIO_8_GPIO_Port, GPIO_8_Pin);
         HAL_GPIO_TogglePin(GPIO_9_GPIO_Port, GPIO_9_Pin);
         HAL_GPIO_TogglePin(GPIO_10_GPIO_Port, GPIO_10_Pin);
+
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
+    }
+}
+
+void LEDTask(void *pvParameters) {
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 2;
+
+    while (true) {
+        HAL_GPIO_TogglePin(GPIO_LED_1_YELLOW_GPIO_Port, GPIO_LED_1_YELLOW_Pin);
+        HAL_GPIO_TogglePin(GPIO_LED_1_GREEN_GPIO_Port, GPIO_LED_1_GREEN_Pin);
+        HAL_GPIO_TogglePin(GPIO_LED_1_RED_GPIO_Port, GPIO_LED_1_RED_Pin);
+
+        HAL_GPIO_TogglePin(GPIO_LED_2_YELLOW_GPIO_Port, GPIO_LED_2_YELLOW_Pin);
+        HAL_GPIO_TogglePin(GPIO_LED_2_GREEN_GPIO_Port, GPIO_LED_2_GREEN_Pin);
+        HAL_GPIO_TogglePin(GPIO_LED_2_RED_GPIO_Port, GPIO_LED_2_RED_Pin);
 
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
