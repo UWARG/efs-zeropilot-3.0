@@ -126,14 +126,19 @@ void PWMTask(void *pvParameters) {
     uint16_t frequency = 20;
 
     Los_Actuators actuators = Los_Actuators::getInstance();
-
+    bool up = true;
     int x = 0;
+
     while (true) {
-        for (int i = 0; i < NUM_ACTUATOR_CHANNELS; i++) {
+        for (int i = 2; i < NUM_ACTUATOR_CHANNELS; i++) {
             actuators.set(i, x);
         }
-        x++;
-        x %= 100;
+        if (x >= 100)
+            up = false;
+        else if (x <= 0)
+            up = true;
+        x += up ? 1 : -1;
+
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
 }
