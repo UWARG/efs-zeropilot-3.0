@@ -153,14 +153,14 @@ void SDMMCTask(void *pvParameters) {
 
 void PWMTask(void *pvParameters) {
     TickType_t xNextWakeTime = xTaskGetTickCount();
-    uint16_t frequency = 20;
+    uint16_t frequency = 50;
 
     Los_Actuators actuators = Los_Actuators::getInstance();
     bool up = true;
     int x = 0;
 
     while (true) {
-        for (int i = 2; i < NUM_ACTUATOR_CHANNELS; i++) {
+        for (int i = 0; i < NUM_ACTUATOR_CHANNELS; i++) {
             actuators.set(i, x);
         }
         if (x >= 100)
