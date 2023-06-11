@@ -8,6 +8,8 @@ Current supported builds (build from ZeroPilot-SW-3 directory):
     `./Tools/build.bash -p nucleol552zeq`
 
     `./Tools/build.bash -p nucleog474re`
+    
+    `./Tools/build.bash -p zeropilot-3-0`
 
 ## Unit Testing
 
