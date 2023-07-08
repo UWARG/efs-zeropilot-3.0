@@ -3,6 +3,7 @@
 	<name>ZeroPilot-SW-3</name>
 	<comment></comment>
 	<projects>
+		<project>LaminarOS</project>
 	</projects>
 	<buildSpec>
 	</buildSpec>
