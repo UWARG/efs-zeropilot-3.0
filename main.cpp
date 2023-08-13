@@ -6,6 +6,7 @@
 #include "LOS_D_DSHOTChannel.hpp"
 #include "LOS_D_PWMChannel.hpp"
 #include "SM.hpp"
+#include "adc.h"
 #include "cmsis_os2.h"
 #include "task.h"
 #include "tim.h"
@@ -16,6 +17,7 @@ void LEDTask(void *pvParameters);
 void UARTTask(void *pvParameters);
 void SDMMCTask(void *pvParameters);
 void PWMTask(void *pvParameters);
+void ADCTask(void *pvParameters);
 
 void SMOperationTask(void *pvParameters);
 const static auto SM_PERIOD_MS = 5;
@@ -40,6 +42,9 @@ int main() {
 
     TaskHandle_t hPWM = NULL;
     xTaskCreate(PWMTask, "PWM", 500U, NULL, osPriorityNormal, &hPWM);
+
+    TaskHandle_t hADC = NULL;
+    xTaskCreate(ADCTask, "ADC", 100U, NULL, osPriorityNormal, &hADC);
 
     losKernelStart();
 
@@ -204,6 +209,31 @@ void PWMTask(void *pvParameters) {
         else if (x <= 0)
             up = true;
         x += up ? 1 : -1;
+
+        vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
+    }
+}
+
+void ADCTask(void *pvParameters) {
+    TickType_t xNextWakeTime = xTaskGetTickCount();
+    uint16_t frequency = 1;
+
+
+    uint32_t raw[6] = {0};
+    float voltage[6] = {0};
+    // HAL_ADC_Start(&hadc1);
+    HAL_ADC_Start_DMA(&hadc1, raw, 3);
+    // HAL_ADC_Start(&hadc2);
+    HAL_ADC_Start_DMA(&hadc2, &raw[3], 3);
+
+    while (true) {
+
+        voltage[0] = raw[0] * 3.3f / (1 << 12);  // in11
+        voltage[1] = raw[1] * 3.3f / (1 << 12);  // in12
+        voltage[2] = raw[2] * 3.3f / (1 << 12);  // in15
+        voltage[3] = raw[3] * (3.3f / (1 << 12)) *  18.28395f;  // vbat_b_sense
+        voltage[4] = raw[4] * (3.3f / (1 << 12)) *  18.28395f;  // pwr_sense
+        voltage[5] = raw[5] * (3.3f / (1 << 12)) *  18.28395f;  // vbat_a_sense
 
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
