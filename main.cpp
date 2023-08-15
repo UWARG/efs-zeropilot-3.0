@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "FreeRTOS.h"
+#include "app_fatfs.h"
 #include "LOS_D_DSHOTChannel.hpp"
 #include "LOS_D_PWMChannel.hpp"
 #include "SM.hpp"
@@ -38,7 +39,7 @@ int main() {
     xTaskCreate(UARTTask, "UART", 500U, NULL, osPriorityNormal, &hUART);
 
     TaskHandle_t hSDMMC = NULL;
-    xTaskCreate(SDMMCTask, "SDMMC", 100U, NULL, osPriorityNormal, &hSDMMC);
+    xTaskCreate(SDMMCTask, "SDMMC", 1000U, NULL, osPriorityNormal, &hSDMMC);
 
     TaskHandle_t hPWM = NULL;
     xTaskCreate(PWMTask, "PWM", 500U, NULL, osPriorityNormal, &hPWM);
@@ -75,9 +76,9 @@ void GPIOTask(void *pvParameters) {
     GPIO_PinState Interlock_C = HAL_GPIO_ReadPin(GPIO_Interlock_C_GPIO_Port, GPIO_Interlock_C_Pin);
     GPIO_PinState Interlock_D = HAL_GPIO_ReadPin(GPIO_Interlock_D_GPIO_Port, GPIO_Interlock_D_Pin);
 
-    if (!Interlock_A || !Interlock_B || !Interlock_C || !Interlock_D)
-        while (true) {
-        }
+    if (!Interlock_A || !Interlock_B || !Interlock_C || !Interlock_D) {
+        Error_Handler();
+    }
 
     while (true) {
         HAL_GPIO_TogglePin(GPIO_1_GPIO_Port, GPIO_1_Pin);
@@ -151,6 +152,47 @@ void UARTTask(void *pvParameters) {
 void SDMMCTask(void *pvParameters) {
     TickType_t xNextWakeTime = xTaskGetTickCount();
     uint16_t frequency = 10;
+
+    FRESULT res; /* FatFs function common result code */
+    UINT byteswritten, bytesread; /* File write/read counts */
+    uint8_t wtext[] = "STM32 FATFS works great!"; /* File write buffer */
+    uint8_t rtext[_MAX_SS];/* File read buffer */
+    if(f_mount(&SDFatFS, (TCHAR const*)SDPath, 0) != FR_OK)
+	{
+		Error_Handler();
+	}
+	else
+	{
+		if(f_mkfs((TCHAR const*)SDPath, FM_ANY, 0, rtext, sizeof(rtext)) != FR_OK)
+	    {
+			Error_Handler();
+	    }
+		else
+		{
+			//Open file for writing (Create)
+			if(f_open(&SDFile, "STM32.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+			{
+				Error_Handler();
+			}
+			else
+			{
+
+				//Write to the text file
+				res = f_write(&SDFile, wtext, strlen((char *)wtext), &byteswritten);
+				if((byteswritten == 0) || (res != FR_OK))
+				{
+					Error_Handler();
+				}
+				else
+				{
+
+					f_close(&SDFile);
+				}
+			}
+		}
+	}
+	f_mount(&SDFatFS, (TCHAR const*)NULL, 0);
+
 
     while (true) {
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
@@ -238,3 +280,4 @@ void ADCTask(void *pvParameters) {
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
     }
 }
+

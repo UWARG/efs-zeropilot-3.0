@@ -28,6 +28,11 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/RC_Receiver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/LOS_Driver/Motor_Channel/Inc
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/FATFS/App
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/FATFS/Target
+    ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FatFs/src
+
+
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/${FAMILY_NAME}_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Drivers/CMSIS/Device/ST/${FAMILY_NAME}/Include
@@ -57,6 +62,11 @@ set(FREE_RTOS_C_SOURCES "${FREE_RTOS_DIR}/*.c"
                         "${FREE_RTOS_DIR}/portable/GCC/ARM_${PORTABLE_NAME}/*.c"
                         "${FREE_RTOS_DIR}/portable/MemMang/*.c")
 
+set(FATFS_C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/FATFS/App/*.c"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/FATFS/Target/*.c"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FatFs/src/*.c"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Middlewares/Third_Party/FatFs/src/option/*.c")
+
 set(HAL_CORE ${CMAKE_CURRENT_SOURCE_DIR}/LaminarOS/boardfiles/${FOLDER_NAME}/Core)
 set(HAL_CORE_C_SOURCES "${HAL_CORE}/Src/*.c")
 set(HAL_CORE_CXX_SOURCES "${HAL_CORE}/Src/*.cpp")
@@ -79,6 +89,7 @@ file(GLOB_RECURSE C_SOURCES ${HAL_DRIVERS_C_SOURCES}
                             ${DRIVERS_CXX_SOURCES}
                             ${CORE_C_SOURCES}
                             ${FREE_RTOS_C_SOURCES}
+                            ${FATFS_C_SOURCES}
                             ${ZP_SM_C_SOURCES}
                             ${ZP_AM_C_SOURCES})
 message("MESSAGE: ${C_SOURCES}")
