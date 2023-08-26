@@ -26,9 +26,6 @@ const static auto SM_PERIOD_MS = 5;
 int main() {
     losInit();
 
-    // TaskHandle_t SM_handle = NULL;
-    // xTaskCreate(SMOperationTask, "SM Thread", 400U, NULL, osPriorityNormal, &SM_handle);
-
     TaskHandle_t hGPIO = NULL;
     xTaskCreate(GPIOTask, "GPIO", 50U, NULL, osPriorityNormal, &hGPIO);
 
@@ -39,7 +36,7 @@ int main() {
     xTaskCreate(UARTTask, "UART", 500U, NULL, osPriorityNormal, &hUART);
 
     TaskHandle_t hSDMMC = NULL;
-    xTaskCreate(SDMMCTask, "SDMMC", 1000U, NULL, osPriorityNormal, &hSDMMC);
+    xTaskCreate(SDMMCTask, "SDMMC", 1000U, NULL, osPriorityHigh, &hSDMMC);
 
     TaskHandle_t hPWM = NULL;
     xTaskCreate(PWMTask, "PWM", 500U, NULL, osPriorityNormal, &hPWM);
@@ -155,44 +152,27 @@ void SDMMCTask(void *pvParameters) {
 
     FRESULT res; /* FatFs function common result code */
     UINT byteswritten, bytesread; /* File write/read counts */
-    uint8_t wtext[] = "STM32 FATFS works great!"; /* File write buffer */
+    uint8_t wtext[] = "SDMMC works"; /* File write buffer */
     uint8_t rtext[_MAX_SS];/* File read buffer */
     if(f_mount(&SDFatFS, (TCHAR const*)SDPath, 0) != FR_OK)
 	{
 		Error_Handler();
 	}
-	else
-	{
-		if(f_mkfs((TCHAR const*)SDPath, FM_ANY, 0, rtext, sizeof(rtext)) != FR_OK)
-	    {
-			Error_Handler();
-	    }
-		else
-		{
-			//Open file for writing (Create)
-			if(f_open(&SDFile, "STM32.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
-			{
-				Error_Handler();
-			}
-			else
-			{
+    //Open file for writing (Create)
+    if(f_open(&SDFile, "STM32.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+    {
+        Error_Handler();
+    }
+    //Write to the text file
+    res = f_write(&SDFile, wtext, strlen((char *)wtext), &byteswritten);
+    if((byteswritten == 0) || (res != FR_OK))
+    {
+        Error_Handler();
+    }
 
-				//Write to the text file
-				res = f_write(&SDFile, wtext, strlen((char *)wtext), &byteswritten);
-				if((byteswritten == 0) || (res != FR_OK))
-				{
-					Error_Handler();
-				}
-				else
-				{
+    f_close(&SDFile);
 
-					f_close(&SDFile);
-				}
-			}
-		}
-	}
 	f_mount(&SDFatFS, (TCHAR const*)NULL, 0);
-
 
     while (true) {
         vTaskDelayUntil(&xNextWakeTime, 1000 / frequency);
